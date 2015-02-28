@@ -8,8 +8,7 @@
 		<!-- ********** INPUTS ********** -->
 
 		<Input>
-			<predictOnClient type="bool" />
-			<runInPastOnServer type="bool" />
+			<predict type="bool" />
 		</Input>
 
 		<!-- ********** MESSAGES ********** -->
