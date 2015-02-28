@@ -1,5 +1,6 @@
 
-// lazy val soundPlayerProject = RootProject(uri("git://github.com/alvinj/SoundFilePlayer.git"#tag))
+lazy val util = RootProject(file("ext/gigurra-scala-util"))
+lazy val renderer = RootProject(file("ext/gigurra-scala-2drenderer"))
 
 lazy val root = (project in file(".")).
   settings(
@@ -21,5 +22,6 @@ lazy val root = (project in file(".")).
         "org.scala-lang.modules" %% "scala-async" % "0.9.2"
     )
   )
-  //.dependsOn(soundPlayerProject)
+  .dependsOn(util, renderer)
+
 
