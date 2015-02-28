@@ -1,5 +1,4 @@
 
-lazy val util = RootProject(file("ext/gigurra-scala-util"))
 lazy val renderer = RootProject(file("ext/gigurra-scala-2drenderer"))
 
 lazy val root = (project in file(".")).
@@ -22,6 +21,6 @@ lazy val root = (project in file(".")).
         "org.scala-lang.modules" %% "scala-async" % "0.9.2"
     )
   )
-  .dependsOn(util, renderer)
+  .dependsOn(renderer)
 
 

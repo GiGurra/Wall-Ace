@@ -1,0 +1,6 @@
+[submodule "ext/gigurra-scala-2drenderer"]
+	path = ext/gigurra-scala-2drenderer
+	url = git@github.com:gigurra/gigurra-scala-2drenderer
+	branch = master
+    fetchRecurseSubmodules = true
+
