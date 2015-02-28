@@ -1,6 +1,6 @@
-name := "yabs-scala-course"
+name := "wall-ace"
 
-organization := "se.yabs"
+organization := "se.gigurra"
 
 scalaVersion := "2.11.5"
 
