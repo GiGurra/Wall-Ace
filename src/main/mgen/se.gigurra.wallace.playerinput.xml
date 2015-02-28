@@ -1,0 +1,30 @@
+<Module>
+
+	<Enums>
+	</Enums>
+
+	<Types>
+
+		<!-- ********** INPUTS ********** -->
+
+		<Input>
+			<entity type="int" />
+		</Input>
+
+		<SingleshotInput extends="Input" />
+
+		<ContinousInput extends="Input" />
+
+		<!-- ********** MESSAGES ********** -->
+
+		<PlayerInputMessage extends="GameStateMessage">
+			<localIterationIndex type="int64" />
+			<localTime type="double" />
+			<singleshotInputs type="list[SingleshotInput]" />
+			<continousInputs type="list[ContinousInput]" />
+		</PlayerInputMessage>
+
+
+	</Types>
+
+</Module>

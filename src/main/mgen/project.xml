@@ -8,5 +8,6 @@
         <Source>se.gigurra.wallace.xml</Source>
         <Source>se.gigurra.wallace.gamestate.xml</Source>
         <Source>se.gigurra.wallace.database.xml</Source>
+        <Source>se.gigurra.wallace.playerinput.xml</Source>
     </Sources>
 </Project>

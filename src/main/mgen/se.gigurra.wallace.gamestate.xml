@@ -6,104 +6,109 @@
 	<Types>
 
 		<!-- ********** WORLD ********** -->
-    
-        <AreaIndex>
-            <ix type="int"/>
-            <iy type="int"/>
-        </AreaIndex>
 
-        <World>
-            <areas type="map[AreaIndex, Area]"/>
-        </World>
+		<AreaIndex>
+			<ix type="int" />
+			<iy type="int" />
+		</AreaIndex>
 
-        <Area>
-            <components type="ComponentStore"/>
-            <entities type="list[Entity]"/>
-        </Area>
+		<World>
+			<areas type="map[AreaIndex, Area]" />
+		</World>
 
-        <Entity>
-            <id type="int"/>
-        </Entity>
+		<Area>
+			<components type="ComponentStore" />
+			<entities type="list[Entity]" />
+		</Area>
 
+		<Entity>
+			<id type="int" />
+		</Entity>
+
+		<WorldSnapshot>
+			<world type="World" />
+			<delta type="string" />
+		</WorldSnapshot>
 
 
 		<!-- ********** ANIMATION ********** -->
 
-        <AnimationStore>
-            <animations type="map[string, Animation]">{}</animations>
-        </AnimationStore>
+		<AnimationStore>
+			<animations type="map[string, Animation]">{}</animations>
+		</AnimationStore>
 
-        <Animation>
-            <name type="string"/>
-            <imageFile type="string"/>
-            <frames type="list[AnimationFrame]"/>
-        </Animation>
+		<Animation>
+			<name type="string" />
+			<imageFile type="string" />
+			<frames type="list[AnimationFrame]" />
+		</Animation>
 
-        <AnimationFrame>
-            <x type="float"/>
-            <y type="float"/>
-            <width type="float"/>
-            <height type="float"/>
-        </AnimationFrame>
+		<AnimationFrame>
+			<x type="float" />
+			<y type="float" />
+			<width type="float" />
+			<height type="float" />
+		</AnimationFrame>
 
 
 
 		<!-- ********** EFFECTS ********** -->
 
-        <EffectType />
+		<EffectType />
 
-        <DamageEffect extends="EffectType" >
-            <amount type="int"/>
-        </DamageEffect>
+		<DamageEffect extends="EffectType">
+			<amount type="int" />
+		</DamageEffect>
 
 
 
 		<!-- ********** COLLISIONS ********** -->
 
-        <CollisionType />
+		<CollisionType />
 
-        <ElasticCollision extends="CollisionType"/>
+		<ElasticCollision extends="CollisionType" />
 
-        <DamagingCollission extends="CollisionType">
-            <damage type="int"/>
-        </DamagingCollission>
-        
+		<DamagingCollission extends="CollisionType">
+			<damage type="int" />
+		</DamagingCollission>
+
 
 
 		<!-- ********** COMPONENTS ********** -->
 
-        <ComponentStore>
-            <geometrics type="list[GeometricComponent]"/>
-            <collisions type="list[CollisionComponent]"/>
-            <graphics type="list[GraphicsComponent]"/>
-            <stats type="list[StatsComponent]"/>
-        </ComponentStore>
+		<ComponentStore>
+			<geometrics type="list[GeometricComponent]" />
+			<collisions type="list[CollisionComponent]" />
+			<graphics type="list[GraphicsComponent]" />
+			<stats type="list[StatsComponent]" />
+		</ComponentStore>
 
-        <GeometricComponent>
-            <x type="double">0.0</x>
-            <y type="double">0.0</y>
-            <width type="double">0.0</width>
-            <height type="double">0.0</height>
-        </GeometricComponent>
+		<GeometricComponent>
+			<x type="double">0.0</x>
+			<y type="double">0.0</y>
+			<width type="double">0.0</width>
+			<height type="double">0.0</height>
+		</GeometricComponent>
 
 		<CollisionComponent>
-            <mass type="double">1.0</mass>
-            <fixed type="bool">false</fixed>
-            <collisionType type="CollisionType"/>
+			<mass type="double">1.0</mass>
+			<fixed type="bool">false</fixed>
+			<collisionType type="CollisionType" />
 		</CollisionComponent>
 
-        <GraphicsComponent>
-            <idleAnimation type="string">default_animation.json</idleAnimation>
-            <action2animation type="map[string, string]">{}</action2animation>
-            <currentAction type="string"></currentAction>
-            <animationTime type="float">0.0</animationTime>
-        </GraphicsComponent>     
+		<GraphicsComponent>
+			<idleAnimation type="string">default_animation.json
+			</idleAnimation>
+			<action2animation type="map[string, string]">{}</action2animation>
+			<currentAction type="string"></currentAction>
+			<animationTime type="float">0.0</animationTime>
+		</GraphicsComponent>
 
-        <StatsComponent>
-            <health type="int">10</health>
-            <endurance type="int">10</endurance>
-            <experience type="int">0</experience>
-        </StatsComponent>
+		<StatsComponent>
+			<health type="int">10</health>
+			<endurance type="int">10</endurance>
+			<experience type="int">0</experience>
+		</StatsComponent>
 
 
 
@@ -111,9 +116,14 @@
 
 		<GameStateMessage extends="Message" />
 
-        <AuthorizedStateMessage extends="GameStateMessage"/>
+		<AuthorizedStateMessage extends="GameStateMessage">
+			<lastLocalIterationIndex type="int64" />
+			<lastLocalTime type="double" />
+			<snapshot type="WorldSnapshot" />
+			<playerInputs type="PlayerInputMessage" />
+		</AuthorizedStateMessage>
 
-        <PlayerInputsMessage extends="GameStateMessage"/>
+		<PlayerInputsMessage extends="GameStateMessage" />
 
 
 	</Types>
