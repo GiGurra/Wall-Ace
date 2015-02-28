@@ -8,20 +8,16 @@
 		<!-- ********** INPUTS ********** -->
 
 		<Input>
-			<entity type="int" />
+			<predictOnClient type="bool" />
+			<runInPastOnServer type="bool" />
 		</Input>
-
-		<SingleshotInput extends="Input" />
-
-		<ContinousInput extends="Input" />
 
 		<!-- ********** MESSAGES ********** -->
 
 		<PlayerInputMessage extends="GameStateMessage">
 			<localIterationIndex type="int64" />
 			<localTime type="double" />
-			<singleshotInputs type="list[SingleshotInput]" />
-			<continousInputs type="list[ContinousInput]" />
+			<inputs type="list[Input]" />
 		</PlayerInputMessage>
 
 

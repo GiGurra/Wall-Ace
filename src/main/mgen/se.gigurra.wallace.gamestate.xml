@@ -120,7 +120,7 @@
 			<lastLocalIterationIndex type="int64" />
 			<lastLocalTime type="double" />
 			<snapshot type="WorldSnapshot" />
-			<playerInputs type="PlayerInputMessage" />
+			<remotePlayerInputs type="PlayerInputMessage" />
 		</AuthorizedStateMessage>
 
 		<PlayerInputsMessage extends="GameStateMessage" />
