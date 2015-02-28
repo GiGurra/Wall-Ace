@@ -13,17 +13,13 @@ class GameLoop(
 
   def run() {
 
-    // Get all inputs
     val localPlayerCurrentInput = inputIfc.getLocalPlayerCurrentInput()
-    val authorativeSnapshot = inputIfc.getAuthorativeSnapshot()
-    val remotePlayersNewInputs = inputIfc.getRemotePlayersNewInputs()
-
-    val localTime = calcLocalTime
+    val serverInputs = inputIfc.getNewInputsFromServer()
+    val localTime = calcLocalTime()
 
     gamestateUpdater.update(
       localPlayerCurrentInput,
-      authorativeSnapshot,
-      remotePlayersNewInputs,
+      serverInputs,
       localIterationIndex,
       localTime,
       lastLocalTime)
