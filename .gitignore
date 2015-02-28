@@ -10,6 +10,7 @@ dist/*
 target/
 lib_managed/
 src_managed/
+src_generated/
 project/boot/
 project/plugins/project/
 
