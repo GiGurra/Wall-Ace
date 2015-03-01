@@ -29,9 +29,9 @@ class GameState() {
 
     override def predict(ownInput: Seq[Input]) {
 
-      // TODO: Modify...
-
       // state_predicted = Some(state.deepCopy())
+
+      // TODO: Modify state_predicted...
 
     }
 
