@@ -6,48 +6,41 @@ import se.gigurra.wallace.playerinput.Input
 
 class GameState() {
 
-  @volatile private var state = new World
-  @volatile private var state_predicted = new World
+  private var state = new World
+  private var state_predicted: Option[World] = None
 
   val updater = new IGameUpdater {
 
     override def update(serverStepMessage: ServerStepMessage) {
 
-      val world = state.deepCopy()
+      // TODO: Modify state...
 
-      // TODO: Modify...
-
-      state = world
-      state_predicted = world
+      state_predicted = None
 
     }
 
     override def simulate(clientInputs: Seq[Input]) {
 
-      val world = state.deepCopy()
+      // TODO: Modify state...
 
-      // TODO: Modify...
-
-      state = world
-      state_predicted = world
+      state_predicted = None
 
     }
 
     override def predict(ownInput: Seq[Input]) {
 
-      val world = state.deepCopy()
-
       // TODO: Modify...
 
-      state_predicted = world
+      // state_predicted = Some(state.deepCopy())
+
     }
 
   }
 
-  val view = new IGameView {
+  val localView = new IGameView {
 
     override def view(): World = {
-      state_predicted
+      state_predicted.getOrElse(state)
     }
 
   }

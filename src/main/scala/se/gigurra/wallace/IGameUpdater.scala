@@ -10,9 +10,10 @@ trait IGameUpdater {
   // Executed on clients
   def update(serverStepMessage: ServerStepMessage)
 
+  // Executed on clients
+  def predict(ownInput: Seq[Input])
+
   // Executed on server
   def simulate(userInputs: Seq[Input])
-
-  def predict(ownInput: Seq[Input])
 
 }

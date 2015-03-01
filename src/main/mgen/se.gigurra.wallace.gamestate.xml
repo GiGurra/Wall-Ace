@@ -5,6 +5,7 @@
 
 	<Types>
 
+
 		<!-- ********** WORLD ********** -->
 
 		<AreaIndex>
@@ -29,6 +30,7 @@
 			<world type="World" />
 			<delta type="string" />
 		</WorldSnapshot>
+
 
 
 		<!-- ********** ANIMATION ********** -->
@@ -63,14 +65,13 @@
 
 
 
-
 		<!-- ********** COMPONENTS ********** -->
 
 		<ComponentStore>
-			<geometrics type="list[GeometricComponent]" />
-			<collisions type="list[CollisionComponent]" />
-			<graphics type="list[GraphicsComponent]" />
-			<stats type="list[StatsComponent]" />
+			<geometrics type="map[int, GeometricComponent]">{}</geometrics>
+			<collisions type="map[int, CollisionComponent]">{}</collisions>
+			<graphics type="map[int, GraphicsComponent]">{}</graphics>
+			<stats type="map[int, StatsComponent]">{}</stats>
 		</ComponentStore>
 
 		<GeometricComponent>
