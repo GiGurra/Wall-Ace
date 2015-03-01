@@ -39,7 +39,7 @@ class GameState() {
 
   val localView = new IGameView {
 
-    override def view(): World = {
+    override def world(): World = {
       state_predicted.getOrElse(state)
     }
 

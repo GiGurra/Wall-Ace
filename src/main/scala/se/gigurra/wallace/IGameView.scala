@@ -4,6 +4,6 @@ import se.gigurra.wallace.gamestate.World
 
 trait IGameView {
   
-  def view(): World
+  def world(): World
   
 }
