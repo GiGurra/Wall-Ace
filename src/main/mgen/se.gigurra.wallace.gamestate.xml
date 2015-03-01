@@ -54,23 +54,13 @@
 
 		<!-- ********** EFFECTS ********** -->
 
-		<EffectType />
+		<WorldEffect />
 
-		<DamageEffect extends="EffectType">
-			<amount type="int" />
-		</DamageEffect>
-
-
-
-		<!-- ********** COLLISIONS ********** -->
-
-		<CollisionType />
-
-		<ElasticCollision extends="CollisionType" />
-
-		<DamagingCollission extends="CollisionType">
+		<Explosion extends="WorldEffect">
+			<radius type="float" />
 			<damage type="int" />
-		</DamagingCollission>
+		</Explosion>
+
 
 
 
@@ -91,14 +81,15 @@
 		</GeometricComponent>
 
 		<CollisionComponent>
-			<mass type="double">1.0</mass>
+			<mass type="float">1.0f</mass>
+			<elasticity type="float">1.0f</elasticity>
 			<fixed type="bool">false</fixed>
-			<collisionType type="CollisionType" />
+			<autoremove type="bool">false</autoremove>
+			<effects type="list[WorldEffect]">[]</effects>
 		</CollisionComponent>
 
 		<GraphicsComponent>
-			<idleAnimation type="string">default_animation.json
-			</idleAnimation>
+			<idleAnimation type="string" />
 			<action2animation type="map[string, string]">{}</action2animation>
 			<currentAction type="string"></currentAction>
 			<animationTime type="float">0.0</animationTime>
@@ -114,15 +105,14 @@
 
 		<!-- ********** MESSAGES ********** -->
 
-		<GameStateMessage extends="Message" />
+		<GameStateMessage extends="Message">
+			<from type="string" />
+			<iGameStep type="int" />
+		</GameStateMessage>
 
-		<ServerStepMessage>
-			<serverIterationIndex type="int64" />
-			<serverTime type="Double" />
-			<lastClientIterationIndex type="int64" />
-			<lastClientTime type="double" />
-			<authorizedState type="WorldSnapshot" />
-			<remotePlayerInputs type="list[PlayerInputMessage]" />
+		<ServerStepMessage extends="GameStateMessage">
+			<snapshot type="WorldSnapshot" />
+			<playerInputs type="list[PlayerInputMessage]" />
 		</ServerStepMessage>
 
 

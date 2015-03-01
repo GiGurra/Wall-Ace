@@ -7,19 +7,13 @@
 
 		<!-- ********** INPUTS ********** -->
 
-		<Input>
-			<predict type="bool" />
-		</Input>
+		<Input />
 
 		<!-- ********** MESSAGES ********** -->
 
 		<PlayerInputMessage extends="GameStateMessage">
-			<localIterationIndex type="int64" />
-			<localTime type="double" />
-			<estimatedServerTIme type="double" />
 			<inputs type="list[Input]" />
 		</PlayerInputMessage>
-
 
 	</Types>
 
