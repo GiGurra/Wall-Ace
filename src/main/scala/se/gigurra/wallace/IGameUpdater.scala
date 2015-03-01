@@ -8,9 +8,7 @@ trait IGameUpdater {
 
   def update(
     localPlayerCurrentInput: PlayerInputMessage,
-    serverStepMessages: Seq[ServerStepMessage],
-    localIterationIndex: Long,
-    localTime: Double,
-    lastLocalTime: Double)
+    serverStepMessages: Option[ServerStepMessage],
+    time: Time)
 
 }

@@ -118,6 +118,7 @@
 
 		<ServerStepMessage>
 			<serverIterationIndex type="int64" />
+			<serverTime type="Double" />
 			<lastClientIterationIndex type="int64" />
 			<lastClientTime type="double" />
 			<authorizedState type="WorldSnapshot" />

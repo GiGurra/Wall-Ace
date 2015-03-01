@@ -1,31 +1,19 @@
 package se.gigurra.wallace
 
+import se.gigurra.wallace.gamestate.ServerStepMessage
+
 class GameLoop(
   gamestateUpdater: IGameUpdater,
-  inputIfc: IGameloopInput) {
+  inputIfc: IGameloopInput,
+  timeKeeper: TimeKeeper) {
 
-  private var localIterationIndex = 0L
-  private var lastLocalTime = calcLocalTime
+  def step() {
 
-  def calcLocalTime(): Double = {
-    System.nanoTime() / 1e9
-  }
+    val ownInput = inputIfc.getLocalPlayerCurrentInput()
+    val lastServerInput = inputIfc.getNewInputsFromServer().lastOption
+    val time = timeKeeper.update(lastServerInput)
 
-  def run() {
-
-    val localPlayerCurrentInput = inputIfc.getLocalPlayerCurrentInput()
-    val serverInputs = inputIfc.getNewInputsFromServer()
-    val localTime = calcLocalTime()
-
-    gamestateUpdater.update(
-      localPlayerCurrentInput,
-      serverInputs,
-      localIterationIndex,
-      localTime,
-      lastLocalTime)
-
-    lastLocalTime = localTime
-    localIterationIndex += 1L
+    gamestateUpdater.update(ownInput, lastServerInput, time)
 
   }
 
