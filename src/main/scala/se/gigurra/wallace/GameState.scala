@@ -22,6 +22,17 @@ class GameState() {
 
     }
 
+    override def simulate(clientInputs: Seq[Input]) {
+
+      val world = state.deepCopy()
+
+      // TODO: Modify...
+
+      state = world
+      state_predicted = world
+
+    }
+
     override def predict(ownInput: Seq[Input]) {
 
       val world = state.deepCopy()

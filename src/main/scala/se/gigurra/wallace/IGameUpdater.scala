@@ -7,8 +7,12 @@ import se.gigurra.wallace.playerinput.Input
 
 trait IGameUpdater {
 
+  // Executed on clients
   def update(serverStepMessage: ServerStepMessage)
-    
+
+  // Executed on server
+  def simulate(userInputs: Seq[Input])
+
   def predict(ownInput: Seq[Input])
 
 }
