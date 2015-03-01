@@ -73,7 +73,7 @@ object ClientMain {
     }
 
     val glWindow = GLWindow.create(caps).mutate { glWindow =>
-      glWindow.setTitle("Raw GL3ES3 Demo")
+      glWindow.setTitle("Wall-Ace")
       glWindow.setSize(1280, 720)
       glWindow.setUndecorated(false)
       glWindow.setPointerVisible(true)
