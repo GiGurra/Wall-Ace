@@ -1,8 +1,8 @@
 package se.gigurra.renderer.glimpl.megavbo
 
-import javax.media.opengl.GL3ES3
+import com.jogamp.opengl.GL3ES3
 import se.gigurra.renderer.Model
-import javax.media.opengl.GL
+import com.jogamp.opengl.GL
 import se.gigurra.renderer.PrimitiveType
 
 class MegaVboModelDescriptor(val model: Model, val vertexOffset: Int) {

@@ -2,7 +2,7 @@ package se.gigurra.renderer.glimpl.uniforms
 
 import java.nio.FloatBuffer
 
-import javax.media.opengl.GL3ES3
+import com.jogamp.opengl.GL3ES3
 import se.gigurra.renderer.Mat4x4
 import se.gigurra.renderer.glimpl.GlShaderProgram
 

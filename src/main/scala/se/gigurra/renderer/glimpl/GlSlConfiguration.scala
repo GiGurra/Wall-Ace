@@ -1,6 +1,6 @@
 package se.gigurra.renderer.glimpl
 
-import javax.media.opengl.GL3ES3
+import com.jogamp.opengl.GL3ES3
 
 class GlSlConfiguration(
   val glSlVersion: String, // e.g. 330

@@ -1,5 +1,5 @@
 import java.util.Arrays
-
+/*
 import org.junit.Test
 import org.poly2tri.triangulation.delaunay.sweep.DTSweep
 import org.poly2tri.triangulation.delaunay.sweep.DTSweepContext
@@ -45,4 +45,4 @@ class Fonts {
     assert(ps.getTriangles.size == 2)
 
   }
-}
+}*/

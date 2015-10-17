@@ -1,6 +1,6 @@
 package se.gigurra.renderer.glimpl.drawstrategy
 
-import javax.media.opengl.GL3ES3
+import com.jogamp.opengl.GL3ES3
 import se.gigurra.renderer.Color
 import se.gigurra.renderer.Transform
 import se.gigurra.renderer.glimpl.megavbo.MegaVboModelDescriptor

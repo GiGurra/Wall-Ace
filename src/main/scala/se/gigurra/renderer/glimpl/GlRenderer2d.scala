@@ -1,6 +1,6 @@
 package se.gigurra.renderer.glimpl
 
-import javax.media.opengl.GL3ES3
+import com.jogamp.opengl.GL3ES3
 import se.gigurra.renderer.Model
 import se.gigurra.renderer.Widget
 import se.gigurra.renderer.glimpl.drawstrategy.multi.MultiDrawStrategy

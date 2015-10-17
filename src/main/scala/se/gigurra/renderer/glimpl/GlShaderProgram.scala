@@ -2,8 +2,8 @@ package se.gigurra.renderer.glimpl
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import javax.media.opengl.GL2ES3
-import javax.media.opengl.GL3ES3
+import com.jogamp.opengl.GL2ES3
+import com.jogamp.opengl.GL3ES3
 
 case class GlShaderProgram(val program: Int, val shaders: Seq[Int]) {
 

@@ -1,13 +1,13 @@
 package se.gigurra.renderer
 
+import com.jogamp.opengl.{GLCapabilities, GLProfile}
+
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 
 import com.jogamp.newt.opengl.GLWindow
 
-import javax.media.opengl.GLCapabilities
-import javax.media.opengl.GLProfile
 import net.jodk.lang.FastMath
 import scalaxy.streams.optimize
 import se.gigurra.renderer.Color.RichColor

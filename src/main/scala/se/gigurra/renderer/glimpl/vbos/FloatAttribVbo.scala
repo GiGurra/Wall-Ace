@@ -2,8 +2,8 @@ package se.gigurra.renderer.glimpl.vbos
 
 import java.nio.FloatBuffer
 
-import javax.media.opengl.GL
-import javax.media.opengl.GL3ES3
+import com.jogamp.opengl.GL
+import com.jogamp.opengl.GL3ES3
 import se.gigurra.renderer.glimpl.GlShaderProgram
 
 class FloatAttribVbo(

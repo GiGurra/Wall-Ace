@@ -1,9 +1,9 @@
 package se.gigurra.renderer.glimpl.vbos
 
 import java.nio.FloatBuffer
-import javax.media.opengl.GL
-import javax.media.opengl.GL2ES3
-import javax.media.opengl.GL3ES3
+import com.jogamp.opengl.GL
+import com.jogamp.opengl.GL2ES3
+import com.jogamp.opengl.GL3ES3
 import se.gigurra.renderer.glimpl.GlIntegers
 import se.gigurra.renderer.glimpl.GlShaderProgram
 

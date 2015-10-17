@@ -1,11 +1,11 @@
 package se.gigurra.renderer.glimpl
 
 import scala.collection.mutable.HashMap
-import javax.media.opengl.GL2ES2
-import javax.media.opengl.GL2ES3
-import javax.media.opengl.GL3ES3
+import com.jogamp.opengl.GL2ES2
+import com.jogamp.opengl.GL2ES3
+import com.jogamp.opengl.GL3ES3
 import se.gigurra.util.Mutate.Mutable
-import javax.media.opengl.GL
+import com.jogamp.opengl.GL
 
 class GlIntegers(gl: GL3ES3) {
 

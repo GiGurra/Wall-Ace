@@ -2,7 +2,7 @@ package se.gigurra.renderer.glimpl.drawstrategy.multi
 
 import com.jogamp.common.nio.Buffers
 
-import javax.media.opengl.GL3
+import com.jogamp.opengl.GL3
 import se.gigurra.renderer.Color
 import se.gigurra.renderer.Transform
 import se.gigurra.renderer.glimpl.megavbo.MegaVboModelDescriptor

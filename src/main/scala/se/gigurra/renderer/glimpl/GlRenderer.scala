@@ -1,11 +1,13 @@
 package se.gigurra.renderer.glimpl
 
+import com.jogamp.opengl.GL3ES3
+
 import scala.collection.mutable.ArrayBuffer
-import javax.media.opengl.GL
-import javax.media.opengl.GL3ES3
-import javax.media.opengl.GLAutoDrawable
-import javax.media.opengl.GLDrawable
-import javax.media.opengl.GLEventListener
+import com.jogamp.opengl.GL
+import com.jogamp.opengl.GL3ES3
+import com.jogamp.opengl.GLAutoDrawable
+import com.jogamp.opengl.GLDrawable
+import com.jogamp.opengl.GLEventListener
 import se.gigurra.renderer.Renderer
 import se.gigurra.renderer.TransformStack
 import se.gigurra.renderer.Widget

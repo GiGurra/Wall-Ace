@@ -6,8 +6,8 @@ import scala.util.Try
 
 import com.jogamp.newt.opengl.GLWindow
 
-import javax.media.opengl.GLCapabilities
-import javax.media.opengl.GLProfile
+import com.jogamp.opengl.GLCapabilities
+import com.jogamp.opengl.GLProfile
 import net.jodk.lang.FastMath
 import se.gigurra.renderer.Color
 import se.gigurra.renderer.Color.RichColor

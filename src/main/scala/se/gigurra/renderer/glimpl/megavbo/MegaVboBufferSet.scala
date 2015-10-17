@@ -1,6 +1,6 @@
 package se.gigurra.renderer.glimpl.megavbo
 
-import javax.media.opengl.GL3ES3
+import com.jogamp.opengl.GL3ES3
 import se.gigurra.renderer.Model
 import se.gigurra.renderer.glimpl.GlShaderProgram
 import se.gigurra.renderer.glimpl.vbos.FloatAttribVbo

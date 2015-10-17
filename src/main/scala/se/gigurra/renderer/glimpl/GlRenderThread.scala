@@ -2,7 +2,7 @@ package se.gigurra.renderer.glimpl
 
 import com.jogamp.opengl.util.Animator
 
-import javax.media.opengl.GLAutoDrawable
+import com.jogamp.opengl.GLAutoDrawable
 
 protected object GlRenderThread {
   private var animator: Animator = null

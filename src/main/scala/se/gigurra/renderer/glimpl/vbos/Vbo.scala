@@ -2,7 +2,7 @@ package se.gigurra.renderer.glimpl.vbos
 
 import java.nio.Buffer
 
-import javax.media.opengl.GL3ES3
+import com.jogamp.opengl.GL3ES3
 import se.gigurra.util.Mutate.Mutable
 
 class Vbo(

@@ -2,9 +2,9 @@ package se.gigurra.renderer.util
 
 import java.nio.charset.Charset
 
-import javax.media.opengl.GL
-import javax.media.opengl.GL2ES2
-import javax.media.opengl.GL3ES3
+import com.jogamp.opengl.GL
+import com.jogamp.opengl.GL2ES2
+import com.jogamp.opengl.GL3ES3
 import se.gigurra.renderer.glimpl.GlIntegers
 import se.gigurra.renderer.glimpl.GlShaderProgram
 import se.gigurra.renderer.glimpl.GlSlConfiguration

@@ -12,8 +12,8 @@ import com.jogamp.newt.event.MouseEvent
 import com.jogamp.newt.event.MouseListener
 import com.jogamp.newt.opengl.GLWindow
 
-import javax.media.opengl.GLCapabilities
-import javax.media.opengl.GLProfile
+import com.jogamp.opengl.GLCapabilities
+import com.jogamp.opengl.GLProfile
 import se.gigurra.renderer.Renderer
 import se.gigurra.renderer.Widget
 import se.gigurra.renderer.glimpl.GlRenderer.Attachable
