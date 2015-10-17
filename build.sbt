@@ -16,7 +16,7 @@ lazy val root = (project in file(".")).
       "se.culvertsoft" % "mgen-javalib" % "0.2.4",
       "com.nativelibs4java" %% "scalaxy-streams" % "0.3.4" % "provided",
       "org.jogamp.gluegen" % "gluegen-rt-main" % "2.3.2",
-      "org.jogamp.jogl" % "jogl-all" % "2.3.2"
+      "org.jogamp.jogl" % "jogl-all-main" % "2.3.2"
     )
   )
 
