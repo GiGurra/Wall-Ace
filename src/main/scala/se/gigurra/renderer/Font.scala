@@ -22,11 +22,12 @@ object Font {
 
 trait Font {
   def get(c: Char): TriangulatedGlyph
-  def color(): Color
+  def color: Color
   var loadedContents: AnyRef = null
 }
 
-class AwtFont(color: Color, font: java.awt.Font) extends Font {
+class AwtFont(val color: Color,
+              val font: java.awt.Font) extends Font {
 
   private val awtCache = new HashMap[Char, TriangulatedGlyph]
   private val awtFrc = new FontRenderContext(null, true, true)
@@ -116,10 +117,6 @@ class AwtFont(color: Color, font: java.awt.Font) extends Font {
       val triangles = makeTriangles(shape)
       TriangulatedGlyph(glyphs.getLogicalBounds.getMaxX.toFloat * scale, triangles)
     })
-  }
-
-  override def color(): Color = {
-    color
   }
 
 }
