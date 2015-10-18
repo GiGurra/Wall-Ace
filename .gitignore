@@ -29,10 +29,11 @@ gen/
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
-
 *~
 
 .project
 .classpath
 
 /bin/
+
+proguard-sbt.txt

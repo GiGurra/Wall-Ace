@@ -13,7 +13,7 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
   version := "0.1",
   scalaVersion := "2.11.7",
   assetsDirectory := {
-    val r = file("assets")
+    val r = file("core/src/main/resources")
     IO.createDirectory(r)
     r
   },
