@@ -8,7 +8,7 @@ object TextureData {
   def fromImgData(imgData: Pixmap,
                   useMipMaps: Boolean,
                   disposeOnUpload: Boolean = false,
-                  reloadOnContextLoss: Boolean = true) = {
+                  reloadOnContextLoss: Boolean = true): PixmapTextureData = {
     new PixmapTextureData(
       imgData, // pixmap
       null, // format (null -> read from img data instead)

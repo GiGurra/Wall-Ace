@@ -1,11 +1,14 @@
 package se.gigurra.wallace.render
 
+import java.nio.ByteBuffer
+
 import com.badlogic.gdx.graphics.{Texture, Pixmap}
 
 case class Sprite(imgData: Pixmap,
                   useMipMaps: Boolean,
                   disposeOnUpload: Boolean = false,
                   reloadOnContextLoss: Boolean = true) {
+
   val textureData = TextureData.fromImgData(
     imgData = imgData,
     useMipMaps = useMipMaps,
@@ -14,13 +17,15 @@ case class Sprite(imgData: Pixmap,
 
   val texture = new Texture(textureData)
 
-  def data = imgData.getPixels
+  def data: Pixmap = imgData
 
-  def width = imgData.getWidth
+  def pixels: ByteBuffer = data.getPixels()
 
-  def height = imgData.getHeight
+  def width: Int = imgData.getWidth
 
-  def len = data.capacity()
+  def height: Int = imgData.getHeight
+
+  def len: Long = data.getPixels.capacity()
 }
 
 object Sprite {
