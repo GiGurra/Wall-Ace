@@ -92,7 +92,7 @@ lazy val desktop = project in file("desktop") settings (sharedSettings: _*) depe
       }
     }
   )
-
+/*
 lazy val android = project in file("android") settings (sharedSettings ++ androidBuild: _*) dependsOn core settings(
     name := (name in core).value + "-android",
     ivyConfigurations += ManagedNatives,
@@ -193,7 +193,7 @@ lazy val ios = project in file("ios") settings (sharedSettings ++ iOSRoboVMSetti
         <treeShaker>aggressive</treeShaker>
       </config>)
   )
-
+*/
 lazy val assetsDirectory = settingKey[File]("Directory with game's assets")
 
 lazy val nativesDirectory = settingKey[File]("Directory where android natives are extracted to")
@@ -202,4 +202,4 @@ lazy val extractNatives = taskKey[Unit]("Extracts natives to nativesDirectory")
 
 lazy val assembly = TaskKey[Unit]("assembly", "Assembly desktop using Proguard")
 
-lazy val all = project in file(".") aggregate(core, desktop, android, ios)
+lazy val all = project in file(".") aggregate(core, desktop/*, android, ios*/)
