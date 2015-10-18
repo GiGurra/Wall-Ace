@@ -1,0 +1,1 @@
+Main-Class: se.gigurra.wallace.Main

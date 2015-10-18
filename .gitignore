@@ -14,6 +14,17 @@ src_managed/
 src_generated/
 project/boot/
 project/plugins/project/
+core/src/main/java/se/gigurra/wallace
+
+# gdx
+lib/
+libs/
+target/
+src_managed/
+project/boot/
+project/plugins/project
+bin/
+gen/
 
 # Scala-IDE specific
 .scala_dependencies
