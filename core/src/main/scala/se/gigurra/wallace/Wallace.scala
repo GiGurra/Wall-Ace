@@ -8,16 +8,17 @@ import se.gigurra.util.Matrix4Stack.Matrix4Stack
 import se.gigurra.wallace.render.{Font, Sprite}
 
 case class WallaceState() {
-  implicit val batch = new SpriteBatch
+  val batch = new SpriteBatch
   val cam = new OrthographicCamera
-  val sprite = Sprite.fromFile("libgdxlogo.png", useMipMaps = false)
   val transform = new Matrix4Stack(32, batch)
   val font20 = Font.fromTtfFile("fonts/pt-mono/PTM55FT.ttf", size = 20)
+  val libgdxLogo = Sprite.fromFile("libgdxlogo.png", useMipMaps = false)
 }
 
 class Wallace extends Game {
 
   lazy val state = WallaceState()
+
 
   override def create(): Unit = {}
 
@@ -29,13 +30,12 @@ class Wallace extends Game {
 
     batch.begin()
 
-    batch.draw(sprite.texture, -sprite.width / 2.0f, -sprite.height / 2f)
+    batch.draw(libgdxLogo.texture, -libgdxLogo.width / 2.0f, -libgdxLogo.height / 2f)
 
-    val text = s"Fps: $fps"
-    val textLayout = font20.layout(text)
+    val text = font20.prepare(s"Fps: $fps")
     transform.pushPop {
-      transform.translate(-font20.width(text) / 2.0f, 0.0f, 0.0f)
-      font20.draw(batch, textLayout, 0f, 0f)
+      transform.translate(-text.width / 2.0f, 0.0f, 0.0f)
+      font20.draw(batch, text, 0f, 0f)
     }
     batch.end()
 

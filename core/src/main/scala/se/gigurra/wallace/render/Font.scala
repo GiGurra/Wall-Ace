@@ -17,6 +17,10 @@ object Font {
       new GlyphLayout(this, str)
     }
 
+    def prepare(str: CharSequence): GlyphLayout = {
+      layout(str)
+    }
+
     def size(str: CharSequence): Vector2 = {
       val l = layout(str)
       new Vector2(l.width, l.height)

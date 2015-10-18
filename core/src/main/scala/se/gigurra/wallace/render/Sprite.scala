@@ -2,6 +2,7 @@ package se.gigurra.wallace.render
 
 import java.nio.ByteBuffer
 
+import com.badlogic.gdx.graphics.Pixmap.Format
 import com.badlogic.gdx.graphics.{Texture, Pixmap}
 
 case class Sprite(imgData: Pixmap,
@@ -41,4 +42,18 @@ object Sprite {
       disposeOnUpload = disposeOnUpload,
       reloadOnContextLoss = reloadOnContextLoss)
   }
+
+  def blank(width: Int,
+            height: Int,
+            useMipMaps: Boolean,
+            format: Format = Format.RGBA8888,
+            disposeOnUpload: Boolean = false,
+            reloadOnContextLoss: Boolean = true) = {
+    Sprite(
+      imgData = ImageData.fromSize(width, height, format),
+      useMipMaps = useMipMaps,
+      disposeOnUpload = disposeOnUpload,
+      reloadOnContextLoss = reloadOnContextLoss)
+  }
+
 }
