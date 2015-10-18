@@ -7,31 +7,18 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter
 import com.badlogic.gdx.graphics.g2d.{BitmapFont, GlyphLayout, PixmapPacker}
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Align
 import se.gigurra.util.Decorated.Decorated
 
 object Font {
 
   class Font(_base: BitmapFont) extends Decorated[BitmapFont](_base) {
 
-    def layout(str: CharSequence): GlyphLayout = {
-      new GlyphLayout(this, str)
-    }
-
-    def prepare(str: CharSequence): GlyphLayout = {
-      layout(str)
-    }
-
-    def size(str: CharSequence): Vector2 = {
-      val l = layout(str)
-      new Vector2(l.width, l.height)
-    }
-
-    def width(str: CharSequence): Float = {
-      size(str).x
-    }
-
-    def height(str: CharSequence): Float = {
-      size(str).y
+    def prep(str: CharSequence,
+             align: Int = Align.left,
+             targetWidth: Float = 0.0f,
+             wrap: Boolean = false): GlyphLayout = {
+      new GlyphLayout(this, str, _base.getColor, targetWidth, align, wrap)
     }
 
   }
@@ -54,8 +41,8 @@ object Font {
                   packer: PixmapPacker = null,
                   flip: Boolean = false,
                   genMipMaps: Boolean = false,
-                  minFilter: TextureFilter = TextureFilter.Nearest,
-                  magFilter: TextureFilter = TextureFilter.Nearest): Font = {
+                  minFilter: TextureFilter = TextureFilter.Linear,
+                  magFilter: TextureFilter = TextureFilter.Linear): Font = {
 
     val generator = new FreeTypeFontGenerator(Gdx.files.internal(filePath))
     val parameter = new FreeTypeFontParameter()
@@ -78,6 +65,7 @@ object Font {
     parameter.magFilter = magFilter
 
     val font = generator.generateFont(parameter)
+    font.setUseIntegerPositions(false)
     generator.dispose()
     new Font(font)
   }

@@ -36,11 +36,16 @@ object Matrix4Stack {
       }
     }
 
+    def apply[AnyReturn](ftr: Matrix4Stack => AnyReturn)(f: => Unit): Unit = {
+      pushPop({ftr(this); f})
+    }
+
     def transform(f: Matrix4 => Unit): this.type = { f(current); apply() }
     def translate(t: Vector3): this.type = transform(_.translate(t))
     def translate(x: Float = 0.0f, y: Float = 0.0f, z: Float = 0.0f): this.type = transform(_.translate(x, y, z))
     def scale(t: Vector3): this.type = transform(_.scale(t.x, t.y, t.z))
-    def scale(x: Float = 0.0f, y: Float = 0.0f, z: Float = 0.0f): this.type = transform(_.scale(x, y, z))
+    def scale(x: Float = 1.0f, y: Float = 1.0f, z: Float = 1.0f): this.type = transform(_.scale(x, y, z))
+    def scalexy(s: Float): this.type = scale(x = s, y = s)
     def rotate(angle: Float, x: Float = 0.0f, y: Float = 0.0f, z: Float = 0.0f): this.type = transform(_.rotate(angle, x, y, z))
     def rotate(angle: Float, axis: Vector3): this.type = transform(_.rotate(axis, angle))
     def apply(): this.type = { batch.setTransformMatrix(current); this }
