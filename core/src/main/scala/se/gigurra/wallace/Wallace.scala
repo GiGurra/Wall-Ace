@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.GL20._
 import se.gigurra.wallace.render._
 
 object Map {
-  val WIDTH = 4096
-  val HEIGHT = 4096
+  val WIDTH = 1024
+  val HEIGHT = 1024
 }
 
 class RenderAssets {
@@ -38,6 +38,7 @@ class Wallace extends Game {
 
     val text = prepText(font = font20, str = s"Fps: ${renderContext.fps}")
 
+    map.upload()
     batch {
 
       transform(_.scalexy(1.0f / 400.0f)) {
