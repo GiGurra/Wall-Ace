@@ -10,18 +10,19 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Align
 import se.gigurra.util.Decorated.Decorated
 
+class Font(_base: BitmapFont) extends Decorated[BitmapFont](_base) {
+
+  def prep(str: CharSequence,
+           align: Int = Align.left,
+           targetWidth: Float = 0.0f,
+           wrap: Boolean = false): RichGlyphLayout = {
+    new RichGlyphLayout(new GlyphLayout(this, str, _base.getColor, targetWidth, align, wrap), this)
+  }
+
+}
+
 object Font {
 
-  class Font(_base: BitmapFont) extends Decorated[BitmapFont](_base) {
-
-    def prep(str: CharSequence,
-             align: Int = Align.left,
-             targetWidth: Float = 0.0f,
-             wrap: Boolean = false): GlyphLayout = {
-      new GlyphLayout(this, str, _base.getColor, targetWidth, align, wrap)
-    }
-
-  }
 
   /**
    * See https://github.com/libgdx/libgdx/wiki/Gdx-freetype

@@ -8,5 +8,8 @@ object Main extends App {
     cfg.height = 480
     cfg.width = 800
     cfg.forceExit = false
+    cfg.vSyncEnabled = false
+    cfg.foregroundFPS = 0
+    cfg.backgroundFPS = 0
     new LwjglApplication(new Wallace, cfg)
 }

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 
 object Projections {
 
-  def ortho11(batch: Batch, w: Int, h: Int): Unit = {
+  def ortho11(w: Int, h: Int)(implicit renderContext: RenderContext[_]) : Unit = {
 
     val cam = new OrthographicCamera
 
@@ -18,6 +18,6 @@ object Projections {
     }
 
     cam.update()
-    batch.setProjectionMatrix(cam.combined)
+    renderContext.state.batch.setProjectionMatrix(cam.combined)
   }
 }

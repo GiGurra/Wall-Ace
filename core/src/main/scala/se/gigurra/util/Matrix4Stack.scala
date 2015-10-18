@@ -1,6 +1,7 @@
 package se.gigurra.util
 
-import com.badlogic.gdx.graphics.g2d.{Batch}
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.{GlyphLayout, Batch}
 import com.badlogic.gdx.math.{Vector3, Matrix4}
 
 import scala.language.implicitConversions
@@ -24,7 +25,7 @@ object Matrix4Stack {
     def pop() = {
       require(i > 0)
       i -= 1
-      apply()
+      upload()
     }
 
     def pushPop(f: => Unit): Unit = {
@@ -40,15 +41,25 @@ object Matrix4Stack {
       pushPop({ftr(this); f})
     }
 
-    def transform(f: Matrix4 => Unit): this.type = { f(current); apply() }
-    def translate(t: Vector3): this.type = transform(_.translate(t))
-    def translate(x: Float = 0.0f, y: Float = 0.0f, z: Float = 0.0f): this.type = transform(_.translate(x, y, z))
-    def scale(t: Vector3): this.type = transform(_.scale(t.x, t.y, t.z))
-    def scale(x: Float = 1.0f, y: Float = 1.0f, z: Float = 1.0f): this.type = transform(_.scale(x, y, z))
-    def scalexy(s: Float): this.type = scale(x = s, y = s)
-    def rotate(angle: Float, x: Float = 0.0f, y: Float = 0.0f, z: Float = 0.0f): this.type = transform(_.rotate(angle, x, y, z))
-    def rotate(angle: Float, axis: Vector3): this.type = transform(_.rotate(axis, angle))
-    def apply(): this.type = { batch.setTransformMatrix(current); this }
+    def unitSize(texture: Texture) = scale(1.0f / texture.getWidth.toFloat, 1.0f / texture.getHeight.toFloat)
+    def unitSize(texture: GlyphLayout) = scale(1.0f / texture.width.toFloat, 1.0f / texture.height.toFloat)
+
+    def center(texture: Texture) = translate(-texture.getWidth.toFloat/2.0f, -texture.getHeight.toFloat/2.0f)
+    def center(text: GlyphLayout) = translate(-text.width/2.0f, text.height/2.0f)
+    def centerX(texture: Texture) = translate(-texture.getWidth.toFloat/2.0f, 0.0f)
+    def centerX(text: GlyphLayout) = translate(-text.width/2.0f, 0.0f)
+    def centerY(texture: Texture) = translate(0.0f, -texture.getHeight.toFloat/2.0f)
+    def centerY(text: GlyphLayout) = translate(0.0f, text.height/2.0f)
+
+    def upload(): this.type = { batch.setTransformMatrix(current); this }
+    def transform(f: Matrix4 => Unit) = { f(current); upload() }
+    def translate(t: Vector3) = transform(_.translate(t))
+    def translate(x: Float = 0.0f, y: Float = 0.0f, z: Float = 0.0f) = transform(_.translate(x, y, z))
+    def scale(t: Vector3) = transform(_.scale(t.x, t.y, t.z))
+    def scale(x: Float = 1.0f, y: Float = 1.0f, z: Float = 1.0f) = transform(_.scale(x, y, z))
+    def scalexy(s: Float) = scale(x = s, y = s)
+    def rotate(angle: Float, x: Float = 0.0f, y: Float = 0.0f, z: Float = 0.0f) = transform(_.rotate(angle, x, y, z))
+    def rotate(angle: Float, axis: Vector3) = transform(_.rotate(axis, angle))
 
   }
 

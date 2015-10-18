@@ -1,47 +1,63 @@
 package se.gigurra.wallace
 
+import com.badlogic.gdx.Game
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20._
-import com.badlogic.gdx.utils.Align
-import com.badlogic.gdx.{Game, Gdx}
-import se.gigurra.wallace.render.{Projections, RenderContext}
+import se.gigurra.wallace.render._
 
+object Map {
+  val WIDTH = 4096
+  val HEIGHT = 4096
+}
+
+class RenderAssets {
+  val font20 = Font.fromTtfFile("fonts/pt-mono/PTM55FT.ttf", size = 40)
+  val libgdxLogo = Sprite.fromFile("libgdxlogo.png", useMipMaps = false)
+  val map = Sprite.fromSize(Map.WIDTH, Map.HEIGHT, useMipMaps = false)
+
+  map.data.setColor(Color.BLACK)
+  map.data.fill()
+  map.upload()
+}
 
 class Wallace extends Game {
 
-  implicit lazy val renderContext = RenderContext()
+  implicit lazy val renderContext = RenderContext(new RenderAssets)
 
-  import renderContext.renderAssets._
-  import renderContext.renderShortcuts._
-  import renderContext.renderState._
-
+  import renderContext.assets._
+  import renderContext.drawShortcuts._
+  import renderContext.glShortcuts._
+  import renderContext.state._
 
   override def create(): Unit = {}
 
   override def render(): Unit = {
 
-    glClearColor(0.5f, 0.5f, 0.5f, 0)
+    glClearColor(0.25f, 0.35f, 0.45f, 0)
     glClear(GL_COLOR_BUFFER_BIT)
 
-    val text = font20.prep(s"Fps: $fps", align = Align.center)
+    val text = prepText(font = font20, str = s"Fps: ${renderContext.fps}")
 
     batch {
 
       transform(_.scalexy(1.0f / 400.0f)) {
-
-        batch.draw(libgdxLogo.texture, -libgdxLogo.width * 0.5f, -libgdxLogo.height / 2f)
-        font20.draw(batch, text, 0f, 0f)
-
+        transform(_.center(libgdxLogo))(drawSprite(libgdxLogo))
+        transform(_.center(text))(drawText(text))
       }
+
+      val angle = System.nanoTime() / 1e9
+      val mapX = math.cos(angle) * 0.5
+      val mapY = math.sin(angle) * 0.5
+      transform(_.translate(mapX.toFloat, mapY.toFloat)) {
+        transform(_.unitSize(map).scalexy(0.1f).center(map))(drawSprite(map))
+      }
+
     }
 
   }
 
   override def resize(w: Int, h: Int) {
-    Projections.ortho11(renderContext.renderState.batch, w, h)
-  }
-
-  def fps = {
-    Gdx.graphics.getFramesPerSecond
+    Projections.ortho11(w, h)
   }
 
 }
