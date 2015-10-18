@@ -18,13 +18,15 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
     r
   },
   libraryDependencies ++= Seq(
-    "com.badlogicgames.gdx" % "gdx" % libgdxVersion
+    "com.badlogicgames.gdx" % "gdx" % libgdxVersion,
+    "org.zeromq" % "jeromq" % "0.3.5",
+    "se.culvertsoft" % "mgen-javalib" % "0.2.4"
   ),
   javacOptions ++= Seq(
     "-Xlint",
     "-encoding", "UTF-8",
-    "-source", "1.6",
-    "-target", "1.6"
+    "-source", "1.7",
+    "-target", "1.7"
   ),
   scalacOptions ++= Seq(
     "-Xlint",
@@ -37,7 +39,7 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
     "-deprecation",
     "-feature",
     "-encoding", "UTF-8",
-    "-target:jvm-1.6"
+    "-target:jvm-1.7"
   ),
   cancelable := true,
   exportJars := true
