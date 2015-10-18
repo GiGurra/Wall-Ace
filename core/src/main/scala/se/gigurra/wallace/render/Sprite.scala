@@ -25,7 +25,7 @@ case class Sprite(imgData: Pixmap,
 
   def height: Int = imgData.getHeight
 
-  def len: Long = data.getPixels.capacity()
+  def len: Int = pixels.capacity()
 }
 
 object Sprite {

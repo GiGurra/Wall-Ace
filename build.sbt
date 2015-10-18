@@ -20,7 +20,8 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
   libraryDependencies ++= Seq(
     "com.badlogicgames.gdx" % "gdx" % libgdxVersion,
     "org.zeromq" % "jeromq" % "0.3.5",
-    "se.culvertsoft" % "mgen-javalib" % "0.2.4"
+    "se.culvertsoft" % "mgen-javalib" % "0.2.4",
+    "com.badlogicgames.gdx" % "gdx-freetype" % libgdxVersion
   ),
   javacOptions ++= Seq(
     "-Xlint",
@@ -31,7 +32,7 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
   scalacOptions ++= Seq(
     "-Xlint",
     "-Ywarn-dead-code",
-    "-Ywarn-value-discard",
+    //"-Ywarn-value-discard",
     "-Ywarn-numeric-widen",
     "-Ywarn-unused",
     "-Ywarn-unused-import",
@@ -52,7 +53,8 @@ lazy val desktop = project in file("desktop") settings (sharedSettings: _*) depe
     libraryDependencies ++= Seq(
       "net.sf.proguard" % "proguard-base" % "5.1" % "provided",
       "com.badlogicgames.gdx" % "gdx-backend-lwjgl" % libgdxVersion,
-      "com.badlogicgames.gdx" % "gdx-platform" % libgdxVersion classifier "natives-desktop"
+      "com.badlogicgames.gdx" % "gdx-platform" % libgdxVersion classifier "natives-desktop",
+      "com.badlogicgames.gdx" % "gdx-freetype-platform" % libgdxVersion classifier "natives-desktop"
     ),
     fork in Compile := true,
     baseDirectory in run := assetsDirectory.value,
