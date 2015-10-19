@@ -11,6 +11,10 @@ case class RenderContext[AssetsType](_assets: AssetsType) {
   val assets: AssetsType = _assets
   val glShortcuts = com.badlogic.gdx.Gdx.gl
 
+  def aspect = Gdx.graphics.getWidth.toFloat / Gdx.graphics.getHeight.toFloat
+
+  def maxAspect = math.max(aspect, 1.0f / aspect)
+
   object drawShortcuts {
 
     def drawSprite(sprite: Sprite, x: Float, y: Float, w: Float, h: Float) {

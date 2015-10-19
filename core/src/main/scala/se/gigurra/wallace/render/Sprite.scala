@@ -3,6 +3,7 @@ package se.gigurra.wallace.render
 import java.nio.ByteBuffer
 
 import com.badlogic.gdx.graphics.Pixmap.Format
+import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.graphics.{Texture, Pixmap}
 import se.gigurra.util.DecoratedTrait.DecoratedTrait
 
@@ -17,7 +18,10 @@ case class Sprite(imgData: Pixmap,
     disposeOnUpload = disposeOnUpload,
     reloadOnContextLoss = reloadOnContextLoss)
 
-  val texture = new Texture(textureData)
+  val texture = new Texture(textureData) {
+    if (useMipMaps)
+      setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapNearestLinear)
+  }
 
   def data: Pixmap = imgData
 
@@ -41,7 +45,7 @@ object Sprite {
                useMipMaps: Boolean,
                disposeOnUpload: Boolean = false,
                reloadOnContextLoss: Boolean = true) = {
-    Sprite(
+    new Sprite(
       imgData = ImageData.fromFile(path),
       useMipMaps = useMipMaps,
       disposeOnUpload = disposeOnUpload,
@@ -54,7 +58,7 @@ object Sprite {
                format: Format = Format.RGBA8888,
                disposeOnUpload: Boolean = false,
                reloadOnContextLoss: Boolean = true) = {
-    Sprite(
+    new Sprite(
       imgData = ImageData.fromSize(width, height, format),
       useMipMaps = useMipMaps,
       disposeOnUpload = disposeOnUpload,

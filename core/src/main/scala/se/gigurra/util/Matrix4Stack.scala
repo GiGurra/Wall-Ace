@@ -41,8 +41,13 @@ object Matrix4Stack {
       pushPop({ftr(this); f})
     }
 
-    def unitSize(texture: Texture) = scale(1.0f / texture.getWidth.toFloat, 1.0f / texture.getHeight.toFloat)
-    def unitSize(texture: GlyphLayout) = scale(1.0f / texture.width.toFloat, 1.0f / texture.height.toFloat)
+    def unitSize(texture: Texture) = scale(
+      1.0f / math.min(texture.getWidth.toFloat, texture.getHeight.toFloat),
+      1.0f / math.min(texture.getWidth.toFloat, texture.getHeight.toFloat))
+
+    def unitSize(texture: GlyphLayout) = scale(
+      1.0f / math.min(texture.width, texture.height),
+      1.0f / math.min(texture.width, texture.height))
 
     def center(texture: Texture) = translate(-texture.getWidth.toFloat/2.0f, -texture.getHeight.toFloat/2.0f)
     def center(text: GlyphLayout) = translate(-text.width/2.0f, text.height/2.0f)

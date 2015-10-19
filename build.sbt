@@ -21,7 +21,8 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
     "com.badlogicgames.gdx" % "gdx" % libgdxVersion,
     "org.zeromq" % "jeromq" % "0.3.5",
     "se.culvertsoft" % "mgen-javalib" % "0.2.4",
-    "com.badlogicgames.gdx" % "gdx-freetype" % libgdxVersion
+    "com.badlogicgames.gdx" % "gdx-freetype" % libgdxVersion,
+    "com.nativelibs4java" %% "scalaxy-streams" % "0.3.4" % "provided"
   ),
   javacOptions ++= Seq(
     "-Xlint",
