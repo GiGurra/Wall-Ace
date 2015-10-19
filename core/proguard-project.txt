@@ -54,6 +54,10 @@
 -dontwarn scala.reflect.**
 -dontwarn scala.sys.process.package$
 
+-dontwarn scala.util.parsing.**
+-dontwarn scala.xml.**
+-dontwarn scalaxy.**
+
 -dontwarn **$$anonfun$*
 -dontwarn scala.collection.immutable.RedBlack$Empty
 -dontwarn scala.tools.**,plugintemplate.**
