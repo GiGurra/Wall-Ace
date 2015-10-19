@@ -1,4 +1,4 @@
-package se.gigurra.util
+package se.gigurra.wallace.util
 
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method

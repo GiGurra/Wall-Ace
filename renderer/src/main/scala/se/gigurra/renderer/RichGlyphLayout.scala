@@ -1,6 +1,6 @@
-package se.gigurra.wallace.render
+package se.gigurra.renderer
 
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
-import se.gigurra.util.Decorated.Decorated
+import se.gigurra.wallace.util.Decorated._
 
 class RichGlyphLayout(_base: GlyphLayout, val font: Font) extends Decorated[GlyphLayout](_base)

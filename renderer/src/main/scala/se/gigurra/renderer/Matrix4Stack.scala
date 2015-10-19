@@ -1,8 +1,8 @@
-package se.gigurra.util
+package se.gigurra.renderer
 
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.{GlyphLayout, Batch}
-import com.badlogic.gdx.math.{Vector3, Matrix4}
+import com.badlogic.gdx.graphics.g2d.{Batch, GlyphLayout}
+import com.badlogic.gdx.math.{Matrix4, Vector3}
 
 import scala.language.implicitConversions
 

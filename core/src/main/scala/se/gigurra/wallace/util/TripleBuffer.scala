@@ -1,4 +1,4 @@
-package se.gigurra.util
+package se.gigurra.wallace.util
 
 class TripleBuffer[T](
   val buffers: Array[T],

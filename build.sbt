@@ -18,10 +18,7 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
     r
   },
   libraryDependencies ++= Seq(
-    "com.badlogicgames.gdx" % "gdx" % libgdxVersion,
-    "org.zeromq" % "jeromq" % "0.3.5",
     "se.culvertsoft" % "mgen-javalib" % "0.2.4",
-    "com.badlogicgames.gdx" % "gdx-freetype" % libgdxVersion,
     "com.nativelibs4java" %% "scalaxy-streams" % "0.3.4" % "provided"
   ),
   javacOptions ++= Seq(
@@ -49,7 +46,19 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
 
 lazy val core = project in file("core") settings (sharedSettings: _*)
 
-lazy val desktop = project in file("desktop") settings (sharedSettings: _*) dependsOn core settings(
+lazy val renderer = project in file("renderer") settings (sharedSettings: _*) dependsOn core settings(
+  name := (name in core).value + "-renderer",
+  libraryDependencies ++= Seq(
+    "com.badlogicgames.gdx" % "gdx" % libgdxVersion,
+    "com.badlogicgames.gdx" % "gdx-freetype" % libgdxVersion
+  )
+)
+
+lazy val server = project in file("server") settings (sharedSettings: _*) dependsOn core settings(
+  name := (name in core).value + "-server"
+)
+
+lazy val desktop = project in file("desktop") settings (sharedSettings: _*) dependsOn renderer settings(
     name := (name in core).value + "-desktop",
     libraryDependencies ++= Seq(
       "net.sf.proguard" % "proguard-base" % "5.1" % "provided",
@@ -96,7 +105,7 @@ lazy val desktop = project in file("desktop") settings (sharedSettings: _*) depe
     }
   )
 /*
-lazy val android = project in file("android") settings (sharedSettings ++ androidBuild: _*) dependsOn core settings(
+lazy val android = project in file("android") settings (sharedSettings ++ androidBuild: _*) dependsOn renderer settings(
     name := (name in core).value + "-android",
     ivyConfigurations += ManagedNatives,
     libraryDependencies ++= Seq(
@@ -139,7 +148,7 @@ lazy val android = project in file("android") settings (sharedSettings ++ androi
         Files.readLines(file("android/proguard-project.txt"), Charsets.UTF_8)
   )
 
-lazy val ios = project in file("ios") settings (sharedSettings ++ iOSRoboVMSettings: _*) dependsOn core settings (
+lazy val ios = project in file("ios") settings (sharedSettings ++ iOSRoboVMSettings: _*) dependsOn renderer settings (
     name := (name in core).value + "-ios",
     libraryDependencies ++= Seq(
       "com.badlogicgames.gdx" % "gdx-backend-robovm" % libgdxVersion,
@@ -205,4 +214,4 @@ lazy val extractNatives = taskKey[Unit]("Extracts natives to nativesDirectory")
 
 lazy val assembly = TaskKey[Unit]("assembly", "Assembly desktop using Proguard")
 
-lazy val all = project in file(".") aggregate(core, desktop/*, android, ios*/)
+lazy val all = project in file(".") aggregate(core, renderer, server, desktop/*, android, ios*/)

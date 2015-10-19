@@ -1,10 +1,9 @@
-package se.gigurra.wallace
+package se.gigurra.renderer
 
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.graphics.GL20._
 import se.gigurra.wallace.model.World
 import se.gigurra.wallace.model.worldGen.WorldGenerator
-import se.gigurra.wallace.render._
 
 class RenderAssets {
   val font20 = Font.fromTtfFile("fonts/pt-mono/PTM55FT.ttf", size = 40)

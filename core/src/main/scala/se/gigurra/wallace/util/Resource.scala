@@ -1,4 +1,4 @@
-package se.gigurra.util
+package se.gigurra.wallace.util
 
 import java.io.File
 import java.io.FileNotFoundException

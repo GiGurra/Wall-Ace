@@ -1,4 +1,4 @@
-package se.gigurra.util
+package se.gigurra.wallace.util
 
 object MeasureTime {
   def apply[A](dbgString: String)(f: => A): A = {

@@ -1,4 +1,4 @@
-package se.gigurra.wallace.render
+package se.gigurra.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.graphics.g2d.{BitmapFont, GlyphLayout, PixmapPacker}
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Align
-import se.gigurra.util.Decorated.Decorated
+import se.gigurra.wallace.util.Decorated._
 
 class Font(_base: BitmapFont) extends Decorated[BitmapFont](_base) {
 

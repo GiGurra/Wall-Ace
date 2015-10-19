@@ -1,4 +1,4 @@
-package se.gigurra.util
+package se.gigurra.wallace.util
 
 object Mutate {
   implicit class Mutable[T](val t: T) extends AnyVal {

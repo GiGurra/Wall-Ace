@@ -1,4 +1,4 @@
-package se.gigurra.util
+package se.gigurra.wallace.util
 
 object ArrayUtil {
   def merge(arrays: Iterable[Array[Float]]): Array[Float] = {

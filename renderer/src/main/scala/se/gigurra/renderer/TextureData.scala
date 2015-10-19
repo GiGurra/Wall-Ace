@@ -1,4 +1,4 @@
-package se.gigurra.wallace.render
+package se.gigurra.renderer
 
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.glutils.PixmapTextureData

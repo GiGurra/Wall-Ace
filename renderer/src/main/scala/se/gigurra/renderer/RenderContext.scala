@@ -1,4 +1,4 @@
-package se.gigurra.wallace.render
+package se.gigurra.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Align

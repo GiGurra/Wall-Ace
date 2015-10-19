@@ -1,11 +1,11 @@
-package se.gigurra.wallace.render
+package se.gigurra.renderer
 
 import java.nio.ByteBuffer
 
 import com.badlogic.gdx.graphics.Pixmap.Format
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.graphics.{Texture, Pixmap}
-import se.gigurra.util.DecoratedTrait.DecoratedTrait
+import se.gigurra.wallace.util.DecoratedTrait._
 
 case class Sprite(imgData: Pixmap,
                   useMipMaps: Boolean,

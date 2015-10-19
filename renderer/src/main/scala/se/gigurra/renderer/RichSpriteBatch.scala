@@ -1,7 +1,7 @@
-package se.gigurra.wallace.render
+package se.gigurra.renderer
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import se.gigurra.util.Decorated.Decorated
+import se.gigurra.wallace.util.Decorated._
 
 class RichSpriteBatch(_base: SpriteBatch) extends Decorated[SpriteBatch](_base) {
   def active(f: => Unit): Unit = {

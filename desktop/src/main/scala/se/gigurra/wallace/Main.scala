@@ -1,6 +1,7 @@
 package se.gigurra.wallace
 
 import com.badlogic.gdx.backends.lwjgl.{LwjglApplication, LwjglApplicationConfiguration}
+import se.gigurra.renderer.Wallace
 
 object Main extends App {
     val cfg = new LwjglApplicationConfiguration
