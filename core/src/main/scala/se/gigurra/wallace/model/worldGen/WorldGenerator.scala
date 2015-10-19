@@ -3,7 +3,6 @@ package se.gigurra.wallace.model.worldGen
 import se.gigurra.wallace.model.{Terrain, World, WorldVector}
 
 import scala.util.Random
-import scalaxy.streams._
 
 object WorldGenerator {
 
@@ -13,14 +12,12 @@ object WorldGenerator {
     val w = world.width
     val h = world.height
 
-    optimize {
       for (y <- 0 until h) {
         for (x <- 0 until w) {
           val typ = genType(rnd, x, y, w, h)
           world.setTerrain(WorldVector(x, y), Terrain.make(rnd, typ))
         }
       }
-    }
   }
 
   private[this] def genType(rnd: Random, x: Int, y: Int, w: Int, h: Int): Byte = {

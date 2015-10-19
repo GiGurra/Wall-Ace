@@ -61,6 +61,11 @@
     long getHwnd();
 }
 
+
+-dontwarn com.badlogic.gdx.jnigen.NativeCodeGenerator
+-dontwarn com.badlogic.gdx.jnigen.BuildConfig
+-dontwarn com.badlogic.gdx.jnigen.AntScriptGenerator
+
 # LibGDX on desktop runs emulated OpenGL, so OpenGL ES it isn't included nor used
 
 -dontwarn org.lwjgl.opengles.**

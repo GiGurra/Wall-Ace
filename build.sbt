@@ -18,8 +18,7 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
     r
   },
   libraryDependencies ++= Seq(
-    "se.culvertsoft" % "mgen-javalib" % "0.2.4",
-    "com.nativelibs4java" %% "scalaxy-streams" % "0.3.4" % "provided"
+    //"com.nativelibs4java" %% "scalaxy-streams" % "0.3.4" % "provided"
   ),
   javacOptions ++= Seq(
     "-Xlint",
@@ -68,7 +67,6 @@ lazy val desktop = project in file("desktop") settings (sharedSettings: _*) depe
     ),
     fork in Compile := true,
     baseDirectory in run := assetsDirectory.value,
-    unmanagedResourceDirectories in Compile += assetsDirectory.value,
     assembly := {
       (fullClasspath in Runtime).value // Just to make sure that compile finished
       val log = streams.value.log
@@ -104,7 +102,7 @@ lazy val desktop = project in file("desktop") settings (sharedSettings: _*) depe
       }
     }
   )
-/*
+
 lazy val android = project in file("android") settings (sharedSettings ++ androidBuild: _*) dependsOn renderer settings(
     name := (name in core).value + "-android",
     ivyConfigurations += ManagedNatives,
@@ -205,7 +203,7 @@ lazy val ios = project in file("ios") settings (sharedSettings ++ iOSRoboVMSetti
         <treeShaker>aggressive</treeShaker>
       </config>)
   )
-*/
+
 lazy val assetsDirectory = settingKey[File]("Directory with game's assets")
 
 lazy val nativesDirectory = settingKey[File]("Directory where android natives are extracted to")
