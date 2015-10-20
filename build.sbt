@@ -17,8 +17,12 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
     IO.createDirectory(r)
     r
   },
+  resolvers += "clojars" at "http://clojars.org/repo",
   libraryDependencies ++= Seq(
-    "com.nativelibs4java" %% "scalaxy-streams" % "0.3.4" % "provided"
+    "com.nativelibs4java" %% "scalaxy-streams" % "0.3.4" % "provided",
+    "com.esotericsoftware" % "kryonet" % "2.22.0-RC1",
+    "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
+    "org.json4s" %% "json4s-native" % "3.3.0"
   ),
   javacOptions ++= Seq(
     "-Xlint",
