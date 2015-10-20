@@ -1,14 +1,13 @@
-package se.gigurra.wallace.network.kryoimpl
+package se.gigurra.wallace.comm.kryoimpl
 
 import com.esotericsoftware.kryo.factories.SerializerFactory
 import com.esotericsoftware.kryo.{Kryo, Serializer}
 import com.esotericsoftware.kryonet.Listener
-import se.gigurra.wallace.network.DefaultBinarySerializer
 
 import scala.reflect.ClassTag
 
 class KryoServer(val port: Int,
-                 serializerFactory: => Serializer[_] = new DefaultBinarySerializer)
+                 serializerFactory: => Serializer[_] = new KryoBinarySerializer)
   extends SerialRegisterable {
 
   private val server = new com.esotericsoftware.kryonet.Server()

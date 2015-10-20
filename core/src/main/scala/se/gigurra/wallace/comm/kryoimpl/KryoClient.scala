@@ -1,15 +1,18 @@
-package se.gigurra.wallace.network.kryoimpl
+package se.gigurra.wallace.comm.kryoimpl
 
 import com.esotericsoftware.kryo.factories.SerializerFactory
 import com.esotericsoftware.kryo.{Kryo, Serializer}
-import se.gigurra.wallace.network.DefaultBinarySerializer
+import com.esotericsoftware.kryonet.Listener
 
 import scala.reflect.ClassTag
 
-abstract class KryoClient[T <: KryoClient[T]](val url: String,
-                 val port: Int,
-                 serializerFactory: => Serializer[_] = new DefaultBinarySerializer,
-                 val connectTimeout: Int = 5000) extends SerialRegisterable {
+abstract class KryoClient[T <: KryoClient[T]](
+  val url: String,
+  val port: Int,
+  serializerFactory: => Serializer[_] = new KryoBinarySerializer,
+  val connectTimeout: Int = 5000)
+  extends Listener
+  with SerialRegisterable {
 
   val kryoClient = new com.esotericsoftware.kryonet.Client()
   kryoClient.getKryo.setDefaultSerializer(new SerializerFactory {
@@ -17,6 +20,7 @@ abstract class KryoClient[T <: KryoClient[T]](val url: String,
   })
 
   def start(): T = {
+    kryoClient.addListener(this)
     kryoClient.start()
     kryoClient.connect(connectTimeout, url, port, port)
     this.asInstanceOf[T]
@@ -36,6 +40,10 @@ abstract class KryoClient[T <: KryoClient[T]](val url: String,
 
   def register[T: ClassTag](): Unit = {
     kryoClient.getKryo.register(scala.reflect.classTag[T].runtimeClass)
+  }
+
+  def isConnected: Boolean = {
+    kryoClient.isConnected
   }
 
 }

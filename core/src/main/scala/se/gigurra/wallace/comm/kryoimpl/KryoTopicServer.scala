@@ -1,8 +1,7 @@
-package se.gigurra.wallace.network
+package se.gigurra.wallace.comm.kryoimpl
 
 import com.esotericsoftware.kryo.Serializer
 import com.esotericsoftware.kryonet.{Connection, Listener}
-import se.gigurra.wallace.network.kryoimpl.{SerialRegisterable, KryoServer}
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -12,8 +11,9 @@ case class ConnectionData() {
   val topics = new ArrayBuffer[String]()
 }
 
-class TopicServer(val port: Int,
-                serializerFactory: => Serializer[_] = new DefaultBinarySerializer)
+class KryoTopicServer[SerializerType <: Serializer[_]](
+  val port: Int,
+  serializerFactory: => SerializerType)
   extends Listener
   with SerialRegisterable {
 

@@ -1,11 +1,11 @@
-package se.gigurra.wallace.network
+package se.gigurra.wallace.comm.kryoimpl
 
-import java.io.{ObjectOutputStream, ObjectInputStream}
+import java.io.{ObjectInputStream, ObjectOutputStream}
 
-import com.esotericsoftware.kryo.io.{Output, Input}
+import com.esotericsoftware.kryo.io.{Input, Output}
 import com.esotericsoftware.kryo.{Kryo, Serializer}
 
-class DefaultBinarySerializer extends Serializer[Object] {
+class KryoBinarySerializer extends Serializer[Object] {
 
   class ObjectInputStreamWithCustomClassLoader(stream: Input) extends ObjectInputStream(stream) {
     override def resolveClass(desc: java.io.ObjectStreamClass): Class[_] = {
