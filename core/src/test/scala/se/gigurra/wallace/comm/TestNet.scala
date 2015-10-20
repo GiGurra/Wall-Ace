@@ -132,6 +132,22 @@ class TestNet extends WordSpec with Matchers {
       Thread.sleep(100)
     }
 
+    "Receive binary messages from subscribed topics" in {
+
+      val fixture = makeTopicFixture[Array[Byte], KryoBinarySerializer](126)()
+      val client2 = makeClient[Array[Byte], KryoBinarySerializer](126)
+      import fixture._
+
+      val subscription = client.subscribe("My Topic")
+      client2.post("My Topic", "Hello".getBytes())
+      assert(finishesTrue(new String(subscription.stream.toBlocking.head) == "Hello"))
+
+      Thread.sleep(1000)
+      client2.close()
+      fixture.close()
+      Thread.sleep(100)
+    }
+
     "Ignore messages from unsubscribed topics" in {
 
       val fixture = makeTopicFixture[String, KryoJsonSerializer](126)()
