@@ -10,12 +10,12 @@ case class Subscribe(topic: String)
 
 case class Unsubscribe(topic: String)
 
-trait TopicClient[MessageType] {
+trait SubscriptionClient[MessageType] {
 
   def subscribe(
-    topicName: String,
+    name: String,
     historySize: Int = 128,
-    historyTimeout: Duration = Duration.apply(1, TimeUnit.HOURS)): Topic[MessageType]
+    historyTimeout: Duration = Duration.apply(1, TimeUnit.HOURS)): Subscription[MessageType]
 
   def unsubscribe(topic: String): Unit
 

@@ -94,7 +94,7 @@ class TestNet extends WordSpec with Matchers {
       val subscription = client.subscribe("My Topic", historyTimeout = Duration(10, TimeUnit.SECONDS))
       val stream = subscription.stream
       Thread.sleep(1000) // Start listening late
-      assert(!timesOut(stream.toBlocking.head))
+      assert(finishes(stream.toBlocking.head))
       fixture.close()
       Thread.sleep(100)
     }
@@ -115,12 +115,91 @@ class TestNet extends WordSpec with Matchers {
       fixture.close()
       Thread.sleep(100)
     }
+
+
+    "Receive messages from subscribed topics" in {
+
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](126)()
+      val client2 = makeClient[String, KryoJsonSerializer](126)
+      import fixture._
+
+      val subscription = client.subscribe("My Topic")
+      client2.post("My Topic", "Hello")
+      assert(finishes(subscription.stream.toBlocking.head))
+
+      client2.close()
+      fixture.close()
+      Thread.sleep(100)
+    }
+
+    "Ignore messages from unsubscribed topics" in {
+
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](126)()
+      val client2 = makeClient[String, KryoJsonSerializer](126)
+      import fixture._
+
+      val subscription = client.subscribe("My Topic")
+      client2.post("My Other Topic", "Hello")
+      assert(finishes(subscription.stream.toBlocking.head))
+
+      client2.close()
+      fixture.close()
+      Thread.sleep(100)
+    }
+
+    "Stop receiving messages after unsubscribing from topics" in {
+
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](126)()
+      val client2 = makeClient[String, KryoJsonSerializer](126)
+      import fixture._
+
+      val subscription = client.subscribe("My Topic")
+      val stream = subscription.stream
+      val items = stream.toBlocking.next
+
+      client2.post("My Topic", "Hello1")
+      Thread.sleep(100)
+
+      client.unsubscribe("My Topic")
+      Thread.sleep(100)
+
+      client2.post("My Topic", "Hello2")
+      Thread.sleep(100)
+
+      assert(finishes(items.head))
+      assert(timesOut(items.tail))
+
+      client2.close()
+      fixture.close()
+      Thread.sleep(100)
+    }
+
+    "All clients can receive from the same topic" in {
+
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](126)()
+      val extraClients = (0 until 10) map (_ => makeClient[String, KryoJsonSerializer](126))
+      import fixture._
+
+      client.post("X", "Hello")
+      val subs = extraClients.map(_.subscribe("X"))
+
+      assert(finishesTrue(subs.forall(s => s.stream.toBlocking.head == "Hello")))
+
+      val subscription = client.subscribe("My Topic")
+      val stream = subscription.stream
+      val items = stream.toBlocking.next
+
+      extraClients.foreach(_.close())
+      fixture.close()
+      Thread.sleep(300)
+    }
+
   }
 
 
   case class TopicFixture[MessageType: ClassTag, SerializerType <: Serializer[_]](
     server: KryoTopicServer[SerializerType],
-    client: TopicClient[MessageType]) {
+    client: SubscriptionClient[MessageType]) {
     def close(): Unit = {
       client.close()
       server.close()
@@ -136,9 +215,22 @@ class TestNet extends WordSpec with Matchers {
     }
   }
 
+  def await[AnyReturnType](op: => AnyReturnType, t: Duration = Duration(1, TimeUnit.SECONDS)): Try[AnyReturnType] = {
+    Try(Await.result(Future(op)(scala.concurrent.ExecutionContext.Implicits.global), atMost = Duration(1, TimeUnit.SECONDS)))
+  }
+
+  def finishesTrue(op: => Boolean, t: Duration = Duration(1, TimeUnit.SECONDS)): Boolean = {
+    val r = await(op, t)
+    r.isSuccess && r.get
+  }
+
+  def finishes[AnyReturnType](op: => AnyReturnType, t: Duration = Duration(1, TimeUnit.SECONDS)): Boolean = {
+    await(op, t).isSuccess
+  }
+
   def timesOut[AnyReturnType](op: => AnyReturnType, t: Duration = Duration(1, TimeUnit.SECONDS)): Boolean = {
-    val t = Try(Await.ready(Future(op)(scala.concurrent.ExecutionContext.Implicits.global), atMost = Duration(1, TimeUnit.SECONDS)))
-    t.isFailure && t.failed.get.isInstanceOf[TimeoutException]
+    val r = await(op, t)
+    r.isFailure && r.failed.get.isInstanceOf[TimeoutException]
   }
 
   def makeTopicFixture[MessageType: ClassTag, SerializerType <: Serializer[_] : ClassTag](
@@ -172,7 +264,7 @@ class TestNet extends WordSpec with Matchers {
 
     val server = new KryoTopicServer(port, serializerFactory()) {
       override def received(connection: Connection, message: Object): Unit = {
-        println(s"Server $this got message: $message")
+        super.received(connection, message)
         serverRecvOverride(connection, message)
       }
 

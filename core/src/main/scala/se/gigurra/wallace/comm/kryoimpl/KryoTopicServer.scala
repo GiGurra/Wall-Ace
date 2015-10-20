@@ -1,38 +1,40 @@
 package se.gigurra.wallace.comm.kryoimpl
 
-import com.esotericsoftware.kryo.Serializer
-import com.esotericsoftware.kryonet.{Connection, Listener}
+import java.util.concurrent.TimeUnit
+import java.util.logging.Logger
 
-import scala.collection.mutable
-import scala.collection.mutable.ArrayBuffer
+import com.esotericsoftware.kryo.Serializer
+import com.esotericsoftware.kryonet.{Connection, FrameworkMessage, Listener}
+import se.gigurra.wallace.comm._
+
+import scala.concurrent.duration.Duration
+import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
-case class ConnectionData() {
-  val topics = new ArrayBuffer[String]()
-}
-
-class KryoTopicServer[SerializerType <: Serializer[_]](
+class KryoTopicServer[SerializerType <: Serializer[_]: ClassTag](
   val port: Int,
-  serializerFactory: => SerializerType)
+  serializerFactory: => SerializerType,
+  val historySize: Int = 128,
+  val historyTimeout: Duration = Duration(1, TimeUnit.HOURS))
   extends Listener
   with SerialRegisterable {
 
-  private val connections = new mutable.HashMap[Connection, ConnectionData]
+  private val topics = new TopicHost(new Topic[Any](_, historySize, historyTimeout))
 
   override def connected(connection: Connection): Unit = {
-    println("Got a connection")
-    connections.put(connection, ConnectionData())
   }
 
   override def disconnected(connection: Connection): Unit = {
-    println("Lost a connection")
-    connections.remove(connection)
   }
 
   override def received(connection: Connection, message: Object): Unit = {
     message match {
-      case message: Array[Byte] => println("Got a message")
-      case _ => println(s"Unknown message class ${message.getClass}")
+      case Post(topic, message) => topics.post(topic, message)
+      case Subscribe(topic) => topics.subscribe(connection, topic)
+      case Unsubscribe(topic) => topics.unsubscribe(connection, topic)
+      case _: FrameworkMessage =>
+      case null => Logger.getLogger(getClass.getName).warning(s"Unexpected null message received on client")
+      case _ => Logger.getLogger(getClass.getName).warning(s"Unexpected message of type ${message.getClass} received on client")
     }
   }
 
@@ -51,6 +53,12 @@ class KryoTopicServer[SerializerType <: Serializer[_]](
     server.close()
   }
 
-  implicit def toData(connection: Connection) = connections(connection)
+  implicit def toTopicClient(connection: Connection): TopicClient[Any] = RichConnection(connection)
+
+  case class RichConnection(val connection: Connection) extends TopicClient[Any] {
+    def post(topic: String, message: Any) = {
+      connection.sendTCP(Post(topic, message))
+    }
+  }
 
 }

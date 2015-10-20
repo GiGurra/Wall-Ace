@@ -16,9 +16,9 @@ class KryoServer(val port: Int,
   })
 
   def start(listener: Listener): Unit = {
+    server.addListener(listener)
     server.start()
     server.bind(port, port)
-    server.addListener(listener)
   }
 
   def close(): Unit = {
