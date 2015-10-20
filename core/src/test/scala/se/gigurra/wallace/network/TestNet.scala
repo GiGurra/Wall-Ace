@@ -13,7 +13,7 @@ class TestNet extends FlatSpec with Matchers {
 
   "TestNet" should "send some binary messages" in {
 
-    val server = new TopicNode(123) {
+    val server = new TopicServer(123) {
       override def received(connection: Connection, message: Object): Unit = {
         println(s"Got message: $message")
       }
@@ -40,7 +40,7 @@ class TestNet extends FlatSpec with Matchers {
 
   "TestNet" should "send some json messages" in {
 
-    val server = new TopicNode(123, new DefaultJsonSerializer) {
+    val server = new TopicServer(123, new DefaultJsonSerializer) {
       override def received(connection: Connection, message: Object): Unit = {
         println(s"Got message: $message")
       }

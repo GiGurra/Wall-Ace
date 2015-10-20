@@ -12,7 +12,7 @@ case class ConnectionData() {
   val topics = new ArrayBuffer[String]()
 }
 
-class TopicNode(val port: Int,
+class TopicServer(val port: Int,
                 serializerFactory: => Serializer[_] = new DefaultBinarySerializer)
   extends Listener
   with SerialRegisterable {
