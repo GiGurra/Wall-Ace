@@ -1,68 +1,122 @@
 package se.gigurra.wallace.comm
 
+import java.util.concurrent.TimeUnit
+
 import com.esotericsoftware.kryo.Serializer
 import com.esotericsoftware.kryonet.Connection
 import org.scalatest._
-import rx.observables.BlockingObservable
 import se.gigurra.wallace.comm.kryoimpl._
 
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future, TimeoutException}
 import scala.reflect.ClassTag
+import scala.util.Try
 
-class TestNet extends FlatSpec with Matchers {
+class TestNet extends WordSpec with Matchers {
 
-  "TestNet" should "send some binary messages" in {
+  "TestNet" should {
 
-    val fixture = makeFixture[Any, KryoBinarySerializer](123)
-    import fixture._
+    "send some binary messages" in {
 
-    client.sendTcp("Hello".getBytes)
-    client.sendTcp(Post(topic = "some.topic", content = "Hello"))
-    client.sendTcp(Post(topic = "some.other.topic", content = "World!"))
-    client.sendTcp(Subscribe(topic = "some.topic"))
-    client.sendTcp(Subscribe(topic = "some.other.topic"))
-    client.sendTcp(Unsubscribe(topic = "some.topic"))
+      val fixture = makeFixture[Any, KryoBinarySerializer](123)()
+      import fixture._
 
-    Thread.sleep(1000)
-    fixture.close()
-    Thread.sleep(1000)
+      client.sendTcp("Hello".getBytes)
+      client.sendTcp(Post(topic = "some.topic", content = "Hello"))
+      client.sendTcp(Post(topic = "some.other.topic", content = "World!"))
+      client.sendTcp(Subscribe(topic = "some.topic"))
+      client.sendTcp(Subscribe(topic = "some.other.topic"))
+      client.sendTcp(Unsubscribe(topic = "some.topic"))
+
+      Thread.sleep(1000)
+      fixture.close()
+      Thread.sleep(1000)
+    }
+
+    "send some json messages" in {
+
+      val fixture = makeFixture[Any, KryoJsonSerializer](124)()
+      import fixture._
+
+      client.sendTcp("Hello".getBytes)
+      client.sendTcp(Post(topic = "some.topic", content = "Hello"))
+      client.sendTcp(Post(topic = "some.other.topic", content = "World!"))
+      client.sendTcp(Subscribe(topic = "some.topic"))
+      client.sendTcp(Subscribe(topic = "some.other.topic"))
+      client.sendTcp(Unsubscribe(topic = "some.topic"))
+
+      Thread.sleep(1000)
+      fixture.close()
+      Thread.sleep(1000)
+    }
+
+    "subscribe to some topic and receive messages in it, even when it starts listening late" in {
+
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](125){
+        case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
+        case (connection, message) => println(s"Client got unknown $message")
+      }
+      import fixture._
+
+      val subscription = client.subscribe("My Topic")
+      val stream = subscription.stream
+
+      Thread.sleep(1000) // Start listening late
+      assert(stream.toBlocking.head == "Hello and welcome to the server")
+      fixture.close()
+      Thread.sleep(100)
+    }
+
+    "drop messages in subscribed topics if they're not collected in time" in {
+
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](126){
+        case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
+        case (connection, message) => println(s"Client got unknown $message")
+      }
+      import fixture._
+
+      val subscription = client.subscribe("My Topic", historyTimeout = Duration(1, TimeUnit.MILLISECONDS))
+      val stream = subscription.stream
+      Thread.sleep(1000) // Start listening late
+      assert(timesOut(stream.toBlocking.head))
+      fixture.close()
+      Thread.sleep(100)
+    }
+
+    "not drop messages in subscribed topics if they're collected in time" in {
+
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](126){
+        case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
+        case (connection, message) => println(s"Client got unknown $message")
+      }
+      import fixture._
+
+      val subscription = client.subscribe("My Topic", historyTimeout = Duration(10, TimeUnit.SECONDS))
+      val stream = subscription.stream
+      Thread.sleep(1000) // Start listening late
+      assert(!timesOut(stream.toBlocking.head))
+      fixture.close()
+      Thread.sleep(100)
+    }
+
+    "drop messages in subscribed topics if they exceed the buffer size when noone is listening" in {
+
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](126){
+        case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
+        case (connection, message) => println(s"Client got unknown $message")
+      }
+
+      import fixture._
+
+      val subscription = client.subscribe("My Topic", historySize = 0)
+      val stream = subscription.stream
+      Thread.sleep(1000) // Start listening late
+      assert(timesOut(stream.toBlocking.head))
+      fixture.close()
+      Thread.sleep(100)
+    }
   }
 
-  "TestNet" should "send some json messages" in {
-
-    val fixture = makeFixture[Any, KryoJsonSerializer](124)
-    import fixture._
-
-    client.sendTcp("Hello".getBytes)
-    client.sendTcp(Post(topic = "some.topic", content = "Hello"))
-    client.sendTcp(Post(topic = "some.other.topic", content = "World!"))
-    client.sendTcp(Subscribe(topic = "some.topic"))
-    client.sendTcp(Subscribe(topic = "some.other.topic"))
-    client.sendTcp(Unsubscribe(topic = "some.topic"))
-
-    Thread.sleep(1000)
-    fixture.close()
-    Thread.sleep(1000)
-  }
-
-  "TestNet" should "subscribe to some topic and receive messages in it" in {
-
-    val fixture = makeTopicFixture[String, KryoJsonSerializer](125, {
-      case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
-      case (connection, message) => println(s"Client got unknown $message")
-    })
-    import fixture._
-
-    Thread.sleep(100)
-    val subscription = client.subscribe("My Topic")
-    val stream = subscription.stream
-
-    stream.foreach(println)
-
-    Thread.sleep(100)
-    assert(stream.toBlocking.head == "Hello and welcome to the server")
-    fixture.close()
-    Thread.sleep(100)
-  }
 
   case class TopicFixture[MessageType: ClassTag, SerializerType <: Serializer[_]](
     server: KryoTopicServer[SerializerType],
@@ -82,10 +136,15 @@ class TestNet extends FlatSpec with Matchers {
     }
   }
 
+  def timesOut[AnyReturnType](op: => AnyReturnType, t: Duration = Duration(1, TimeUnit.SECONDS)): Boolean = {
+    val t = Try(Await.ready(Future(op)(scala.concurrent.ExecutionContext.Implicits.global), atMost = Duration(1, TimeUnit.SECONDS)))
+    t.isFailure && t.failed.get.isInstanceOf[TimeoutException]
+  }
+
   def makeTopicFixture[MessageType: ClassTag, SerializerType <: Serializer[_] : ClassTag](
-    post: Int,
+    post: Int)(
     serverRecvOverride: (Connection, Object) => Unit = (c, x) => {}): TopicFixture[MessageType, SerializerType] = {
-    val fix = makeFixture[MessageType, SerializerType](post, serverRecvOverride)
+    val fix = makeFixture[MessageType, SerializerType](post)(serverRecvOverride)
     TopicFixture(fix.server, fix.client)
   }
 
@@ -105,7 +164,7 @@ class TestNet extends FlatSpec with Matchers {
   }
 
   def makeFixture[MessageType: ClassTag, SerializerType <: Serializer[_] : ClassTag](
-    port: Int,
+    port: Int)(
     serverRecvOverride: (Connection, Object) => Unit = (c, x) => {}
     ): Fixture[MessageType, SerializerType] = {
 
@@ -116,6 +175,7 @@ class TestNet extends FlatSpec with Matchers {
         println(s"Server $this got message: $message")
         serverRecvOverride(connection, message)
       }
+
       registerTypes(this)
     }.start()
 
