@@ -140,7 +140,7 @@ class TestNet extends WordSpec with Matchers {
 
       val subscription = client.subscribe("My Topic")
       client2.post("My Other Topic", "Hello")
-      assert(finishes(subscription.stream.toBlocking.head))
+      assert(timesOut(subscription.stream.toBlocking.head))
 
       client2.close()
       fixture.close()
@@ -161,7 +161,7 @@ class TestNet extends WordSpec with Matchers {
       Thread.sleep(100)
 
       client.unsubscribe("My Topic")
-      Thread.sleep(100)
+      Thread.sleep(500)
 
       client2.post("My Topic", "Hello2")
       Thread.sleep(100)
@@ -199,7 +199,7 @@ class TestNet extends WordSpec with Matchers {
 
   case class TopicFixture[MessageType: ClassTag, SerializerType <: Serializer[_]](
     server: KryoTopicServer[SerializerType],
-    client: SubscriptionClient[MessageType]) {
+    client: TopicClient[MessageType]) {
     def close(): Unit = {
       client.close()
       server.close()

@@ -17,7 +17,7 @@ class KryoTopicClient[MessageType: ClassTag, SerializerType <: Serializer[_]](
   serializerFactory: => SerializerType,
   connectTimeout: Int = 5000)
   extends KryoClient[KryoTopicClient[MessageType, SerializerType]](url, port, serializerFactory, connectTimeout)
-  with SubscriptionClient[MessageType] {
+  with TopicClient[MessageType] {
 
   private val topics = new ConcurrentHashMap[String, Topic[MessageType]]()
   private var disconnected = false

@@ -4,13 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
 
-case class Post[MessageType](topic: String, content: MessageType)
-
-case class Subscribe(topic: String)
-
-case class Unsubscribe(topic: String)
-
-trait SubscriptionClient[MessageType] {
+trait TopicClient[MessageType] {
 
   def subscribe(
     name: String,

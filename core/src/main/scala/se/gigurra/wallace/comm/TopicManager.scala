@@ -2,18 +2,17 @@ package se.gigurra.wallace.comm
 
 import scala.collection.mutable
 
-trait TopicClient[MessageType] {
+trait TopicManagerClient[MessageType] {
   def post(topic: String, message: MessageType)
 }
 
-class TopicHost[MessageType](
-  topicFactory: String => Topic[MessageType]) {
+class TopicManager[MessageType](topicFactory: String => Topic[MessageType]) {
 
   private val topics = new mutable.HashMap[String, Topic[MessageType]]()
-  private val subscriptions = new mutable.HashMap[(TopicClient[MessageType], String), Subscription[MessageType]]()
+  private val subscriptions = new mutable.HashMap[(TopicManagerClient[MessageType], String), Subscription[MessageType]]()
   private val subscribersPerTopic = new mutable.HashMap[String, Int]
 
-  def subscribe(client: TopicClient[MessageType], topicName: String): Unit = {
+  def subscribe(client: TopicManagerClient[MessageType], topicName: String): Unit = {
 
     if (subscriptions.contains((client, topicName)))
       throw new RuntimeException(s"Client $client already subscribes to $topicName")
@@ -26,7 +25,7 @@ class TopicHost[MessageType](
     subscription.stream.foreach(client.post(topicName, _))
   }
 
-  def unsubscribe(client: TopicClient[MessageType], topicName: String): Unit = {
+  def unsubscribe(client: TopicManagerClient[MessageType], topicName: String): Unit = {
     subscriptions.remove((client, topicName)) match {
       case Some(subscription) =>
         val prevCount = subscribersPerTopic.put(topicName, subscribersPerTopic(topicName) - 1).get

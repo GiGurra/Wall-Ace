@@ -19,7 +19,7 @@ class KryoTopicServer[SerializerType <: Serializer[_]: ClassTag](
   extends Listener
   with SerialRegisterable {
 
-  private val topics = new TopicHost(new Topic[Any](_, historySize, historyTimeout))
+  private val topics = new TopicManager(new Topic[Any](_, historySize, historyTimeout))
 
   override def connected(connection: Connection): Unit = {
   }
@@ -53,9 +53,9 @@ class KryoTopicServer[SerializerType <: Serializer[_]: ClassTag](
     server.close()
   }
 
-  implicit def toTopicClient(connection: Connection): TopicClient[Any] = RichConnection(connection)
+  implicit def toTopicClient(connection: Connection): TopicManagerClient[Any] = RichConnection(connection)
 
-  case class RichConnection(val connection: Connection) extends TopicClient[Any] {
+  case class RichConnection(val connection: Connection) extends TopicManagerClient[Any] {
     def post(topic: String, message: Any) = {
       connection.sendTCP(Post(topic, message))
     }
