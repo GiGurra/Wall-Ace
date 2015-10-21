@@ -53,9 +53,9 @@ class KryoTopicServer[SerializerType <: Serializer[_]: ClassTag](
     server.close()
   }
 
-  implicit def toTopicClient(connection: Connection): TopicManagerClient[Any] = RichConnection(connection)
+  implicit def toTopicClient(connection: Connection): TopicManager.Client[Any] = RichConnection(connection)
 
-  case class RichConnection(val connection: Connection) extends TopicManagerClient[Any] {
+  case class RichConnection(val connection: Connection) extends TopicManager.Client[Any] {
     def post(topic: String, message: Any) = {
       connection.sendTCP(Post(topic, message))
     }

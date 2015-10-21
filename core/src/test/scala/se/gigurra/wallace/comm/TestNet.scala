@@ -18,7 +18,7 @@ class TestNet extends WordSpec with Matchers {
 
     "send some binary messages" in {
 
-      val fixture = makeFixture[Any, KryoBinarySerializer](123)()
+      val fixture = makeFixture[Any, KryoBinarySerializer](1024 + 0)()
       import fixture._
 
       client.sendTcp("Hello".getBytes)
@@ -35,7 +35,7 @@ class TestNet extends WordSpec with Matchers {
 
     "send some json messages" in {
 
-      val fixture = makeFixture[Any, KryoJsonSerializer](124)()
+      val fixture = makeFixture[Any, KryoJsonSerializer](1024 + 1)()
       import fixture._
 
       client.sendTcp("Hello".getBytes)
@@ -52,7 +52,7 @@ class TestNet extends WordSpec with Matchers {
 
     "subscribe to some topic and receive messages in it, even when it starts listening late" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](125){
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 2){
         case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
         case (connection, message) => println(s"Client got unknown $message")
       }
@@ -69,7 +69,7 @@ class TestNet extends WordSpec with Matchers {
 
     "drop messages in subscribed topics if they're not collected in time" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](126){
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 3){
         case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
         case (connection, message) => println(s"Client got unknown $message")
       }
@@ -85,7 +85,7 @@ class TestNet extends WordSpec with Matchers {
 
     "not drop messages in subscribed topics if they're collected in time" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](126){
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 4){
         case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
         case (connection, message) => println(s"Client got unknown $message")
       }
@@ -101,7 +101,7 @@ class TestNet extends WordSpec with Matchers {
 
     "drop messages in subscribed topics if they exceed the buffer size when noone is listening" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](126){
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 5){
         case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
         case (connection, message) => println(s"Client got unknown $message")
       }
@@ -119,8 +119,8 @@ class TestNet extends WordSpec with Matchers {
 
     "Receive messages from subscribed topics" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](126)()
-      val client2 = makeClient[String, KryoJsonSerializer](126)
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 6)()
+      val client2 = makeClient[String, KryoJsonSerializer](1024 + 6)
       import fixture._
 
       val subscription = client.subscribe("My Topic")
@@ -134,8 +134,8 @@ class TestNet extends WordSpec with Matchers {
 
     "Receive binary messages from subscribed topics" in {
 
-      val fixture = makeTopicFixture[Array[Byte], KryoBinarySerializer](126)()
-      val client2 = makeClient[Array[Byte], KryoBinarySerializer](126)
+      val fixture = makeTopicFixture[Array[Byte], KryoBinarySerializer](1024 + 7)()
+      val client2 = makeClient[Array[Byte], KryoBinarySerializer](1024 + 7)
       import fixture._
 
       val subscription = client.subscribe("My Topic")
@@ -150,8 +150,8 @@ class TestNet extends WordSpec with Matchers {
 
     "Ignore messages from unsubscribed topics" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](126)()
-      val client2 = makeClient[String, KryoJsonSerializer](126)
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 8)()
+      val client2 = makeClient[String, KryoJsonSerializer](1024 + 8)
       import fixture._
 
       val subscription = client.subscribe("My Topic")
@@ -165,8 +165,8 @@ class TestNet extends WordSpec with Matchers {
 
     "Stop receiving messages after unsubscribing from topics" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](126)()
-      val client2 = makeClient[String, KryoJsonSerializer](126)
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 9)()
+      val client2 = makeClient[String, KryoJsonSerializer](1024 + 9)
       import fixture._
 
       val subscription = client.subscribe("My Topic")
@@ -192,18 +192,21 @@ class TestNet extends WordSpec with Matchers {
 
     "All clients can receive from the same topic" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](126)()
-      val extraClients = (0 until 10) map (_ => makeClient[String, KryoJsonSerializer](126))
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 10)()
+      val extraClients = (0 until 50) map (_ => makeClient[String, KryoJsonSerializer](1024 + 10))
       import fixture._
 
       client.post("X", "Hello")
+
+      Thread.sleep(1000)
+
       val subs = extraClients.map(_.subscribe("X"))
 
       assert(finishesTrue(subs.forall(s => s.stream.toBlocking.head == "Hello")))
 
       val subscription = client.subscribe("My Topic")
       val stream = subscription.stream
-      val items = stream.toBlocking.next
+      assert(finishes(stream.toBlocking.next))
 
       extraClients.foreach(_.close())
       fixture.close()

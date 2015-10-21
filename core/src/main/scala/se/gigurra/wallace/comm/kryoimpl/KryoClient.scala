@@ -38,8 +38,8 @@ abstract class KryoClient[T <: KryoClient[T]](
     kryoClient.sendUDP(message)
   }
 
-  def register[T: ClassTag](): Unit = {
-    kryoClient.getKryo.register(scala.reflect.classTag[T].runtimeClass)
+  def register[MessageType: ClassTag](): Unit = {
+    kryoClient.getKryo.register(scala.reflect.classTag[MessageType].runtimeClass)
   }
 
   def isConnected: Boolean = {
