@@ -60,6 +60,7 @@ class KryoTopicClient[MessageType: ClassTag, SerializerType <: Serializer[_]](
 
   override def unsubscribe(topicName: String): Unit = {
     Option(topics.remove(topicName)).foreach{ topic =>
+      topic.complete()
       sendTcp(Unsubscribe(topicName))
     }
   }

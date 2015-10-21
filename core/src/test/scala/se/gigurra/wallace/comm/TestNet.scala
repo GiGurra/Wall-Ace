@@ -190,6 +190,26 @@ class TestNet extends WordSpec with Matchers {
       Thread.sleep(100)
     }
 
+    "Stream is completed on disconnect" in {
+
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 9)()
+      import fixture._
+
+      val subscription = client.subscribe("My Topic")
+      val stream = subscription.stream.toBlocking
+
+      client.post("My Topic", "Hello1")
+      client.post("My Topic", "Hello1")
+      client.post("My Topic", "Hello1")
+      Thread.sleep(500)
+      client.close()
+
+      assert(finishes(stream.foreach(println)))
+
+      fixture.close()
+      Thread.sleep(100)
+    }
+
     "All clients can receive from the same topic" in {
 
       val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 10)()
