@@ -23,7 +23,8 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
     "com.esotericsoftware" % "kryonet" % "2.22.0-RC1",
     "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
     "org.json4s" %% "json4s-native" % "3.3.0",
-    "io.reactivex" %% "rxscala" % "0.25.0"
+    "io.reactivex" %% "rxscala" % "0.25.0",
+    "com.jsuereth" %% "scala-arm" % "1.4"
   ),
   javacOptions ++= Seq(
     "-Xlint",

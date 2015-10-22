@@ -5,7 +5,9 @@ import java.util.concurrent.TimeUnit
 import com.esotericsoftware.kryo.Serializer
 import com.esotericsoftware.kryonet.Connection
 import org.scalatest._
+import resource._
 import se.gigurra.wallace.comm.kryoimpl._
+import se.gigurra.wallace.util.Decorated.Decorated
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future, TimeoutException}
@@ -18,209 +20,181 @@ class TestNet extends WordSpec with Matchers {
 
     "send some binary messages" in {
 
-      val fixture = makeFixture[Any, KryoBinarySerializer](1024 + 0)()
-      import fixture._
-
-      client.sendTcp("Hello".getBytes)
-      client.sendTcp(Post(topic = "some.topic", content = "Hello"))
-      client.sendTcp(Post(topic = "some.other.topic", content = "World!"))
-      client.sendTcp(Subscribe(topic = "some.topic"))
-      client.sendTcp(Subscribe(topic = "some.other.topic"))
-      client.sendTcp(Unsubscribe(topic = "some.topic"))
-
-      fixture.close()
-      Thread.sleep(100)
+      for (fixture <- managed(makeFixture[Any, KryoBinarySerializer](1024 + 0)())) {
+        import fixture._
+        client.sendTcp("Hello".getBytes)
+        client.sendTcp(Post(topic = "some.topic", content = "Hello"))
+        client.sendTcp(Post(topic = "some.other.topic", content = "World!"))
+        client.sendTcp(Subscribe(topic = "some.topic"))
+        client.sendTcp(Subscribe(topic = "some.other.topic"))
+        client.sendTcp(Unsubscribe(topic = "some.topic"))
+      }
     }
 
     "send some json messages" in {
 
-      val fixture = makeFixture[Any, KryoJsonSerializer](1024 + 1)()
-      import fixture._
-
-      client.sendTcp("Hello".getBytes)
-      client.sendTcp(Post(topic = "some.topic", content = "Hello"))
-      client.sendTcp(Post(topic = "some.other.topic", content = "World!"))
-      client.sendTcp(Subscribe(topic = "some.topic"))
-      client.sendTcp(Subscribe(topic = "some.other.topic"))
-      client.sendTcp(Unsubscribe(topic = "some.topic"))
-
-      fixture.close()
-      Thread.sleep(100)
+      for (fixture <- managed(makeFixture[Any, KryoJsonSerializer](1024 + 1)())) {
+        import fixture._
+        client.sendTcp("Hello".getBytes)
+        client.sendTcp(Post(topic = "some.topic", content = "Hello"))
+        client.sendTcp(Post(topic = "some.other.topic", content = "World!"))
+        client.sendTcp(Subscribe(topic = "some.topic"))
+        client.sendTcp(Subscribe(topic = "some.other.topic"))
+        client.sendTcp(Unsubscribe(topic = "some.topic"))
+      }
     }
 
     "subscribe to some topic and receive messages in it, even when it starts listening late" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 2){
+      for (fixture <- managed(makeTopicFixture[String, KryoJsonSerializer](1024 + 2){
         case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
         case (connection, message) => println(s"Client got unknown $message")
+      })) {
+        import fixture._
+        val subscription = client.subscribe("My Topic")
+        Thread.sleep(1000) // Start listening late
+        assert(subscription.stream.toBlocking.head == "Hello and welcome to the server")
       }
-      import fixture._
-
-      val subscription = client.subscribe("My Topic")
-      val stream = subscription.stream
-
-      Thread.sleep(1000) // Start listening late
-      assert(stream.toBlocking.head == "Hello and welcome to the server")
-      fixture.close()
-      Thread.sleep(100)
     }
 
     "drop messages in subscribed topics if they're not collected in time" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 3){
+      for (fixture <- managed(makeTopicFixture[String, KryoJsonSerializer](1024 + 3){
         case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
         case (connection, message) => println(s"Client got unknown $message")
+      })) {
+        import fixture._
+        val subscription = client.subscribe("My Topic", historyTimeout = Duration(1, TimeUnit.MILLISECONDS))
+        Thread.sleep(1000) // Start listening late
+        assert(timesOut(subscription.stream.toBlocking.head))
       }
-      import fixture._
-
-      val subscription = client.subscribe("My Topic", historyTimeout = Duration(1, TimeUnit.MILLISECONDS))
-      val stream = subscription.stream
-      Thread.sleep(1000) // Start listening late
-      assert(timesOut(stream.toBlocking.head))
-      fixture.close()
-      Thread.sleep(100)
     }
 
     "not drop messages in subscribed topics if they're collected in time" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 4){
+      for (fixture <- managed(makeTopicFixture[String, KryoJsonSerializer](1024 + 4){
         case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
         case (connection, message) => println(s"Client got unknown $message")
+      })) {
+        import fixture._
+        val subscription = client.subscribe("My Topic", historyTimeout = Duration(10, TimeUnit.SECONDS))
+        Thread.sleep(200) // Start listening late
+        assert(finishes(subscription.stream.toBlocking.head))
       }
-      import fixture._
-
-      val subscription = client.subscribe("My Topic", historyTimeout = Duration(10, TimeUnit.SECONDS))
-      val stream = subscription.stream
-      Thread.sleep(200) // Start listening late
-      assert(finishes(stream.toBlocking.head))
-      fixture.close()
-      Thread.sleep(100)
     }
 
     "drop messages in subscribed topics if they exceed the buffer size when noone is listening" in {
-
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 5){
+      for (fixture <- managed(makeTopicFixture[String, KryoJsonSerializer](1024 + 5){
         case (connection, message: Subscribe) => connection.sendTCP(Post(message.topic, "Hello and welcome to the server"))
         case (connection, message) => println(s"Client got unknown $message")
+      })) {
+        import fixture._
+        val subscription = client.subscribe("My Topic", historySize = 0)
+        val stream = subscription.stream
+        Thread.sleep(200) // Start listening late
+        assert(timesOut(stream.toBlocking.head))
       }
-
-      import fixture._
-
-      val subscription = client.subscribe("My Topic", historySize = 0)
-      val stream = subscription.stream
-      Thread.sleep(200) // Start listening late
-      assert(timesOut(stream.toBlocking.head))
-      fixture.close()
-      Thread.sleep(100)
     }
 
 
     "Receive messages from subscribed topics" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 6)()
-      val client2 = makeClient[String, KryoJsonSerializer](1024 + 6)
-      import fixture._
-
-      val subscription = client.subscribe("My Topic")
-      client2.post("My Topic", "Hello")
-      assert(finishes(subscription.stream.toBlocking.head))
-
-      client2.close()
-      fixture.close()
-      Thread.sleep(100)
+      for {
+        fixture <- managed(makeTopicFixture[String, KryoJsonSerializer](1024 + 6)())
+        client2 <- managed(makeClient[String, KryoJsonSerializer](1024 + 6))
+      } {
+        import fixture._
+        val subscription = client.subscribe("My Topic")
+        client2.post("My Topic", "Hello")
+        assert(finishes(subscription.stream.toBlocking.head))
+      }
     }
 
     "Receive binary messages from subscribed topics" in {
 
-      val fixture = makeTopicFixture[Array[Byte], KryoBinarySerializer](1024 + 7)()
-      val client2 = makeClient[Array[Byte], KryoBinarySerializer](1024 + 7)
-      import fixture._
-
-      val subscription = client.subscribe("My Topic")
-      client2.post("My Topic", "Hello".getBytes())
-      assert(finishesTrue(new String(subscription.stream.toBlocking.head) == "Hello"))
-
-      client2.close()
-      fixture.close()
-      Thread.sleep(100)
+      for {
+        fixture <- managed(makeTopicFixture[Array[Byte], KryoBinarySerializer](1024 + 7)())
+        client2 <- managed(makeClient[Array[Byte], KryoBinarySerializer](1024 + 7))
+      } {
+        import fixture._
+        val subscription = client.subscribe("My Topic")
+        client2.post("My Topic", "Hello".getBytes())
+        assert(finishesTrue(new String(subscription.stream.toBlocking.head) == "Hello"))
+      }
     }
 
     "Ignore messages if not subscribed to topic" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 8)()
-      val client2 = makeClient[String, KryoJsonSerializer](1024 + 8)
-      import fixture._
-
-      val subscription = client.subscribe("My Topic")
-      client2.post("My Other Topic", "Hello")
-      assert(timesOut(subscription.stream.toBlocking.head))
-
-      client2.close()
-      fixture.close()
-      Thread.sleep(100)
+      for {
+        fixture <- managed(makeTopicFixture[String, KryoJsonSerializer](1024 + 8)())
+        client2 <- managed(makeClient[String, KryoJsonSerializer](1024 + 8))
+      } {
+        import fixture._
+        val subscription = client.subscribe("My Topic")
+        client2.post("My Other Topic", "Hello")
+        assert(timesOut(subscription.stream.toBlocking.head))
+      }
     }
 
     "Stop receiving messages after unsubscribing from topics" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 9)()
-      val client2 = makeClient[String, KryoJsonSerializer](1024 + 9)
-      import fixture._
-
-      val subscription = client.subscribe("My Topic")
-      val items = subscription.stream.toBlocking.next
-
-      client2.post("My Topic", "Hello1")
-      assert(finishes(items.head))
-      client.unsubscribe("My Topic")
-      assert(finishes(subscription.awaitComplete()))
-
-      client2.close()
-      fixture.close()
-      Thread.sleep(100)
+      for {
+        fixture <- managed(makeTopicFixture[String, KryoJsonSerializer](1024 + 9)())
+        client2 <- managed(makeClient[String, KryoJsonSerializer](1024 + 9))
+      } {
+        import fixture._
+        val subscription = client.subscribe("My Topic")
+        val items = subscription.stream.toBlocking.next
+        client2.post("My Topic", "Hello1")
+        assert(finishes(items.head))
+        client.unsubscribe("My Topic")
+        assert(finishes(subscription.awaitComplete()))
+      }
     }
 
     "Stream is completed on disconnect" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 10)()
-      import fixture._
-
-      val subscription = client.subscribe("My Topic")
-      val stream = subscription.stream.toBlocking
-
-      client.post("My Topic", "Hello1")
-      client.post("My Topic", "Hello1")
-      client.post("My Topic", "Hello1")
-      assert(finishes(stream.toIterable.take(3)))
-
-      client.close()
-      assert(finishes(subscription.awaitComplete()))
-
-      fixture.close()
-      Thread.sleep(100)
+      for {
+        fixture <- managed(makeTopicFixture[String, KryoJsonSerializer](1024 + 10)())
+      } {
+        import fixture._
+        val subscription = client.subscribe("My Topic")
+        val stream = subscription.stream.toBlocking
+        client.post("My Topic", "Hello1")
+        client.post("My Topic", "Hello1")
+        client.post("My Topic", "Hello1")
+        assert(finishes(stream.toIterable.take(3)))
+        client.close()
+        assert(finishes(subscription.awaitComplete()))
+      }
     }
 
     "All clients can receive from the same topic" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 11)()
-      val extraClients = (0 until 50) map (_ => makeClient[String, KryoJsonSerializer](1024 + 11))
-      import fixture._
-
-      client.post("X", "Hello")
-      val subs = extraClients.map(_.subscribe("X"))
-
-      assert(finishesTrue(subs.forall(s => s.stream.toBlocking.head == "Hello")))
-
-      val subscription = client.subscribe("My Topic")
-      val stream = subscription.stream
-      assert(finishes(stream.toBlocking.next))
-
-      extraClients.foreach(_.close())
-      fixture.close()
-      Thread.sleep(300)
+      for {
+        fixture <- managed(makeTopicFixture[String, KryoJsonSerializer](1024 + 11)())
+        extraClients <- mmanaged((0 until 50) map (_ => makeClient[String, KryoJsonSerializer](1024 + 11)))
+      } {
+        import fixture._
+        client.post("X", "Hello")
+        val subs = extraClients.map(_.subscribe("X"))
+        assert(finishesTrue(subs.forall(s => s.stream.toBlocking.head == "Hello")))
+        val subscription = client.subscribe("My Topic")
+        val stream = subscription.stream
+        assert(finishes(stream.toBlocking.next))
+      }
     }
 
   }
 
+  implicit def mmanaged[A: Resource : Manifest](s: Iterable[A]) = managed(RichSeqResource(s))
+
+  case class RichSeqResource[A: Resource : Manifest](
+    val resources: Iterable[A]) extends Decorated[Iterable[A]](resources) {
+    def close(): Unit = {
+      resources.foreach(resource => Try(implicitly[Resource[A]].close(resource)))
+    }
+  }
 
   case class TopicFixture[MessageType: ClassTag, SerializerType <: Serializer[_]](
     server: KryoTopicServer[SerializerType],
