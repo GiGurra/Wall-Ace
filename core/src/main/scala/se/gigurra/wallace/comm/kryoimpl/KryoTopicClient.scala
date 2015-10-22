@@ -26,6 +26,8 @@ class KryoTopicClient[MessageType: ClassTag, SerializerType <: Serializer[_]](
     message match {
       case Post(topic, message: MessageType) => Option(topics.get(topic)).foreach(_.publish(message))
       case Post(topic, message) => Logger.getLogger(getClass.getName).warning(s"Unexpected message of type ${message.getClass} received")
+      case Subscribed(topic) =>
+      case Unsubscribed(topic) => finalizeUnsubscribe(topic)
       case _: FrameworkMessage =>
       case null => Logger.getLogger(getClass.getName).warning(s"Unexpected null message received on client")
       case _ => Logger.getLogger(getClass.getName).warning(s"Unexpected message of type ${message.getClass} received on client")
@@ -47,22 +49,18 @@ class KryoTopicClient[MessageType: ClassTag, SerializerType <: Serializer[_]](
     // We were disconnected during the function call
     // Ok in java >= 5 since volatile = memory barrier
     if (disconnected)
-      unsubscribe(topicName)
+      finalizeUnsubscribe(topicName)
 
     Subscription[MessageType](topicName, topic.masterSource, () => unsubscribe(topicName))
   }
 
   override def close(): Unit = {
-    topics.keys.foreach(unsubscribe)
     super.close()
     disconnected(null)
   }
 
   override def unsubscribe(topicName: String): Unit = {
-    Option(topics.remove(topicName)).foreach{ topic =>
-      topic.complete()
-      sendTcp(Unsubscribe(topicName))
-    }
+    sendTcp(Unsubscribe(topicName))
   }
 
   override def post(topic: String, message: MessageType) = {
@@ -71,6 +69,10 @@ class KryoTopicClient[MessageType: ClassTag, SerializerType <: Serializer[_]](
 
   override def disconnected(c: Connection): Unit = {
     disconnected = true
-    topics.keys.foreach(unsubscribe)
+    topics.keys.foreach(finalizeUnsubscribe)
+  }
+
+  private[this] def finalizeUnsubscribe(topicName: String): Unit = {
+    Option(topics.remove(topicName)).foreach(_.complete())
   }
 }

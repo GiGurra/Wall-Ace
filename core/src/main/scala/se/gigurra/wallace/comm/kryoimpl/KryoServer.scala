@@ -18,7 +18,7 @@ class KryoServer(val port: Int,
   def start(listener: Listener): Unit = {
     server.addListener(listener)
     server.start()
-    server.bind(port, port)
+    server.bind(port) // TCP only - Linux has issues with > 25 udp connections
   }
 
   def close(): Unit = {

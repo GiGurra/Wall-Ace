@@ -22,7 +22,7 @@ abstract class KryoClient[T <: KryoClient[T]](
   def start(): T = {
     kryoClient.addListener(this)
     kryoClient.start()
-    kryoClient.connect(connectTimeout, url, port, port)
+    kryoClient.connect(connectTimeout, url, port) // TCP only - Linux has issues with > 25 udp connections
     this.asInstanceOf[T]
   }
 

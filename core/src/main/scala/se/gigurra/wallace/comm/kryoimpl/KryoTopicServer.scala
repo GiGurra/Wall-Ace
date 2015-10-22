@@ -59,6 +59,14 @@ class KryoTopicServer[SerializerType <: Serializer[_]: ClassTag](
     def post(topic: String, message: Any) = {
       connection.sendTCP(Post(topic, message))
     }
+
+    override def subscribed(topic: String): Unit = {
+      connection.sendTCP(Subscribed(topic))
+    }
+
+    override def unsubscribed(topic: String): Unit =  {
+      connection.sendTCP(Unsubscribed(topic))
+    }
   }
 
 }

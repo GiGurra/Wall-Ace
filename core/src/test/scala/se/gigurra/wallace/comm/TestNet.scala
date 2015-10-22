@@ -28,9 +28,8 @@ class TestNet extends WordSpec with Matchers {
       client.sendTcp(Subscribe(topic = "some.other.topic"))
       client.sendTcp(Unsubscribe(topic = "some.topic"))
 
-      Thread.sleep(1000)
       fixture.close()
-      Thread.sleep(1000)
+      Thread.sleep(100)
     }
 
     "send some json messages" in {
@@ -45,9 +44,8 @@ class TestNet extends WordSpec with Matchers {
       client.sendTcp(Subscribe(topic = "some.other.topic"))
       client.sendTcp(Unsubscribe(topic = "some.topic"))
 
-      Thread.sleep(1000)
       fixture.close()
-      Thread.sleep(1000)
+      Thread.sleep(100)
     }
 
     "subscribe to some topic and receive messages in it, even when it starts listening late" in {
@@ -93,7 +91,7 @@ class TestNet extends WordSpec with Matchers {
 
       val subscription = client.subscribe("My Topic", historyTimeout = Duration(10, TimeUnit.SECONDS))
       val stream = subscription.stream
-      Thread.sleep(1000) // Start listening late
+      Thread.sleep(200) // Start listening late
       assert(finishes(stream.toBlocking.head))
       fixture.close()
       Thread.sleep(100)
@@ -110,7 +108,7 @@ class TestNet extends WordSpec with Matchers {
 
       val subscription = client.subscribe("My Topic", historySize = 0)
       val stream = subscription.stream
-      Thread.sleep(1000) // Start listening late
+      Thread.sleep(200) // Start listening late
       assert(timesOut(stream.toBlocking.head))
       fixture.close()
       Thread.sleep(100)
@@ -142,13 +140,12 @@ class TestNet extends WordSpec with Matchers {
       client2.post("My Topic", "Hello".getBytes())
       assert(finishesTrue(new String(subscription.stream.toBlocking.head) == "Hello"))
 
-      Thread.sleep(1000)
       client2.close()
       fixture.close()
       Thread.sleep(100)
     }
 
-    "Ignore messages from unsubscribed topics" in {
+    "Ignore messages if not subscribed to topic" in {
 
       val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 8)()
       val client2 = makeClient[String, KryoJsonSerializer](1024 + 8)
@@ -170,20 +167,12 @@ class TestNet extends WordSpec with Matchers {
       import fixture._
 
       val subscription = client.subscribe("My Topic")
-      val stream = subscription.stream
-      val items = stream.toBlocking.next
+      val items = subscription.stream.toBlocking.next
 
       client2.post("My Topic", "Hello1")
-      Thread.sleep(100)
-
-      client.unsubscribe("My Topic")
-      Thread.sleep(500)
-
-      client2.post("My Topic", "Hello2")
-      Thread.sleep(100)
-
       assert(finishes(items.head))
-      assert(timesOut(items.tail))
+      client.unsubscribe("My Topic")
+      assert(finishes(subscription.awaitComplete()))
 
       client2.close()
       fixture.close()
@@ -192,7 +181,7 @@ class TestNet extends WordSpec with Matchers {
 
     "Stream is completed on disconnect" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 9)()
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 10)()
       import fixture._
 
       val subscription = client.subscribe("My Topic")
@@ -201,10 +190,10 @@ class TestNet extends WordSpec with Matchers {
       client.post("My Topic", "Hello1")
       client.post("My Topic", "Hello1")
       client.post("My Topic", "Hello1")
-      Thread.sleep(500)
-      client.close()
+      assert(finishes(stream.toIterable.take(3)))
 
-      assert(finishes(stream.foreach(println)))
+      client.close()
+      assert(finishes(subscription.awaitComplete()))
 
       fixture.close()
       Thread.sleep(100)
@@ -212,14 +201,11 @@ class TestNet extends WordSpec with Matchers {
 
     "All clients can receive from the same topic" in {
 
-      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 10)()
-      val extraClients = (0 until 50) map (_ => makeClient[String, KryoJsonSerializer](1024 + 10))
+      val fixture = makeTopicFixture[String, KryoJsonSerializer](1024 + 11)()
+      val extraClients = (0 until 50) map (_ => makeClient[String, KryoJsonSerializer](1024 + 11))
       import fixture._
 
       client.post("X", "Hello")
-
-      Thread.sleep(1000)
-
       val subs = extraClients.map(_.subscribe("X"))
 
       assert(finishesTrue(subs.forall(s => s.stream.toBlocking.head == "Hello")))
@@ -284,7 +270,9 @@ class TestNet extends WordSpec with Matchers {
     endPoint.register[String]
     endPoint.register[Post[_]]
     endPoint.register[Subscribe]
+    endPoint.register[Subscribed]
     endPoint.register[Unsubscribe]
+    endPoint.register[Unsubscribed]
   }
 
   def makeClient[MessageType: ClassTag, SerializerType <: Serializer[_] : ClassTag](port: Int) = {
