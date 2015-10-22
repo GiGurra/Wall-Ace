@@ -66,13 +66,13 @@ lazy val server = project in file("server") settings (sharedSettings: _*) depend
 lazy val desktop = project in file("desktop") settings (sharedSettings: _*) dependsOn renderer settings(
     name := (name in core).value + "-desktop",
     libraryDependencies ++= Seq(
-      "net.sf.proguard" % "proguard-base" % "5.1" % "provided",
+     /* "net.sf.proguard" % "proguard-base" % "5.1" % "provided",*/
       "com.badlogicgames.gdx" % "gdx-backend-lwjgl" % libgdxVersion,
       "com.badlogicgames.gdx" % "gdx-platform" % libgdxVersion classifier "natives-desktop",
       "com.badlogicgames.gdx" % "gdx-freetype-platform" % libgdxVersion classifier "natives-desktop"
     ),
     fork in Compile := true,
-    baseDirectory in run := assetsDirectory.value,
+    baseDirectory in run := assetsDirectory.value/*,
     assembly := {
       (fullClasspath in Runtime).value // Just to make sure that compile finished
       val log = streams.value.log
@@ -106,7 +106,7 @@ lazy val desktop = project in file("desktop") settings (sharedSettings: _*) depe
       } else {
         log.info("Output file: "+outfile)
       }
-    }
+    }*/
   )
 /*
 lazy val android = project in file("android") settings (sharedSettings ++ androidBuild: _*) dependsOn renderer settings(
