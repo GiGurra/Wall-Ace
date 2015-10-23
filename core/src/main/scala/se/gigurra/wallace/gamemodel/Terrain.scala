@@ -1,4 +1,4 @@
-package se.gigurra.wallace.model
+package se.gigurra.wallace.gamemodel
 
 import scala.util.Random
 

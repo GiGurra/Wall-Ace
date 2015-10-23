@@ -1,7 +1,8 @@
 package se.gigurra.wallace
 
 import com.badlogic.gdx.backends.lwjgl.{LwjglApplication, LwjglApplicationConfiguration}
-import se.gigurra.renderer.Wallace
+import se.gigurra.wallace.client.Client
+import se.gigurra.wallace.client.renderer.Renderer
 
 object Main extends App {
     val cfg = new LwjglApplicationConfiguration
@@ -12,5 +13,5 @@ object Main extends App {
     cfg.vSyncEnabled = true
     cfg.foregroundFPS = 0
     cfg.backgroundFPS = 0
-    new LwjglApplication(new Wallace, cfg)
+    new LwjglApplication(new Client, cfg)
 }

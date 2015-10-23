@@ -1,4 +1,4 @@
-package se.gigurra.renderer
+package se.gigurra.wallace.client.renderer
 
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch

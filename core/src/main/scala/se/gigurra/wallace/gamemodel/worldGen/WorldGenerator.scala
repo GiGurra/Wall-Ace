@@ -1,6 +1,6 @@
-package se.gigurra.wallace.model.worldGen
+package se.gigurra.wallace.gamemodel.worldGen
 
-import se.gigurra.wallace.model.{Terrain, World, WorldVector}
+import se.gigurra.wallace.gamemodel.{Terrain, World, WorldVector}
 
 import scala.util.Random
 import scalaxy.streams.optimize

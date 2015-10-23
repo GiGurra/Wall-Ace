@@ -1,4 +1,4 @@
-package se.gigurra.renderer
+package se.gigurra.wallace.client.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color

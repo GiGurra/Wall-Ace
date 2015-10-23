@@ -1,20 +1,21 @@
-package se.gigurra.wallace.model
+package se.gigurra.wallace.gamemodel
 
 import java.nio.ByteBuffer
 
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 
-case class World(terrainData: ByteBuffer,
-            width: Int,
-            height: Int) {
+case class World(
+  terrainData: ByteBuffer,
+  width: Int,
+  height: Int) {
   require(terrainData.capacity == width * height * 4)
 
   private val entities = new ArrayBuffer[Entity]()
 
   def entities[EntityType <: Entity : ClassTag](pos: WorldVector = WorldVector(),
-                                                maxDelta: Int = math.max(width, height),
-                                                filter: EntityType => Boolean = (e: EntityType) => true): Seq[EntityType] = {
+    maxDelta: Int = math.max(width, height),
+    filter: EntityType => Boolean = (e: EntityType) => true): Seq[EntityType] = {
     requireInsideMap(pos)
     entities
       .filter(_.isWithin(maxDelta, pos))

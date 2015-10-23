@@ -1,4 +1,4 @@
-package se.gigurra.wallace.model
+package se.gigurra.wallace.gamemodel
 
 case class WorldVector(var x: Int = 0, var y: Int = 0) {
 
