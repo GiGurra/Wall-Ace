@@ -1,6 +1,6 @@
 package se.gigurra.wallace.client.worldstate
 
-import se.gigurra.wallace.gamemodel.worldGen.WorldGenerator
+import se.gigurra.wallace.gamemodel.WorldGenerator
 
 class WorldStateManager {
   import WorldStateManager._

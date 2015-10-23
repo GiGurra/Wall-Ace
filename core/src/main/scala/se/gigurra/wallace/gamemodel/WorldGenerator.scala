@@ -1,6 +1,4 @@
-package se.gigurra.wallace.gamemodel.worldGen
-
-import se.gigurra.wallace.gamemodel.{Terrain, World, WorldVector}
+package se.gigurra.wallace.gamemodel
 
 import scala.util.Random
 import scalaxy.streams.optimize
@@ -17,7 +15,7 @@ object WorldGenerator {
       for (y <- 0 until h) {
         for (x <- 0 until w) {
           val typ = genType(rnd, x, y, w, h)
-          world.setTerrain(WorldVector(x, y), Terrain.make(rnd, typ))
+          world.set(x, y, Terrain.make(rnd, typ))
         }
       }
     }
