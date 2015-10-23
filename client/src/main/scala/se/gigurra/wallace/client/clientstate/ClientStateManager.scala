@@ -12,4 +12,9 @@ object ClientMainState {
 class ClientStateManager {
   var state: ClientMainState = PreGame
   var modifiers: Seq[ClientMainState.Modifier] = Nil
+
+  def update(): Unit = {
+
+  }
+
 }

@@ -10,7 +10,9 @@ import se.gigurra.wallace.util.DecoratedTrait._
 case class Sprite(imgData: Pixmap,
                   useMipMaps: Boolean,
                   disposeOnUpload: Boolean = false,
-                  reloadOnContextLoss: Boolean = true) extends DecoratedTrait[Texture] {
+                  reloadOnContextLoss: Boolean = true)
+  extends DecoratedTrait[Texture]
+  with RenderAsset {
 
   val textureData = TextureData.fromImgData(
     imgData = imgData,
@@ -35,11 +37,12 @@ case class Sprite(imgData: Pixmap,
 
   def upload(): Unit = texture.load(textureData)
 
+  def dispose(): Unit = texture.dispose()
+
   override def _base0: Texture = texture
 }
 
 object Sprite {
-
 
   def fromFile(path: String,
                useMipMaps: Boolean,

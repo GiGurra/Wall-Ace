@@ -13,41 +13,17 @@ class KryoJsonSerializer extends kryo.Serializer[Object] {
 
   val utf8 = Charset.forName("UTF-8")
 
-  class Interval(start: Long, end: Long) {
-    val startTime = start
-    val endTime = end
-  }
-
-  class IntervalSerializer extends CustomSerializer[Interval](format => ( {
-    case JObject(JField("start", JInt(s)) :: JField("end", JInt(e)) :: Nil) =>
-      new Interval(s.longValue, e.longValue)
-  }, {
-    case x: Interval =>
-      JObject(JField("start", JInt(BigInt(x.startTime))) ::
-        JField("end", JInt(BigInt(x.endTime))) :: Nil)
-  }))
-
-  val formats = org.json4s.DefaultFormats + new Serializer[Array[Byte]] {
-    def deserialize(implicit format: Formats): PartialFunction[(TypeInfo, JValue), Array[Byte]] = {
-      ???
-    }
-
-    def serialize(implicit format: Formats): PartialFunction[Any, JValue] = {
-      ???
-    }
-  }
-
 
   override def write(kryo: Kryo, fos: Output, _o: Object): Unit = {
     val writer = new OutputStreamWriter(fos, utf8)
-    writeJson(_o, writer)(formats)
+    writeJson(_o, writer)(DefaultFormats)
     writer.flush()
   }
 
   override def read(kryo: Kryo, fis: Input, typ: Class[Object]): Object = {
     val reader = new InputStreamReader(fis, utf8)
     val manifest = Manifest.classType(typ)
-    readJson(reader)(formats, manifest)
+    readJson(reader)(DefaultFormats, manifest)
   }
 
 }

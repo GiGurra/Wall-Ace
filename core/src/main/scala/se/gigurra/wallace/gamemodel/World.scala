@@ -5,13 +5,21 @@ import java.nio.ByteBuffer
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 
-case class World(
-  terrainData: ByteBuffer,
-  width: Int,
-  height: Int) {
+trait TerrainData {
+  def data: ByteBuffer
+  def width: Int
+  def height: Int
+}
+
+case class World(terrain: TerrainData) {
+  val terrainData = terrain.data
   require(terrainData.capacity == width * height * 4)
 
   private val entities = new ArrayBuffer[Entity]()
+
+  def width = terrain.width
+
+  def height = terrain.height
 
   def entities[EntityType <: Entity : ClassTag](pos: WorldVector = WorldVector(),
     maxDelta: Int = math.max(width, height),

@@ -8,8 +8,8 @@ import se.gigurra.wallace.client.worldstate.WorldStateManager
 class ClientManager {
 
   val clientState = new ClientStateManager
-  val network = new NetworkStateManager
-  val world = new WorldStateManager
+  val networkState = new NetworkStateManager
+  val worldState = new WorldStateManager
   val renderer = new Renderer
 
   object callbacks {
@@ -32,8 +32,10 @@ class ClientManager {
       // update network
       // update world
       // update renderer
-      renderer.update()
-
+      clientState.update()
+      networkState.update()
+      worldState.update()
+      renderer.update(worldState.sector)
     }
   }
 }
