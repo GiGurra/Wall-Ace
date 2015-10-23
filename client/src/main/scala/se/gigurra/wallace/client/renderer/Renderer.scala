@@ -1,9 +1,8 @@
 package se.gigurra.wallace.client.renderer
 
-import com.badlogic.gdx.{Gdx, Game}
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20._
 import se.gigurra.wallace.client.worldstate.Sector
-import se.gigurra.wallace.gamemodel.{WorldGenerator, World}
 
 class Renderer {
 
