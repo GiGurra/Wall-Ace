@@ -1,6 +1,6 @@
 package se.gigurra.wallace.client.worldstate
 
-import se.gigurra.wallace.gamemodel.WorldGenerator
+import se.gigurra.wallace.gamemodel.TerrainGenerator
 
 class WorldStateManager {
   import WorldStateManager._
@@ -19,7 +19,7 @@ object WorldStateManager {
     val width = 640
     val height = 640
     val out = new Sector(width, height)
-    WorldGenerator.generate("MyMapSeed", out.model)
+    TerrainGenerator.generate("MyMapSeed", out.model)
     out
   }
 }

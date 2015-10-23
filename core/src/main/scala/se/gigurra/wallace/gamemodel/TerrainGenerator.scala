@@ -3,7 +3,7 @@ package se.gigurra.wallace.gamemodel
 import scala.util.Random
 import scalaxy.streams.optimize
 
-object WorldGenerator {
+object TerrainGenerator {
 
   def generate(seed: String, world: World): Unit = {
 
