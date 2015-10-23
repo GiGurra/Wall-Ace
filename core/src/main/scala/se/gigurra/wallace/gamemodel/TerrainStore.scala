@@ -10,24 +10,24 @@ trait TerrainStore {
 
   def set(x: Int, y: Int, value: Terrain): Unit
 
+  def get(pos: WorldVector): Terrain = {
+    get(pos.x, pos.y)
+  }
+
   def set(pos: WorldVector, value: Terrain): Unit = {
     set(pos.x, pos.y, value)
   }
 
-  def terrainAt(pos: WorldVector): Terrain = {
-    get(pos.x, pos.y)
-  }
-
-  def terrainIndexOf(x: Int, y: Int): Int = {
-    requireInsideMap(x,y)
+  def indexOf(x: Int, y: Int): Int = {
+    requireInside(x,y)
     x + y * width
   }
 
-  def requireInsideMap(pos: WorldVector): Unit = {
-    requireInsideMap(pos.x, pos.y)
+  def requireInside(pos: WorldVector): Unit = {
+    requireInside(pos.x, pos.y)
   }
 
-  def requireInsideMap(x: Int, y: Int): Unit = {
+  def requireInside(x: Int, y: Int): Unit = {
     require(x >= 0)
     require(x < width)
     require(y >= 0)

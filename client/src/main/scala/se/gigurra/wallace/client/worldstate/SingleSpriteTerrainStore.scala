@@ -12,7 +12,7 @@ class SingleSpriteTerrainStore(sprite: Sprite) extends TerrainStore {
   override def height: Int = sprite.height
 
   override def get(x: Int, y: Int): Terrain = {
-    val i = terrainIndexOf(x,y) * 4
+    val i = indexOf(x, y) * 4
     Terrain(
       terrainData.get(i + 0),
       terrainData.get(i + 1),
@@ -21,7 +21,7 @@ class SingleSpriteTerrainStore(sprite: Sprite) extends TerrainStore {
   }
 
   override def set(x: Int, y: Int, value: Terrain): Unit = {
-    val i = terrainIndexOf(x,y) * 4
+    val i = indexOf(x, y) * 4
     terrainData
       .put(i + 0, value.r)
       .put(i + 1, value.g)

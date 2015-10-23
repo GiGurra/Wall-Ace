@@ -10,7 +10,7 @@ case class World(terrain: TerrainStore) {
   def entities[EntityType <: Entity : ClassTag](pos: WorldVector = WorldVector(),
     maxDelta: Int = math.max(terrain.width, terrain.height),
     filter: EntityType => Boolean = (e: EntityType) => true): Seq[EntityType] = {
-    terrain.requireInsideMap(pos)
+    terrain.requireInside(pos)
     entities
       .filter(_.isWithin(maxDelta, pos))
       .collect { case e: EntityType => e }
@@ -18,7 +18,7 @@ case class World(terrain: TerrainStore) {
   }
 
   def addEntity(entity: Entity): Unit = {
-    terrain.requireInsideMap(entity.position)
+    terrain.requireInside(entity.position)
     entities += entity
   }
 
