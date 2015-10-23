@@ -3,7 +3,7 @@ package se.gigurra.wallace.gamemodel
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 
-case class World(terrain: WorldStore) {
+case class World(terrain: TerrainStore) {
 
   private val entities = new ArrayBuffer[Entity]()
 

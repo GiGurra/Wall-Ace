@@ -11,7 +11,7 @@ class Sector(width: Int, height: Int) extends RenderAsset {
     useMipMaps = true
   )
 
-  val model = new World(new SingleSpriteWorldStore(asset))
+  val model = new World(new SingleSpriteTerrainStore(asset))
 
   override def dispose() = asset.dispose()
 

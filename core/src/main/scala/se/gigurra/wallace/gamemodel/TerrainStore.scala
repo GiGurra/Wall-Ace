@@ -1,6 +1,6 @@
 package se.gigurra.wallace.gamemodel
 
-trait WorldStore {
+trait TerrainStore {
 
   def width: Int
 

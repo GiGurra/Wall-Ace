@@ -1,9 +1,9 @@
 package se.gigurra.wallace.client.worldstate
 
 import se.gigurra.wallace.client.renderer.Sprite
-import se.gigurra.wallace.gamemodel.{Terrain, WorldStore}
+import se.gigurra.wallace.gamemodel.{Terrain, TerrainStore}
 
-class SingleSpriteWorldStore(sprite: Sprite) extends WorldStore {
+class SingleSpriteTerrainStore(sprite: Sprite) extends TerrainStore {
 
   private val terrainData = sprite.pixels
 
