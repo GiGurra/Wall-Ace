@@ -23,10 +23,10 @@ object TerrainGenerator {
 
   private[this] def genType(rnd: Random, x: Int, y: Int, w: Int, h: Int): Byte = {
     // TODO: Impl - Currently SUPER dumb!
-    val dyAboveGround = (h - y).toFloat / h.toFloat
-    if (dyAboveGround > 0.2f) {
+    val dyAboveGround = 100 * (h - y) / h
+    if (dyAboveGround > 20) {
       Terrain.ALPHA_SPACE
-    } else if (dyAboveGround > 0.1f) {
+    } else if (dyAboveGround > 10) {
       Terrain.ALPHA_DIRT
     } else {
       Terrain.ALPHA_ROCK
