@@ -1,6 +1,6 @@
 package se.gigurra.wallace.gamemodel
 
-case class Terrain[T_TerrainStorage <: TerrainStorage](storage: T_TerrainStorage,
+case class Terrain[+T_TerrainStorage <: TerrainStorage](storage: T_TerrainStorage,
                                                        patch2WorldScale: Int = 100) {
 
   val patchWidth = storage.width

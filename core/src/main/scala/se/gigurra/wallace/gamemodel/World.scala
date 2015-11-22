@@ -4,7 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 import scala.language.implicitConversions
 
-case class World[T_TerrainStorage <: TerrainStorage](terrain: Terrain[T_TerrainStorage]) {
+case class World[+T_TerrainStorage <: TerrainStorage](terrain: Terrain[T_TerrainStorage]) {
 
   private val entities = new ArrayBuffer[Entity]()
 

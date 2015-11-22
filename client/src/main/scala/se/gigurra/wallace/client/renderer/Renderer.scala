@@ -16,7 +16,7 @@ class Renderer {
   // End of constructor
   ///////////////////////
 
-  def update[T <: TerrainStorage with RenderAsset](client_world: World[T]): Unit = {
+  def update(client_world: World[TerrainStorage with RenderAsset]): Unit = {
 
     Projections.ortho11(Gdx.graphics.getWidth, Gdx.graphics.getHeight)
     glClearColor(0.0f, 0.0f, 0.0f, 0)
@@ -29,7 +29,7 @@ class Renderer {
 
   }
 
-  private def drawWorld[T <: TerrainStorage with RenderAsset](client_world: World[T]): Unit = {
+  private def drawWorld(client_world: World[TerrainStorage with RenderAsset]): Unit = {
 
     val mapSprite = assets.maps.getOrElseUpdate("mapSprite", client_world.terrain.storage)
 
