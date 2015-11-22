@@ -1,16 +1,9 @@
-import java.io.File
-
 val libgdxVersion = "1.7.0"
 
 lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
   name := "wall-ace",
   version := "0.1",
   scalaVersion := "2.11.7",
-  assetsDirectory := {
-    val r = file("core/src/main/resources")
-    IO.createDirectory(r)
-    r
-  },
   resolvers += "clojars" at "http://clojars.org/repo",
   libraryDependencies ++= Seq(
     "com.nativelibs4java" %% "scalaxy-streams" % "0.3.4" % "provided",
@@ -21,8 +14,6 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
     "com.jsuereth" %% "scala-arm" % "1.4"
   ),
   javacOptions ++= Seq(
-    "-Xlint",
-    "-encoding", "UTF-8",
     "-source", "1.7",
     "-target", "1.7"
   ),
@@ -60,21 +51,11 @@ lazy val server = project in file("server") settings (sharedSettings: _*) depend
 lazy val desktop = project in file("desktop") settings (sharedSettings: _*) dependsOn client settings(
     name := (name in core).value + "-desktop",
     libraryDependencies ++= Seq(
-     /* "net.sf.proguard" % "proguard-base" % "5.1" % "provided",*/
       "com.badlogicgames.gdx" % "gdx-backend-lwjgl" % libgdxVersion,
       "com.badlogicgames.gdx" % "gdx-platform" % libgdxVersion classifier "natives-desktop",
       "com.badlogicgames.gdx" % "gdx-freetype-platform" % libgdxVersion classifier "natives-desktop"
     ),
-    fork in Compile := true,
-    baseDirectory in run := assetsDirectory.value
+    fork in Compile := true
   )
-
-lazy val assetsDirectory = settingKey[File]("Directory with game's assets")
-
-lazy val nativesDirectory = settingKey[File]("Directory where android natives are extracted to")
-
-lazy val extractNatives = taskKey[Unit]("Extracts natives to nativesDirectory")
-
-lazy val assembly = TaskKey[Unit]("assembly", "Assembly desktop using Proguard")
 
 lazy val all = project in file(".") aggregate(core, client, server, desktop)
