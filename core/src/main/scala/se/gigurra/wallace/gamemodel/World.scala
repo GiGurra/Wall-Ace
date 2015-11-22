@@ -2,6 +2,7 @@ package se.gigurra.wallace.gamemodel
 
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
+import scala.language.implicitConversions
 
 case class World(terrain: TerrainStore) {
 

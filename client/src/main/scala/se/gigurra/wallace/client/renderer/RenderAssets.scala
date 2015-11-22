@@ -39,10 +39,6 @@ class RenderAssets {
   val font20 = Font.fromTtfFile("fonts/pt-mono/PTM55FT.ttf", size = 40)
   val libgdxLogo = Sprite.fromFile("libgdxlogo.png", useMipMaps = false)
 
-  object sprites extends RenderAssetsCategory[Sprite] {
-    private val sprites = new mutable.HashMap[String, Sprite]()
-  }
+  val sprites = new RenderAssetsCategory[Sprite]
 
-
-  //val mapSprite = Sprite.fromSize(256, 256, useMipMaps = true)
 }

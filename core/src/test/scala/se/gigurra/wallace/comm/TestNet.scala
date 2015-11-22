@@ -13,6 +13,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future, TimeoutException}
 import scala.reflect.ClassTag
 import scala.util.Try
+import scala.language.implicitConversions
 
 class TestNet extends WordSpec with Matchers {
 
