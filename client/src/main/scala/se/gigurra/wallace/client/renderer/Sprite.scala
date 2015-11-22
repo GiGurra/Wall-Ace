@@ -5,7 +5,7 @@ import java.nio.ByteBuffer
 import com.badlogic.gdx.graphics.Pixmap.Format
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.graphics.{Texture, Pixmap}
-import se.gigurra.wallace.gamemodel.{SingleSpriteTerrainStorage, TerrainStorageFactory}
+import se.gigurra.wallace.gamemodel.{ByteBufferTerrainStorage, TerrainStorageFactory}
 import se.gigurra.wallace.util.DecoratedTrait._
 
 case class Sprite(imgData: Pixmap,
@@ -14,7 +14,7 @@ case class Sprite(imgData: Pixmap,
                   reloadOnContextLoss: Boolean = true)
   extends DecoratedTrait[Texture]
   with RenderAsset
-  with SingleSpriteTerrainStorage {
+  with ByteBufferTerrainStorage {
 
   val textureData = TextureData.fromImgData(
     imgData = imgData,

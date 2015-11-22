@@ -9,7 +9,7 @@ trait TerrainStorage {
   def set(iPatch: Int, patch: TerrainPatch): Unit
 }
 
-trait SingleSpriteTerrainStorage extends TerrainStorage {
+trait ByteBufferTerrainStorage extends TerrainStorage {
 
   def data: ByteBuffer
 
