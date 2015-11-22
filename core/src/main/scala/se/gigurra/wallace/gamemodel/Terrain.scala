@@ -1,63 +1,56 @@
 package se.gigurra.wallace.gamemodel
 
-import scala.util.Random
+case class Terrain[T_TerrainStorage <: TerrainStorage](storage: T_TerrainStorage,
+                                                       patch2WorldScale: Int = 100) {
 
-case class Terrain(r: Byte,
-                   g: Byte,
-                   b: Byte,
-                   a: Byte) {
+  val patchWidth = storage.width
 
-  import Terrain._
+  val patchHeight = storage.height
 
-  def is(t: Byte) = a == t
+  val worldWidth = patchWidth * patch2WorldScale
 
-  def isSpace = is(ALPHA_SPACE)
+  val worldHeight = patchHeight * patch2WorldScale
 
-  def isDirt = is(ALPHA_DIRT)
+  def getPatch(iPatch: Int): TerrainPatch = storage.get(iPatch)
 
-  def isRock = is(ALPHA_ROCK)
+  def setPatch(iPatch: Int, patch: TerrainPatch): Unit = storage.set(iPatch, patch)
 
-  def typ = a
-
-}
-
-object Terrain {
-
-  val ALPHA_SPACE = 255.toByte
-  val ALPHA_DIRT = 254.toByte
-  val ALPHA_ROCK = 253.toByte
-
-  def apply(r: Int = 0,
-            g: Int = 0,
-            b: Int = 0,
-            a: Byte): Terrain = {
-
-    new Terrain(r.toByte, g.toByte, b.toByte, a)
+  def setPatch(xWorld: Int, yWorld: Int, patch: TerrainPatch): Unit = {
+    setPatch(patchIndexOf(xWorld, yWorld), patch)
   }
 
-  def make(rnd: Random, typ: Byte): Terrain = {
-    typ match {
-      case ALPHA_SPACE => makeSpace(rnd)
-      case ALPHA_DIRT => makeDirt(rnd)
-      case ALPHA_ROCK => makeRock(rnd)
-    }
+  def getPatch(xWorld: Int, yWorld: Int): TerrainPatch = {
+    getPatch(patchIndexOf(xWorld, yWorld))
   }
 
-  def makeSpace(rnd: Random): Terrain = {
-    val g = ((rnd.nextDouble * 32.0 + 64.0) / 2.0).toInt
-    val r = g * 2
-    Terrain(r, g, 0, ALPHA_SPACE)
+  def getPatch(pos: WorldVector): TerrainPatch = {
+    getPatch(pos.x, pos.y)
   }
 
-  def makeDirt(rnd: Random): Terrain = {
-    val g = ((rnd.nextDouble * 48.0 + 100.0) / 2.0).toInt
-    val r = g * 2
-    Terrain(r, g, 0, ALPHA_DIRT)
+  def setPatch(pos: WorldVector, value: TerrainPatch): Unit = {
+    setPatch(pos.x, pos.y, value)
   }
 
-  def makeRock(rnd: Random): Terrain = {
-    val c = (rnd.nextDouble * 100.0 + 128).toInt
-    Terrain(c, c, c, ALPHA_ROCK)
+  def patchIndexOf(pos: WorldVector): Int = {
+    patchIndexOf(pos.x, pos.y)
+  }
+
+  def patchIndexOf(xWorld: Int, yWorld: Int): Int = {
+    requireInside(xWorld, yWorld)
+    val xPatch = xWorld / patch2WorldScale
+    val yPatch = yWorld / patch2WorldScale
+    xPatch + yPatch * patchWidth
+  }
+
+  def requireInside(pos: WorldVector): Unit = {
+    requireInside(pos.x, pos.y)
+  }
+
+  def requireInside(x: Int, y: Int): Unit = {
+    require(x >= 0, "x position negative")
+    require(x < worldWidth, "x position too large")
+    require(y >= 0, "y position negative")
+    require(y < worldHeight, "y position too large")
   }
 
 }

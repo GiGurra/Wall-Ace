@@ -2,14 +2,14 @@ package se.gigurra.wallace.client
 
 import se.gigurra.wallace.client.clientstate.ClientStateManager
 import se.gigurra.wallace.client.networkstate.NetworkStateManager
-import se.gigurra.wallace.client.renderer.Renderer
-import se.gigurra.wallace.client.worldstate.WorldStateManager
+import se.gigurra.wallace.client.renderer.{Sprite, Renderer}
+import se.gigurra.wallace.gamemodel.WorldStateManager
 
 class Client {
 
   val clientState = new ClientStateManager
   val networkState = new NetworkStateManager
-  val worldState = new WorldStateManager
+  val worldState = new WorldStateManager(Sprite)
   val renderer = new Renderer
 
   object callbacks {
@@ -35,7 +35,7 @@ class Client {
       clientState.update()
       networkState.update()
       worldState.update()
-      renderer.update(worldState.sector)
+      renderer.update(worldState.world)
     }
   }
 }

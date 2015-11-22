@@ -5,6 +5,7 @@ import java.nio.ByteBuffer
 import com.badlogic.gdx.graphics.Pixmap.Format
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.graphics.{Texture, Pixmap}
+import se.gigurra.wallace.gamemodel.{SingleSpriteTerrainStorage, TerrainStorageFactory}
 import se.gigurra.wallace.util.DecoratedTrait._
 
 case class Sprite(imgData: Pixmap,
@@ -12,7 +13,8 @@ case class Sprite(imgData: Pixmap,
                   disposeOnUpload: Boolean = false,
                   reloadOnContextLoss: Boolean = true)
   extends DecoratedTrait[Texture]
-  with RenderAsset {
+  with RenderAsset
+  with SingleSpriteTerrainStorage {
 
   val textureData = TextureData.fromImgData(
     imgData = imgData,
@@ -25,24 +27,26 @@ case class Sprite(imgData: Pixmap,
       setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapNearestLinear)
   }
 
-  def data: Pixmap = imgData
+  def pixmap: Pixmap = imgData
 
-  def pixels: ByteBuffer = data.getPixels()
+  def data: ByteBuffer = pixmap.getPixels()
 
   def width: Int = imgData.getWidth
 
   def height: Int = imgData.getHeight
 
-  def len: Int = pixels.capacity()
-
   def upload(): Unit = texture.load(textureData)
 
   def dispose(): Unit = texture.dispose()
 
+  def draw[AssetsType]()(implicit renderContext: RenderContext[AssetsType]): Unit = {
+    renderContext.state.batch.draw(this, 0.0f, 0.0f, width.toFloat, height.toFloat)
+  }
+
   override def _base0: Texture = texture
 }
 
-object Sprite {
+object Sprite extends TerrainStorageFactory[Sprite] {
 
   def fromFile(path: String,
                useMipMaps: Boolean,
@@ -66,6 +70,10 @@ object Sprite {
       useMipMaps = useMipMaps,
       disposeOnUpload = disposeOnUpload,
       reloadOnContextLoss = reloadOnContextLoss)
+  }
+
+  def create(width: Int, height: Int): Sprite = {
+    fromSize(width = width, height = height, useMipMaps = true)
   }
 
 }

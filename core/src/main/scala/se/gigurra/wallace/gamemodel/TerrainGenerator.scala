@@ -5,17 +5,20 @@ import scalaxy.streams.optimize
 
 object TerrainGenerator {
 
-  def generate(seed: String, world: World): Unit = {
+  def generate[T_TerrainStorage <: TerrainStorage](seed: String, world: World[T_TerrainStorage]): Unit = {
 
     val rnd = new Random(seed.hashCode)
-    val w = world.width
-    val h = world.height
+    val w = world.patchWidth
+    val h = world.patchHeight
 
     optimize {
       for (y <- 0 until h) {
         for (x <- 0 until w) {
           val typ = genType(rnd, x, y, w, h)
-          world.set(x, y, Terrain.make(rnd, typ))
+          world.setPatch(
+            xWorld = x * world.patch2WorldScale,
+            yWorld = y * world.patch2WorldScale,
+            patch = TerrainPatch.make(rnd, typ))
         }
       }
     }
@@ -25,11 +28,11 @@ object TerrainGenerator {
     // TODO: Impl - Currently SUPER dumb!
     val dyAboveGround = 100 * (h - y) / h
     if (dyAboveGround > 20) {
-      Terrain.ALPHA_SPACE
+      TerrainPatch.ALPHA_SPACE
     } else if (dyAboveGround > 10) {
-      Terrain.ALPHA_DIRT
+      TerrainPatch.ALPHA_DIRT
     } else {
-      Terrain.ALPHA_ROCK
+      TerrainPatch.ALPHA_ROCK
     }
   }
 

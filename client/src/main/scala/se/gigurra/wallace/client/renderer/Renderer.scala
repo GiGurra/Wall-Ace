@@ -2,7 +2,7 @@ package se.gigurra.wallace.client.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20._
-import se.gigurra.wallace.client.worldstate.Sector
+import se.gigurra.wallace.gamemodel.{TerrainStorage, World}
 
 class Renderer {
 
@@ -16,24 +16,24 @@ class Renderer {
   // End of constructor
   ///////////////////////
 
-  def update(client_world: Option[Sector]): Unit = {
+  def update[T <: TerrainStorage with RenderAsset](client_world: World[T]): Unit = {
 
     Projections.ortho11(Gdx.graphics.getWidth, Gdx.graphics.getHeight)
     glClearColor(0.0f, 0.0f, 0.0f, 0)
     glClear(GL_COLOR_BUFFER_BIT)
 
     batch {
-      client_world foreach drawWorld
+      drawWorld(client_world)
       drawGui
     }
 
   }
 
-  private def drawWorld(client_world: Sector): Unit = {
-    assets.sprites.ensureHas("mapSprite", client_world.asset)
-    val mapSprite = assets.sprites("mapSprite")
+  private def drawWorld[T <: TerrainStorage with RenderAsset](client_world: World[T]): Unit = {
+    assets.maps.ensureHas("mapSprite", client_world.terrain.storage)
+    val mapSprite = assets.maps("mapSprite")
     transform(_.unitSize(mapSprite).scalexy(renderContext.maxAspect).center(mapSprite)) {
-      drawSprite(mapSprite)
+      mapSprite.draw()
     }
   }
 
