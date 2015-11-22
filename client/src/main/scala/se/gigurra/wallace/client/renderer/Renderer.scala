@@ -30,9 +30,13 @@ class Renderer {
   }
 
   private def drawWorld[T <: TerrainStorage with RenderAsset](client_world: World[T]): Unit = {
-    assets.maps.ensureHas("mapSprite", client_world.terrain.storage)
-    val mapSprite = assets.maps("mapSprite")
-    transform(_.unitSize(mapSprite).scalexy(renderContext.maxAspect).center(mapSprite)) {
+
+    val mapSprite = assets.maps.getOrElseUpdate("mapSprite", client_world.terrain.storage)
+
+    transform(_
+      .unitSize(mapSprite)
+      .scalexy(renderContext.maxAspect)
+      .center(mapSprite)) {
       mapSprite.draw()
     }
   }

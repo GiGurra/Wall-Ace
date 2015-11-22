@@ -6,12 +6,16 @@ class RenderAssetsCategory[T <: RenderAsset] {
   private val data = new mutable.HashMap[String, T]()
 
   def ensureHas(id: String, factory: => T): RenderAssetsCategory[T] = {
+    getOrElseUpdate(id, factory)
+    this
+  }
+
+  def getOrElseUpdate(id: String, factory: => T): T = {
     data.getOrElseUpdate(id, {
       val asset = factory
       asset.upload()
       asset
     })
-    this
   }
 
   def apply(id: String): T = {
