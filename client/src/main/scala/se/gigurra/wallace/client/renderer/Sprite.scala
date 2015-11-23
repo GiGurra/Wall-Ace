@@ -13,7 +13,6 @@ case class Sprite(imgData: Pixmap,
                   disposeOnUpload: Boolean = false,
                   reloadOnContextLoss: Boolean = true)
   extends DecoratedTrait[Texture]
-  with RenderAsset
   with ByteBufferTerrainStorage {
 
   val textureData = TextureData.fromImgData(
@@ -38,10 +37,6 @@ case class Sprite(imgData: Pixmap,
   def upload(): Unit = texture.load(textureData)
 
   def dispose(): Unit = texture.dispose()
-
-  def draw[AssetsType]()(implicit renderContext: RenderContext[AssetsType]): Unit = {
-    renderContext.state.batch.draw(this, 0.0f, 0.0f, width.toFloat, height.toFloat)
-  }
 
   override def _base0: Texture = texture
 }

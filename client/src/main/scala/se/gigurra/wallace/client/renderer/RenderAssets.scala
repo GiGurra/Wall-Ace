@@ -1,33 +1,41 @@
 package se.gigurra.wallace.client.renderer
 
+import se.gigurra.wallace.client.renderer.Renderer.Rendering
+import se.gigurra.wallace.gamemodel.TerrainStorage
+
 import scala.collection.mutable
 
-class RenderAssetsCategory[T <: RenderAsset] {
-  private val data = new mutable.HashMap[String, T]()
+class RenderAssetsCategory[SourceType] {
+  private val data = new mutable.HashMap[String, RenderAsset[SourceType]]()
 
-  def ensureHas(id: String, factory: => T): RenderAssetsCategory[T] = {
-    getOrElseUpdate(id, factory)
+  def ensureHas[T1 <: SourceType : Rendering, AssetsType](id: String, source: T1)(implicit renderContext: RenderContext[AssetsType]): RenderAssetsCategory[SourceType] = {
+    getOrElseUpdate(id, source)
     this
   }
 
-  def getOrElseUpdate(id: String, factory: => T): T = {
-    data.getOrElseUpdate(id, {
-      val asset = factory
-      asset.upload()
-      asset
-    })
+  def getOrElseUpdate[T1 <: SourceType : Rendering, AssetsType](id: String, source: T1)(implicit renderContext: RenderContext[AssetsType]): RenderAsset[SourceType] = {
+    getOrElseUpdate(id, implicitly[Rendering[T1]].buildRenderAsset(source))
   }
 
-  def apply(id: String): T = {
+  def ensureHas(id: String, asset: => RenderAsset[SourceType]): RenderAssetsCategory[SourceType] = {
+    getOrElseUpdate(id, asset)
+    this
+  }
+
+  def getOrElseUpdate(id: String, asset: => RenderAsset[SourceType]): RenderAsset[SourceType] = {
+    data.getOrElseUpdate(id, asset)
+  }
+
+  def apply(id: String): RenderAsset[SourceType] = {
     data.apply(id)
   }
 
-  def delete(id: String): RenderAssetsCategory[T] = {
+  def delete(id: String): RenderAssetsCategory[SourceType] = {
     data.remove(id).foreach(_.dispose())
     this
   }
 
-  def replace(id: String, asset: T = null.asInstanceOf[T]): RenderAssetsCategory[T] = {
+  def replace[SourceType1 <: SourceType: Rendering, AssetsType](id: String, asset: RenderAsset[SourceType1] = null.asInstanceOf[RenderAsset[SourceType]])(implicit renderContext: RenderContext[AssetsType]): RenderAssetsCategory[SourceType] = {
     data.get(id) match {
       case Some(prevAsset) if (asset eq prevAsset) =>
       case _ =>
@@ -43,6 +51,7 @@ class RenderAssets {
   val font20 = Font.fromTtfFile("fonts/pt-mono/PTM55FT.ttf", size = 40)
   val libgdxLogo = Sprite.fromFile("libgdxlogo.png", useMipMaps = false)
 
-  val maps = new RenderAssetsCategory[RenderAsset]
+  val maps = new RenderAssetsCategory[AnyRef]
+  val sprites = new RenderAssetsCategory[Sprite]
 
 }

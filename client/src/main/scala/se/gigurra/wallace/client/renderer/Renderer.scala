@@ -2,9 +2,12 @@ package se.gigurra.wallace.client.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20._
-import se.gigurra.wallace.gamemodel.{TerrainStorage, World}
+import se.gigurra.wallace.gamemodel.{Terrain, TerrainStorage, World}
 
 class Renderer {
+
+  import Renderer._
+  import Renderables._
 
   implicit val renderContext = RenderContext(new RenderAssets)
 
@@ -16,22 +19,23 @@ class Renderer {
   // End of constructor
   ///////////////////////
 
-  def update(client_world: World[TerrainStorage with RenderAsset]): Unit = {
+  def update[T <: TerrainStorage : Rendering] (client_world: World[T]): Unit = {
 
     Projections.ortho11(Gdx.graphics.getWidth, Gdx.graphics.getHeight)
     glClearColor(0.0f, 0.0f, 0.0f, 0)
     glClear(GL_COLOR_BUFFER_BIT)
 
     batch {
-      drawWorld(client_world)
+      drawTerrain(client_world.terrain)
       drawGui
     }
-
   }
 
-  private def drawWorld(client_world: World[TerrainStorage with RenderAsset]): Unit = {
+  private def drawTerrain[T <: TerrainStorage : Rendering](terrain: Terrain[T]): Unit = {
 
-    val mapSprite = assets.maps.getOrElseUpdate("mapSprite", client_world.terrain.storage)
+    val mapSprite = assets.maps.getOrElseUpdate("mapSprite", terrain)
+
+    mapSprite.upload()
 
     transform(_
       .unitSize(mapSprite)
@@ -42,11 +46,29 @@ class Renderer {
   }
 
   private def drawGui(): Unit = {
+
+    val gdxLogoAsset = assets.sprites.getOrElseUpdate("gdxLogo", assets.libgdxLogo)
+
     val text = prepText(font = assets.font20, str = s"Fps: ${renderContext.fps}")
     transform(_.scalexy(1.0f / 400.0f)) {
-      transform(_.center(assets.libgdxLogo))(drawSprite(assets.libgdxLogo))
+      transform(_.center(gdxLogoAsset))(gdxLogoAsset.draw())
       transform(_.center(text))(drawText(text))
     }
+  }
+
+}
+
+object Renderer {
+
+
+  implicit class RichRenderable[T: Rendering](val t: T) {
+    def buildRenderAsset[AssetsType]()(implicit renderContext: RenderContext[AssetsType]): RenderAsset[T] = {
+      implicitly[Rendering[T]].buildRenderAsset(t)(renderContext)
+    }
+  }
+
+  trait Rendering[Renderable] {
+    def buildRenderAsset[AssetsType](renderable: Renderable)(implicit renderContext: RenderContext[AssetsType]): RenderAsset[Renderable]
   }
 
 }

@@ -1,9 +1,13 @@
 package se.gigurra.wallace.client.renderer
 
-trait RenderAsset {
-  def dispose(): Unit
-  def upload(): Unit
-  def width: Int
-  def height: Int
+import java.io.Closeable
+
+trait RenderAsset[+SourceType] extends Closeable {
+  def dispose(): Unit = {}
+  def upload(): Unit = {}
+  def width: Float
+  def height: Float
   def draw[AssetsType]()(implicit renderContext: RenderContext[AssetsType]): Unit
+
+  override def close(): Unit = dispose()
 }
