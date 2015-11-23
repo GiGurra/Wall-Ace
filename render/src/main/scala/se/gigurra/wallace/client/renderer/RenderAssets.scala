@@ -1,9 +1,6 @@
 package se.gigurra.wallace.client.renderer
 
-import se.gigurra.wallace.gamemodel.Terrain
-
 import scala.collection.mutable
-import scala.reflect.ClassTag
 
 class RenderAssetsCategory[SourceType] {
   private val data = new mutable.HashMap[String, RenderAsset[SourceType]]()
@@ -35,12 +32,12 @@ class RenderAssetsCategory[SourceType] {
     this
   }
 
-  def replace[SourceType1 <: SourceType: Rendering, AssetsType](id: String, asset: RenderAsset[SourceType1] = null.asInstanceOf[RenderAsset[SourceType]])(implicit renderContext: RenderContext[AssetsType]): RenderAssetsCategory[SourceType] = {
+  def replace[SourceType1 <: SourceType : Rendering, AssetsType](id: String, asset: RenderAsset[SourceType1] = null.asInstanceOf[RenderAsset[SourceType]])(implicit renderContext: RenderContext[AssetsType]): RenderAssetsCategory[SourceType] = {
     data.get(id) match {
       case Some(prevAsset) if (asset eq prevAsset) =>
       case _ =>
         delete(id)
-        if(asset != null)
+        if (asset != null)
           ensureHas(id, asset)
     }
     this
@@ -51,10 +48,10 @@ class RenderAssets {
   val font20 = Font.fromTtfFile("fonts/pt-mono/PTM55FT.ttf", size = 40)
   val libgdxLogo = Sprite.fromFile("libgdxlogo.png", useMipMaps = false)
 
-  val maps = new RenderAssetsCategory[Terrain[_]]
+  val maps = new RenderAssetsCategory[AnyRef]
   val sprites = new RenderAssetsCategory[Sprite]
 
-  def temporary[T: Rendering: Manifest, AssetsType](t: T)(implicit renderContext: RenderContext[AssetsType]) = {
+  def temporary[T: Rendering : Manifest, AssetsType](t: T)(implicit renderContext: RenderContext[AssetsType]) = {
     import resource._
     implicit val x = manifest[Rendering[T]]
     managed(implicitly[Rendering[T]].buildRenderAsset(t))
