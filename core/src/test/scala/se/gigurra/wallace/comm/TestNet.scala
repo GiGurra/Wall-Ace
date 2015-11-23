@@ -7,7 +7,7 @@ import com.esotericsoftware.kryonet.Connection
 import org.scalatest._
 import resource._
 import se.gigurra.wallace.comm.kryoimpl._
-import se.gigurra.wallace.util.Decorated.Decorated
+import se.gigurra.wallace.util.Decorated
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future, TimeoutException}

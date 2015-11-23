@@ -1,9 +1,9 @@
 package se.gigurra.wallace.client.renderer
 
-import se.gigurra.wallace.client.renderer.Renderer.Rendering
 import se.gigurra.wallace.gamemodel.Terrain
 
 import scala.collection.mutable
+import scala.reflect.ClassTag
 
 class RenderAssetsCategory[SourceType] {
   private val data = new mutable.HashMap[String, RenderAsset[SourceType]]()
@@ -53,5 +53,11 @@ class RenderAssets {
 
   val maps = new RenderAssetsCategory[Terrain[_]]
   val sprites = new RenderAssetsCategory[Sprite]
+
+  def temporary[T: Rendering: Manifest, AssetsType](t: T)(implicit renderContext: RenderContext[AssetsType]) = {
+    import resource._
+    implicit val x = manifest[Rendering[T]]
+    managed(implicitly[Rendering[T]].buildRenderAsset(t))
+  }
 
 }

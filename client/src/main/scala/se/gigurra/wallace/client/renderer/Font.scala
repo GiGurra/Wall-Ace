@@ -6,9 +6,8 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter
 import com.badlogic.gdx.graphics.g2d.{BitmapFont, GlyphLayout, PixmapPacker}
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Align
-import se.gigurra.wallace.util.Decorated._
+import se.gigurra.wallace.util.Decorated
 
 class Font(_base: BitmapFont) extends Decorated[BitmapFont](_base) {
 

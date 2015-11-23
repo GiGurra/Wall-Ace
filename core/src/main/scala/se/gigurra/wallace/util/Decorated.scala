@@ -2,12 +2,11 @@ package se.gigurra.wallace.util
 
 import scala.language.implicitConversions
 
+class Decorated[BaseType](val _base: BaseType) {
+  implicit def toBase: BaseType = Decorated.toBase(this)
+}
+
 object Decorated {
-
-  class Decorated[BaseType](val _base: BaseType) {
-    implicit def toBase: BaseType = Decorated.toBase(this)
-  }
-
   implicit def toBase[BaseType](decorated: Decorated[BaseType]): BaseType = decorated._base
 }
 

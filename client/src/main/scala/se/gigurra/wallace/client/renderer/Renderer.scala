@@ -6,20 +6,18 @@ import se.gigurra.wallace.gamemodel.{Terrain, World}
 
 class Renderer {
 
-  import Renderer._
   import Renderables._
 
   implicit val renderContext = RenderContext(new RenderAssets)
 
-  import renderContext.assets
-  import renderContext.drawShortcuts._
+  import renderContext._
   import renderContext.glShortcuts._
   import renderContext.state._
 
   // End of constructor
   ///////////////////////
 
-  def update[T_Terrain : Rendering] (client_world: World[T_Terrain]): Unit = {
+  def update[T_TerrainStorage: Rendering](client_world: World[T_TerrainStorage]): Unit = {
 
     Projections.ortho11(Gdx.graphics.getWidth, Gdx.graphics.getHeight)
     glClearColor(0.0f, 0.0f, 0.0f, 0)
@@ -31,7 +29,7 @@ class Renderer {
     }
   }
 
-  private def drawTerrain[T_Terrain : Rendering](terrain: Terrain[T_Terrain]): Unit = {
+  private def drawTerrain[T_TerrainStorage: Rendering](terrain: Terrain[T_TerrainStorage]): Unit = {
 
     val mapSprite = assets.maps.getOrElseUpdate("mapSprite", terrain)
 
@@ -50,25 +48,15 @@ class Renderer {
     val gdxLogoAsset = assets.sprites.getOrElseUpdate("gdxLogo", assets.libgdxLogo)
 
     val text = prepText(font = assets.font20, str = s"Fps: ${renderContext.fps}")
+
     transform(_.scalexy(1.0f / 400.0f)) {
       transform(_.center(gdxLogoAsset))(gdxLogoAsset.draw())
-      transform(_.center(text))(drawText(text))
+      assets.temporary(text) foreach { text => transform(_.center(text))(text.draw()) }
     }
   }
 
 }
 
-object Renderer {
-
-
-  implicit class RichRenderable[T: Rendering](val t: T) {
-    def buildRenderAsset[AssetsType]()(implicit renderContext: RenderContext[AssetsType]): RenderAsset[T] = {
-      implicitly[Rendering[T]].buildRenderAsset(t)(renderContext)
-    }
-  }
-
-  trait Rendering[Renderable] {
-    def buildRenderAsset[AssetsType](renderable: Renderable)(implicit renderContext: RenderContext[AssetsType]): RenderAsset[Renderable]
-  }
-
+trait Rendering[Renderable] {
+  def buildRenderAsset[AssetsType](renderable: Renderable)(implicit renderContext: RenderContext[AssetsType]): RenderAsset[Renderable]
 }
