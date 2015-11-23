@@ -1,7 +1,7 @@
 package se.gigurra.wallace.client.renderer
 
 import se.gigurra.wallace.client.renderer.Renderer.Rendering
-import se.gigurra.wallace.gamemodel.TerrainStorage
+import se.gigurra.wallace.gamemodel.{Terrain, TerrainStorage}
 
 import scala.collection.mutable
 
@@ -51,7 +51,7 @@ class RenderAssets {
   val font20 = Font.fromTtfFile("fonts/pt-mono/PTM55FT.ttf", size = 40)
   val libgdxLogo = Sprite.fromFile("libgdxlogo.png", useMipMaps = false)
 
-  val maps = new RenderAssetsCategory[AnyRef]
+  val maps = new RenderAssetsCategory[Terrain[_]]
   val sprites = new RenderAssetsCategory[Sprite]
 
 }
