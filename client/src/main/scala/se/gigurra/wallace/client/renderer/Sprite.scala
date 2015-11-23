@@ -4,16 +4,14 @@ import java.nio.ByteBuffer
 
 import com.badlogic.gdx.graphics.Pixmap.Format
 import com.badlogic.gdx.graphics.Texture.TextureFilter
-import com.badlogic.gdx.graphics.{Texture, Pixmap}
-import se.gigurra.wallace.gamemodel.{ByteBufferTerrainStorage, TerrainStorageFactory}
+import com.badlogic.gdx.graphics.{Pixmap, Texture}
 import se.gigurra.wallace.util.DecoratedTrait._
 
 case class Sprite(imgData: Pixmap,
                   useMipMaps: Boolean,
                   disposeOnUpload: Boolean = false,
                   reloadOnContextLoss: Boolean = true)
-  extends DecoratedTrait[Texture]
-  with ByteBufferTerrainStorage {
+  extends DecoratedTrait[Texture] {
 
   val textureData = TextureData.fromImgData(
     imgData = imgData,
@@ -41,7 +39,7 @@ case class Sprite(imgData: Pixmap,
   override def _base0: Texture = texture
 }
 
-object Sprite extends TerrainStorageFactory[Sprite] {
+object Sprite {
 
   def fromFile(path: String,
                useMipMaps: Boolean,
@@ -67,8 +65,5 @@ object Sprite extends TerrainStorageFactory[Sprite] {
       reloadOnContextLoss = reloadOnContextLoss)
   }
 
-  def create(width: Int, height: Int): Sprite = {
-    fromSize(width = width, height = height, useMipMaps = true)
-  }
 
 }

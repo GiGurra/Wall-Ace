@@ -5,7 +5,7 @@ import scalaxy.streams.optimize
 
 object TerrainGenerator {
 
-  def generate[T_TerrainStorage <: TerrainStorage](seed: String, world: World[T_TerrainStorage]): Unit = {
+  def generate[T_TerrainStorage : TerrainStoring](seed: String, world: World[T_TerrainStorage]): Unit = {
 
     val rnd = new Random(seed.hashCode)
     val w = world.patchWidth

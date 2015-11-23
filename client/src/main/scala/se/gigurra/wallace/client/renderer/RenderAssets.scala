@@ -1,7 +1,7 @@
 package se.gigurra.wallace.client.renderer
 
 import se.gigurra.wallace.client.renderer.Renderer.Rendering
-import se.gigurra.wallace.gamemodel.{Terrain, TerrainStorage}
+import se.gigurra.wallace.gamemodel.Terrain
 
 import scala.collection.mutable
 

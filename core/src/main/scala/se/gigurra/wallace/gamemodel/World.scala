@@ -4,7 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 import scala.language.implicitConversions
 
-case class World[+T_TerrainStorage <: TerrainStorage](terrain: Terrain[T_TerrainStorage]) {
+case class World[T_TerrainStorage : TerrainStoring](terrain: Terrain[T_TerrainStorage]) {
 
   private val entities = new ArrayBuffer[Entity]()
 
@@ -27,9 +27,9 @@ case class World[+T_TerrainStorage <: TerrainStorage](terrain: Terrain[T_Terrain
 
 object World {
 
-  implicit def world2terrain[T_TerrainStorage <: TerrainStorage](world: World[T_TerrainStorage]): Terrain[T_TerrainStorage] = world.terrain
+  implicit def world2terrain[T_TerrainStorage : TerrainStoring](world: World[T_TerrainStorage]): Terrain[T_TerrainStorage] = world.terrain
 
-  def create[T_TerrainStorage <: TerrainStorage](storageFactory: TerrainStorageFactory[T_TerrainStorage],
+  def create[T_TerrainStorage : TerrainStoring](storageFactory: TerrainStorageFactory[T_TerrainStorage],
                                                  patchWidth: Int,
                                                  patchHeight: Int,
                                                  seed: String = "MyMapSeed"): World[T_TerrainStorage] = {

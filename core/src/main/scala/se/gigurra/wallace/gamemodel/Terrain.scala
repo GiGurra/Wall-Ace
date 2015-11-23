@@ -1,19 +1,21 @@
 package se.gigurra.wallace.gamemodel
 
-case class Terrain[+T_TerrainStorage <: TerrainStorage](storage: T_TerrainStorage,
-                                                       patch2WorldScale: Int = 100) {
+case class Terrain[T_TerrainStorage : TerrainStoring](storage: T_TerrainStorage,
+                                                      patch2WorldScale: Int = 100) {
 
-  val patchWidth = storage.width
+  val storing = implicitly[TerrainStoring[T_TerrainStorage]]
 
-  val patchHeight = storage.height
+  val patchWidth = storing.width(storage)
+
+  val patchHeight = storing.height(storage)
 
   val worldWidth = patchWidth * patch2WorldScale
 
   val worldHeight = patchHeight * patch2WorldScale
 
-  def getPatch(iPatch: Int): TerrainPatch = storage.get(iPatch)
+  def getPatch(iPatch: Int): TerrainPatch = storing.get(storage, iPatch)
 
-  def setPatch(iPatch: Int, patch: TerrainPatch): Unit = storage.set(iPatch, patch)
+  def setPatch(iPatch: Int, patch: TerrainPatch): Unit = storing.set(storage, iPatch, patch)
 
   def setPatch(xWorld: Int, yWorld: Int, patch: TerrainPatch): Unit = {
     setPatch(patchIndexOf(xWorld, yWorld), patch)

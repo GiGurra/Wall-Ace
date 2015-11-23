@@ -2,15 +2,16 @@ package se.gigurra.wallace.client
 
 import se.gigurra.wallace.client.clientstate.ClientStateManager
 import se.gigurra.wallace.client.networkstate.NetworkStateManager
-import se.gigurra.wallace.client.renderer.{Renderables, Sprite, Renderer}
+import se.gigurra.wallace.client.renderer._
 import se.gigurra.wallace.gamemodel.WorldStateManager
 
 class Client {
   import Renderables._
+  import SpriteTerrainStoring._
 
   val clientState = new ClientStateManager
   val networkState = new NetworkStateManager
-  val worldState = new WorldStateManager(Sprite)
+  val worldState = WorldStateManager(SpriteTerrainStorageFactory)
   val renderer = new Renderer
 
   object callbacks {

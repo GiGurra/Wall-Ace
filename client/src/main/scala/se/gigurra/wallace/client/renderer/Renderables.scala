@@ -1,6 +1,6 @@
 package se.gigurra.wallace.client.renderer
 
-import se.gigurra.wallace.gamemodel.{Terrain, TerrainStorage}
+import se.gigurra.wallace.gamemodel.Terrain
 
 object Renderables {
   import Renderer._
@@ -27,7 +27,7 @@ object Renderables {
     }
   }
 
-  implicit def terrianRenderer[T <: TerrainStorage : Rendering] = new Rendering[Terrain[T]] {
+  implicit def terrianRenderer[T : Rendering] = new Rendering[Terrain[T]] {
     override def buildRenderAsset[AssetsType](t: Terrain[T])(implicit renderContext: RenderContext[AssetsType]) = {
       val backingAsset = t.storage.buildRenderAsset()
       new RenderAsset[Terrain[T]] {
