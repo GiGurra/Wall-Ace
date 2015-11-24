@@ -8,9 +8,9 @@ case class World[T_TerrainStorage : TerrainStoring](terrain: Terrain[T_TerrainSt
 
   private val entities = new ArrayBuffer[Entity]()
 
-  def entities[EntityType <: Entity : ClassTag](pos: WorldVector = WorldVector(),
-    maxDelta: Int = 0,
-    filter: EntityType => Boolean = (e: EntityType) => true): Seq[EntityType] = {
+  def entities[EntityType <: Entity : ClassTag](pos: WorldVector = new WorldVector(),
+                                                maxDelta: Int = 0,
+                                                filter: EntityType => Boolean = (e: EntityType) => true): Seq[EntityType] = {
     terrain.requireInside(pos)
     entities
       .filter(_.isWithin(maxDelta, pos))

@@ -1,20 +1,16 @@
 package se.gigurra.wallace.client.clientstate
 
-sealed abstract class ClientMainState
-case object PreGame extends ClientMainState
-case class InGame() extends ClientMainState
+import se.gigurra.wallace.WorldVector
+import se.gigurra.wallace.client.{DynamicConfiguration, StaticConfiguration}
 
-object ClientMainState {
-  sealed abstract class Modifier
-  case object MenuOpen extends Modifier
-}
+class ClientStateManager(statCfg: StaticConfiguration,
+                         dynCfg: DynamicConfiguration) {
 
-class ClientStateManager {
-  var state: ClientMainState = PreGame
-  var modifiers: Seq[ClientMainState.Modifier] = Nil
+  var menuOpen = false
+  var camera = new Camera(worldPosition = WorldVector())
 
   def update(): Unit = {
+    val dt = statCfg.sim_dt
 
   }
-
 }

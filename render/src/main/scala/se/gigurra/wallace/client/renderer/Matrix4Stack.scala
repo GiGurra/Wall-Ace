@@ -49,12 +49,12 @@ object Matrix4Stack {
       1.0f / math.min(texture.width, texture.height),
       1.0f / math.min(texture.width, texture.height))
 
-    def center(texture: RenderAsset[_]) = translate(-texture.width/2.0f, -texture.height/2.0f)
-    def center(text: GlyphLayout) = translate(-text.width/2.0f, text.height/2.0f)
-    def centerX(texture: Texture) = translate(-texture.getWidth.toFloat/2.0f, 0.0f)
-    def centerX(text: GlyphLayout) = translate(-text.width/2.0f, 0.0f)
-    def centerY(texture: Texture) = translate(0.0f, -texture.getHeight.toFloat/2.0f)
-    def centerY(text: GlyphLayout) = translate(0.0f, text.height/2.0f)
+    def center(asset: RenderAsset[_]) = translate(-asset.width / 2.0f, -asset.height / 2.0f)
+    def center(text: GlyphLayout) = translate(-text.width / 2.0f, text.height / 2.0f)
+    def centerX(texture: Texture) = translate(-texture.getWidth.toFloat / 2.0f, 0.0f)
+    def centerX(text: GlyphLayout) = translate(-text.width / 2.0f, 0.0f)
+    def centerY(texture: Texture) = translate(0.0f, -texture.getHeight.toFloat / 2.0f)
+    def centerY(text: GlyphLayout) = translate(0.0f, text.height / 2.0f)
 
     def upload(): this.type = { batch.setTransformMatrix(current); this }
     def transform(f: Matrix4 => Unit) = { f(current); upload() }
@@ -65,7 +65,5 @@ object Matrix4Stack {
     def scalexy(s: Float) = scale(x = s, y = s)
     def rotate(angle: Float, x: Float = 0.0f, y: Float = 0.0f, z: Float = 0.0f) = transform(_.rotate(angle, x, y, z))
     def rotate(angle: Float, axis: Vector3) = transform(_.rotate(axis, angle))
-
   }
-
 }

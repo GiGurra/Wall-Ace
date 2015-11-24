@@ -5,11 +5,13 @@ import se.gigurra.wallace.client.networkstate.NetworkStateManager
 import se.gigurra.wallace.client.renderer._
 import se.gigurra.wallace.gamemodel.WorldStateManager
 
-class Client {
+class Client(statCfg: StaticConfiguration,
+             dynCfg: DynamicConfiguration) {
+
   import Renderables._
   import SpriteTerrainStoring._
 
-  val clientState = new ClientStateManager
+  val clientState = new ClientStateManager(statCfg, dynCfg)
   val networkState = new NetworkStateManager
   val worldState = WorldStateManager(SpriteTerrainStorageFactory)
   val renderer = new Renderer

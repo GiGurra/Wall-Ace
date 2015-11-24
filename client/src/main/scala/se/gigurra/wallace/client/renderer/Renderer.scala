@@ -17,15 +17,17 @@ class Renderer {
   // End of constructor
   ///////////////////////
 
-  def update[T_TerrainStorage: Rendering](client_world: World[T_TerrainStorage]): Unit = {
+  def update[T_TerrainStorage: Rendering](client_world: World[T_TerrainStorage]) = Frame2D {
+    drawTerrain(client_world.terrain)
+    drawGui
+  }
 
-    Projections.ortho11(Gdx.graphics.getWidth, Gdx.graphics.getHeight)
-    glClearColor(0.0f, 0.0f, 0.0f, 0)
-    glClear(GL_COLOR_BUFFER_BIT)
-
+  private def Frame2D(impl: => Unit): Unit = {
     batch {
-      drawTerrain(client_world.terrain)
-      drawGui
+      Projections.ortho11(Gdx.graphics.getWidth, Gdx.graphics.getHeight)
+      glClearColor(0.0f, 0.0f, 0.0f, 0)
+      glClear(GL_COLOR_BUFFER_BIT)
+      impl
     }
   }
 
@@ -33,13 +35,11 @@ class Renderer {
 
     val mapSprite = assets.maps.getOrElseUpdate("mapSprite", terrain)
 
-    mapSprite.upload()
-
     transform(_
       .unitSize(mapSprite)
-      .scalexy(renderContext.maxAspect)
+      .scalexy(maxAspect)
       .center(mapSprite)) {
-      mapSprite.draw()
+      mapSprite.uploaded.draw()
     }
   }
 

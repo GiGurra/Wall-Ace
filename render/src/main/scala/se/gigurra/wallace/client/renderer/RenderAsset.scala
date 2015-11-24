@@ -10,4 +10,9 @@ trait RenderAsset[+SourceType] extends Closeable {
   def draw[AssetsType]()(implicit renderContext: RenderContext[AssetsType]): Unit
 
   override def close(): Unit = dispose()
+
+  def uploaded(): RenderAsset[SourceType] = {
+    upload()
+    this
+  }
 }
