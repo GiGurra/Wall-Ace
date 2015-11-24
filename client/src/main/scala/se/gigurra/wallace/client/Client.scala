@@ -3,7 +3,7 @@ package se.gigurra.wallace.client
 import se.gigurra.wallace.client.clientstate.ClientStateManager
 import se.gigurra.wallace.client.networkstate.NetworkStateManager
 import se.gigurra.wallace.client.renderer._
-import se.gigurra.wallace.gamemodel.WorldStateManager
+import se.gigurra.wallace.client.worldstate.WorldStateManager
 
 class Client(statCfg: StaticConfiguration,
              dynCfg: DynamicConfiguration) {
@@ -11,10 +11,10 @@ class Client(statCfg: StaticConfiguration,
   import Renderables._
   import SpriteTerrainStoring._
 
-  val clientState = new ClientStateManager(statCfg, dynCfg)
-  val networkState = new NetworkStateManager
-  val worldState = WorldStateManager(SpriteTerrainStorageFactory)
-  val renderer = new Renderer
+  val networkStateMgr = NetworkStateManager(statCfg, dynCfg)
+  val clientStateMgr = ClientStateManager(statCfg, dynCfg)
+  val worldStateMgr = WorldStateManager(statCfg, dynCfg, SpriteTerrainStorageFactory)
+  val renderer = Renderer(statCfg, dynCfg)
 
   object callbacks {
 
@@ -36,10 +36,10 @@ class Client(statCfg: StaticConfiguration,
       // update network
       // update world
       // update renderer
-      clientState.update()
-      networkState.update()
-      worldState.update()
-      renderer.update(worldState.world)
+      networkStateMgr.update(clientStateMgr, worldStateMgr)
+      clientStateMgr.update(networkStateMgr, worldStateMgr)
+      worldStateMgr.update()
+      renderer.update(clientStateMgr.state, worldStateMgr.state)
     }
   }
 }

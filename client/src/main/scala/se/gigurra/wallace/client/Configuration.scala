@@ -8,11 +8,11 @@ case class StaticConfiguration(sim_dt: Int,
                                window_title: String,
                                app_forceExit: Boolean = true)
 
-case class DynamicConfiguration(window_position: Vec2FixedPoint,
-                                window_size: Vec2FixedPoint,
-                                app_vsyncEnabled: Boolean = true,
-                                app_foregroundFps: Int = 0,
-                                app_backgroundFps: Int = 0)
+case class DynamicConfiguration(var window_position: Vec2FixedPoint,
+                                var window_size: Vec2FixedPoint,
+                                var app_vsyncEnabled: Boolean = true,
+                                var app_foregroundFps: Int = 0,
+                                var app_backgroundFps: Int = 0)
 
 object Configuration {
 

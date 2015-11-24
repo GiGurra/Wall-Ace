@@ -1,8 +1,15 @@
 package se.gigurra.wallace.client.networkstate
 
-class NetworkStateManager {
+import se.gigurra.wallace.client.clientstate.ClientStateManager
+import se.gigurra.wallace.client.worldstate.WorldStateManager
+import se.gigurra.wallace.client.{DynamicConfiguration, StaticConfiguration}
+import se.gigurra.wallace.gamemodel.TerrainStoring
 
-  def update(): Unit = {
+case class NetworkStateManager(statCfg: StaticConfiguration,
+                               dynCfg: DynamicConfiguration) {
+
+  def update[T_TerrainStorage: TerrainStoring](clientStateMgr: ClientStateManager,
+                                               worldStateMgr: WorldStateManager[T_TerrainStorage]): Unit = {
 
   }
 }

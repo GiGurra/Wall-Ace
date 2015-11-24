@@ -1,16 +1,17 @@
 package se.gigurra.wallace.client.clientstate
 
-import se.gigurra.wallace.WorldVector
+import se.gigurra.wallace.client.networkstate.NetworkStateManager
+import se.gigurra.wallace.client.worldstate.WorldStateManager
 import se.gigurra.wallace.client.{DynamicConfiguration, StaticConfiguration}
+import se.gigurra.wallace.gamemodel.TerrainStoring
 
-class ClientStateManager(statCfg: StaticConfiguration,
-                         dynCfg: DynamicConfiguration) {
+case class ClientStateManager(statCfg: StaticConfiguration,
+                              dynCfg: DynamicConfiguration) {
 
-  var menuOpen = false
-  var camera = new Camera(worldPosition = WorldVector())
+  val state = new ClientState
 
-  def update(): Unit = {
-    val dt = statCfg.sim_dt
+  def update[T_TerrainStorage: TerrainStoring](networkStateMgr: NetworkStateManager,
+                                               worldStateMgr: WorldStateManager[T_TerrainStorage]) = {
 
   }
 }

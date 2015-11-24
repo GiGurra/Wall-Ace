@@ -2,9 +2,12 @@ package se.gigurra.wallace.client.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20._
+import se.gigurra.wallace.client.clientstate.ClientState
+import se.gigurra.wallace.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.gamemodel.{Terrain, World}
 
-class Renderer {
+case class Renderer(statCfg: StaticConfiguration,
+                    dynCfg: DynamicConfiguration) {
 
   import Renderables._
 
@@ -17,8 +20,9 @@ class Renderer {
   // End of constructor
   ///////////////////////
 
-  def update[T_TerrainStorage: Rendering](client_world: World[T_TerrainStorage]) = Frame2D {
-    drawTerrain(client_world.terrain)
+  def update[T_TerrainStorage: Rendering](clientState: ClientState,
+                                          worldState: World[T_TerrainStorage]) = Frame2D {
+    drawTerrain(worldState.terrain)
     drawGui
   }
 
