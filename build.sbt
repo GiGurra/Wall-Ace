@@ -50,6 +50,13 @@ lazy val comm = project in file("comm") settings (sharedSettings: _*) dependsOn 
   )
 )
 
+lazy val input = project in file("input") settings (sharedSettings: _*) dependsOn util settings(
+  name := baseName + "-input",
+  libraryDependencies ++= Seq(
+    "com.badlogicgames.gdx" % "gdx" % libgdxVersion
+  )
+)
+
 lazy val render = project in file("render") settings (sharedSettings: _*) dependsOn util settings(
   name := baseName + "-render",
   libraryDependencies ++= Seq(
@@ -58,7 +65,7 @@ lazy val render = project in file("render") settings (sharedSettings: _*) depend
   )
 )
 
-lazy val client = project in file("client") settings (sharedSettings: _*) dependsOn(util, model, comm, render) settings(
+lazy val client = project in file("client") settings (sharedSettings: _*) dependsOn(util, model, comm, render, input) settings(
   name := baseName + "-client"
 )
 
@@ -76,4 +83,4 @@ lazy val desktop = project in file("desktop") settings (sharedSettings: _*) depe
     fork in Compile := true
   )
 
-lazy val all = project in file(".") aggregate(util, model, comm, render, client, server, desktop)
+lazy val all = project in file(".") aggregate(util, model, comm, render, input, client, server, desktop)
