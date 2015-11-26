@@ -36,5 +36,4 @@ class GameSimulationStage(statCfg: StaticConfiguration,
     worldStateMgr.update()
     renderer.update(clientStateMgr.state, worldStateMgr.state)
   }
-
 }

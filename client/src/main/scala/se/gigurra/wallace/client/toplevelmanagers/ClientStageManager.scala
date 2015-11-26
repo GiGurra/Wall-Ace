@@ -26,6 +26,10 @@ case class ClientStageManager(statCfg: StaticConfiguration,
     stages.foreach(_.update())
   }
 
+  def hasStage(stageId: String): Boolean = {
+    stages.exists(_.id == stageId)
+  }
+
   def pushStage(stage: Stage): Unit = {
     require(!stages.exists(_.id == stage.id), "Duplicate stage id detected, bailing!")
     stages.insert(0, stage)
