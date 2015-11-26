@@ -1,7 +1,8 @@
 package se.gigurra.wallace.client
 
 import com.badlogic.gdx.Gdx
-import se.gigurra.wallace.client.toplevelmanagers.{ClientStageManager, ClientWindowManger, TopLevelManager}
+import se.gigurra.wallace.client.stage.{GameSimulationStage, MainMenuStage}
+import se.gigurra.wallace.client.toplevelmanagers.{StageManager, ClientStageManager, ClientWindowManger, TopLevelManager}
 import se.gigurra.wallace.input.InputQue
 
 class Client(statCfg: StaticConfiguration,
@@ -13,6 +14,8 @@ class Client(statCfg: StaticConfiguration,
   val clientWindowManager = new ClientWindowManger(statCfg, dynCfg)
   val clientStageManager = new ClientStageManager(statCfg, dynCfg)
   val managers = Seq(clientWindowManager, clientStageManager)
+
+  Client.addDefaultStages(statCfg, dynCfg, clientStageManager)
 
   object callbacks {
 
@@ -28,8 +31,19 @@ class Client(statCfg: StaticConfiguration,
 
     def onUpdate(): Unit = {
       managers.foldLeft(inputQue.pop())((inputs, manager) => manager.consumeInputs(inputs))
-      managers.foreach(_.update())
+      managers.reverse.foreach(_.update())
     }
   }
 
+}
+
+object Client {
+
+  def addDefaultStages(statCfg: StaticConfiguration,
+                       dynCfg: DynamicConfiguration,
+                       stageManager: StageManager): Unit = {
+
+    stageManager.appendStage(new MainMenuStage(statCfg, dynCfg, stageManager))
+    stageManager.appendStage(new GameSimulationStage(statCfg, dynCfg, stageManager))
+  }
 }

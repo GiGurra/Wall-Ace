@@ -12,4 +12,9 @@ case class NetworkStateManager(statCfg: StaticConfiguration,
                                                worldStateMgr: WorldStateManager[T_TerrainStorage]): Unit = {
 
   }
+
+  def close(): Unit = {
+    
+  }
+
 }

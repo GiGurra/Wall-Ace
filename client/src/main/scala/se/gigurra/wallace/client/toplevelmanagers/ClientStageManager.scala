@@ -7,12 +7,11 @@ import se.gigurra.wallace.input.InputEvent
 import scala.collection.mutable.ArrayBuffer
 
 case class ClientStageManager(statCfg: StaticConfiguration,
-                              dynCfg: DynamicConfiguration) extends TopLevelManager {
+                              dynCfg: DynamicConfiguration)
+  extends TopLevelManager
+  with StageManager {
 
   private val stages = new ArrayBuffer[Stage]()
-
-  appendStage(new MainMenuStage(statCfg, dynCfg))
-  appendStage(new GameSimulationStage(statCfg, dynCfg))
 
   /**
     * @param inputs
@@ -27,43 +26,49 @@ case class ClientStageManager(statCfg: StaticConfiguration,
   }
 
   def hasStage(stageId: String): Boolean = {
-    stages.exists(_.id == stageId)
+    stages.exists(_.stageId == stageId)
   }
 
   def pushStage(stage: Stage): Unit = {
-    require(!stages.exists(_.id == stage.id), "Duplicate stage id detected, bailing!")
+    require(!stages.exists(_.stageId == stage.stageId), "Duplicate stage id detected, bailing!")
     stages.insert(0, stage)
+    stage.onOpen()
   }
 
   def insertBefore(stageId: String, stage: Stage): Unit = {
-    require(!stages.exists(_.id == stage.id), "Duplicate stage id detected, bailing!")
-    val i = stages.indexWhere(_.id == stageId)
+    require(!stages.exists(_.stageId == stage.stageId), "Duplicate stage id detected, bailing!")
+    val i = stages.indexWhere(_.stageId == stageId)
     if (i >= 0) {
       stages.insert(i, stage)
+      stage.onOpen()
     } else {
-      appendStage(stage)
+      stages += stage
+      stage.onOpen()
     }
   }
 
   def insertAfter(stageId: String, stage: Stage): Unit = {
-    require(!stages.exists(_.id == stage.id), "Duplicate stage id detected, bailing!")
-    val i = stages.indexWhere(_.id == stageId)
+    require(!stages.exists(_.stageId == stage.stageId), "Duplicate stage id detected, bailing!")
+    val i = stages.indexWhere(_.stageId == stageId)
     if (i >= 0) {
       stages.insert(i+1, stage)
+      stage.onOpen()
     } else {
-      appendStage(stage)
+      stages += stage
+      stage.onOpen()
     }
   }
 
   def appendStage(stage: Stage): Unit = {
-    require(!stages.exists(_.id == stage.id), "Duplicate stage id detected, bailing!")
+    require(!stages.exists(_.stageId == stage.stageId), "Duplicate stage id detected, bailing!")
     stages += stage
+    stage.onOpen()
   }
 
   def removeStage(stageId: String): Unit = {
-    val i = stages.indexWhere(_.id == stageId)
+    val i = stages.indexWhere(_.stageId == stageId)
     if (i >= 0)
-      stages.remove(i)
+      stages.remove(i).onClose()
   }
 
 }

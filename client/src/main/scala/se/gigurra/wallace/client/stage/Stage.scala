@@ -4,7 +4,7 @@ import se.gigurra.wallace.input.InputEvent
 
 trait Stage {
 
-  def id: String
+  def stageId: String
 
   /**
     * @param inputs
@@ -17,4 +17,14 @@ trait Stage {
   def update(): Unit = {
 
   }
+
+  def onClose(): Unit = {
+
+  }
+
+  def onOpen(): Unit = {
+
+  }
+
+
 }

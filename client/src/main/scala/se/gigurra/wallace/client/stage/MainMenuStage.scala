@@ -1,12 +1,14 @@
 package se.gigurra.wallace.client.stage
 
+import se.gigurra.wallace.client.toplevelmanagers.StageManager
 import se.gigurra.wallace.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.input.InputEvent
 
 class MainMenuStage(statCfg: StaticConfiguration,
-                    dynCfg: DynamicConfiguration) extends Stage {
+                    dynCfg: DynamicConfiguration,
+                    stageManager: StageManager) extends Stage {
 
-  override def id: String = "main-menu"
+  override def stageId: String = "main-menu"
 
   override def consumeInputs(inputs: Seq[InputEvent]): Seq[InputEvent] = {
     inputs
