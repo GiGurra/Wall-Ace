@@ -2,7 +2,7 @@ package se.gigurra.wallace.client
 
 import com.badlogic.gdx.{Game, Gdx}
 import se.gigurra.wallace.client.stage.menu.MainMenuStage
-import se.gigurra.wallace.client.stage.world.GameSimulationStage
+import se.gigurra.wallace.client.stage.world.WorldStage
 import se.gigurra.wallace.client.toplevelmanagers.{ClientStageManager, ClientWindowManger}
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.input.InputQue
@@ -41,6 +41,6 @@ object Client {
                        stageManager: StageManager): Unit = {
 
     stageManager.appendStage(new MainMenuStage(statCfg, dynCfg, stageManager))
-    stageManager.appendStage(new GameSimulationStage(statCfg, dynCfg, stageManager))
+    stageManager.appendStage(new WorldStage(statCfg, dynCfg, stageManager))
   }
 }

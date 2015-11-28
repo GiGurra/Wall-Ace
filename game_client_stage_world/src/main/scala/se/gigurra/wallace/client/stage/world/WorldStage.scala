@@ -9,9 +9,9 @@ import se.gigurra.wallace.input.InputEvent
 import se.gigurra.wallace.stage.{Stage, StageManager}
 import se.gigurra.wallace.client.stage.world.renderer.Renderables
 
-class GameSimulationStage(statCfg: StaticConfiguration,
-                          dynCfg: DynamicConfiguration,
-                          stageManager: StageManager) extends Stage {
+class WorldStage(statCfg: StaticConfiguration,
+                 dynCfg: DynamicConfiguration,
+                 stageManager: StageManager) extends Stage {
 
   override def stageId: String = "game-simulation"
 
