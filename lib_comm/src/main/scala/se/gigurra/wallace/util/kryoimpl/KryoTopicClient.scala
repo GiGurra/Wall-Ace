@@ -1,11 +1,11 @@
-package se.gigurra.wallace.comm.kryoimpl
+package se.gigurra.wallace.util.kryoimpl
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.logging.Logger
 
 import com.esotericsoftware.kryo.Serializer
 import com.esotericsoftware.kryonet.{Connection, FrameworkMessage}
-import se.gigurra.wallace.comm._
+import se.gigurra.wallace.util._
 
 import scala.collection.JavaConversions._
 import scala.concurrent.duration.Duration

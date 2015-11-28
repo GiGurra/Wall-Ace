@@ -1,4 +1,4 @@
-package se.gigurra.wallace.comm
+package se.gigurra.wallace.util
 
 case class Post[MessageType](topic: String, content: MessageType)
 case class Subscribe(topic: String)

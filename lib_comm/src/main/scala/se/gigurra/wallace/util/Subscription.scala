@@ -1,4 +1,4 @@
-package se.gigurra.wallace.comm
+package se.gigurra.wallace.util
 
 import rx.lang.scala.Observable
 

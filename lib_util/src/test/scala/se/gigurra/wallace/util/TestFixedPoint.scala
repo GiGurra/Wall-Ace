@@ -1,7 +1,6 @@
-package se.gigurra.wallace.comm
+package se.gigurra.wallace.util
 
 import org.scalatest._
-import se.gigurra.wallace.util.FixedPoint
 
 class TestFixedPoint extends WordSpec with Matchers {
 
