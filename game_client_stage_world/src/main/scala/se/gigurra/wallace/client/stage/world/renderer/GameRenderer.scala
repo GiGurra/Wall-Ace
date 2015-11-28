@@ -1,38 +1,24 @@
 package se.gigurra.wallace.client.stage.world.renderer
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.GL20._
 import se.gigurra.wallace.client.stage.world.clientstate.ClientState
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.gamemodel.{Terrain, World}
 
 case class GameRenderer(statCfg: StaticConfiguration,
-                        dynCfg: DynamicConfiguration) {
+                        dynCfg: DynamicConfiguration) extends Frame2DRender {
 
   import Renderables._
 
   implicit val renderContext = RenderContext(new RenderAssets)
-
   import renderContext._
-  import renderContext.glShortcuts._
-  import renderContext.state._
 
   // End of constructor
   ///////////////////////
 
   def update[T_TerrainStorage: Rendering](clientState: ClientState,
-                                          worldState: World[T_TerrainStorage]) = Frame2D {
+                                          worldState: World[T_TerrainStorage]) = frame2D {
     drawTerrain(worldState.terrain)
     drawGui
-  }
-
-  private def Frame2D(impl: => Unit): Unit = {
-    batch {
-      Projections.ortho11(Gdx.graphics.getWidth, Gdx.graphics.getHeight)
-      glClearColor(0.0f, 0.0f, 0.0f, 0)
-      glClear(GL_COLOR_BUFFER_BIT)
-      impl
-    }
   }
 
   private def drawTerrain[T_TerrainStorage: Rendering](terrain: Terrain[T_TerrainStorage]): Unit = {

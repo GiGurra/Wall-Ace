@@ -10,6 +10,7 @@ case class RenderContext[AssetsType](_assets: AssetsType) {
   val state = new RenderState
   val assets: AssetsType = _assets
   val glShortcuts = com.badlogic.gdx.Gdx.gl
+  val transform = state.transform
 
   def aspect = Gdx.graphics.getWidth.toFloat / Gdx.graphics.getHeight.toFloat
 
