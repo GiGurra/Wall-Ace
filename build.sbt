@@ -33,16 +33,20 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
   exportJars := true
 )
 
-lazy val util = project in file("util") settings (sharedSettings: _*) settings(
-  name := baseName + "-util"
+lazy val lib_util = project in file("lib_util") settings (sharedSettings: _*) settings(
+  name := baseName + "-lib_util"
 )
 
-lazy val model = project in file("model") settings (sharedSettings: _*) dependsOn util settings(
-  name := baseName + "-model"
+lazy val game_config = project in file("game_config") settings (sharedSettings: _*) dependsOn lib_util settings(
+  name := baseName + "-game_config"
 )
 
-lazy val comm = project in file("comm") settings (sharedSettings: _*) dependsOn util settings(
-  name := baseName + "-comm",
+lazy val game_model = project in file("game_model") settings (sharedSettings: _*) dependsOn lib_util settings(
+  name := baseName + "-game_model"
+)
+
+lazy val lib_comm = project in file("lib_comm") settings (sharedSettings: _*) dependsOn lib_util settings(
+  name := baseName + "-lib_comm",
   libraryDependencies ++= Seq(
     "org.json4s" %% "json4s-native" % "3.3.0",
     "io.reactivex" %% "rxscala" % "0.25.0",
@@ -50,31 +54,43 @@ lazy val comm = project in file("comm") settings (sharedSettings: _*) dependsOn 
   )
 )
 
-lazy val input = project in file("input") settings (sharedSettings: _*) dependsOn util settings(
-  name := baseName + "-input",
+lazy val lib_input = project in file("lib_input") settings (sharedSettings: _*) dependsOn lib_util settings(
+  name := baseName + "-lib_input",
   libraryDependencies ++= Seq(
     "com.badlogicgames.gdx" % "gdx" % libgdxVersion
   )
 )
 
-lazy val render = project in file("render") settings (sharedSettings: _*) dependsOn util settings(
-  name := baseName + "-render",
+lazy val lib_render = project in file("lib_render") settings (sharedSettings: _*) dependsOn lib_util settings(
+  name := baseName + "-lib_render",
   libraryDependencies ++= Seq(
     "com.badlogicgames.gdx" % "gdx" % libgdxVersion,
     "com.badlogicgames.gdx" % "gdx-freetype" % libgdxVersion
   )
 )
 
-lazy val client = project in file("client") settings (sharedSettings: _*) dependsOn(util, model, comm, render, input) settings(
-  name := baseName + "-client"
+lazy val lib_stage = project in file("lib_stage") settings (sharedSettings: _*) dependsOn(lib_util, lib_input) settings(
+  name := baseName + "-lib_stage"
 )
 
-lazy val server = project in file("server") settings (sharedSettings: _*) dependsOn(util, model, comm) settings(
-  name := baseName + "-server"
+lazy val game_client_stage_menu = project in file("game_client_stage_menu") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_render, game_config) settings(
+  name := baseName + "-game_client_stage_menu"
 )
 
-lazy val desktop = project in file("desktop") settings (sharedSettings: _*) dependsOn client settings(
-    name := baseName + "-desktop",
+lazy val game_client_stage_world = project in file("game_client_stage_world") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_render, game_config, game_model) settings(
+  name := baseName + "-game_client_stage_world"
+)
+
+lazy val game_client = project in file("game_client") settings (sharedSettings: _*) dependsOn(lib_util, game_client_stage_menu, game_client_stage_world) settings(
+  name := baseName + "-game_client"
+)
+
+lazy val game_server = project in file("game_server") settings (sharedSettings: _*) dependsOn(lib_util, lib_comm, game_model) settings(
+  name := baseName + "-game_server"
+)
+
+lazy val platform_desktop = project in file("platform_desktop") settings (sharedSettings: _*) dependsOn game_client settings(
+    name := baseName + "-platform_desktop",
     libraryDependencies ++= Seq(
       "com.badlogicgames.gdx" % "gdx-backend-lwjgl" % libgdxVersion,
       "com.badlogicgames.gdx" % "gdx-platform" % libgdxVersion classifier "natives-desktop",
@@ -83,4 +99,18 @@ lazy val desktop = project in file("desktop") settings (sharedSettings: _*) depe
     fork in Compile := true
   )
 
-lazy val all = project in file(".") aggregate(util, model, comm, render, input, client, server, desktop)
+lazy val all = project.in(file("."))
+  .aggregate(
+    lib_util,
+    lib_comm,
+    lib_input,
+    lib_render,
+    lib_stage,
+    game_config,
+    game_model,
+    game_client_stage_menu,
+    game_client_stage_world,
+    game_client,
+    game_server,
+    platform_desktop
+  )
