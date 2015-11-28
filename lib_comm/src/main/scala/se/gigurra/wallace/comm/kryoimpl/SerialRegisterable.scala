@@ -1,4 +1,4 @@
-package se.gigurra.wallace.util.kryoimpl
+package se.gigurra.wallace.comm.kryoimpl
 
 import scala.reflect.ClassTag
 

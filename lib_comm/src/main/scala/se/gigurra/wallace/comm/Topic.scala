@@ -1,4 +1,4 @@
-package se.gigurra.wallace.util
+package se.gigurra.wallace.comm
 
 import java.util.concurrent.TimeUnit
 
@@ -7,6 +7,9 @@ import rx.lang.scala.schedulers.ExecutionContextScheduler
 
 import scala.concurrent.duration.Duration
 
+/**
+  * Created by kjolh on 11/28/2015.
+  */
 case class Topic[MessageType](
   name: String,
   historySize: Int = 128,

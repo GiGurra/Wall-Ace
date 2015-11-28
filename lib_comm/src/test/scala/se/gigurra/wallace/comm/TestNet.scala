@@ -1,12 +1,14 @@
-package se.gigurra.wallace.util
+package se.gigurra.wallace.comm
 
 import java.util.concurrent.TimeUnit
 
 import com.esotericsoftware.kryo.Serializer
 import com.esotericsoftware.kryonet.Connection
 import org.scalatest._
+import resource.Resource
 import resource._
-import se.gigurra.wallace.util.kryoimpl._
+import se.gigurra.wallace.util._
+import se.gigurra.wallace.comm.kryoimpl._
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future, TimeoutException}

@@ -1,4 +1,4 @@
-package se.gigurra.wallace.util
+package se.gigurra.wallace.comm
 
 import scala.collection.mutable
 
