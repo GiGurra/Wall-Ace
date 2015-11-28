@@ -44,7 +44,7 @@ class WorldStage(statCfg: StaticConfiguration,
     val updatesFromPlayer = playerStateMgr.update(iSimFrame)
     val updatesFromNetwork = networkStateMgr.update(iSimFrame, updatesFromPlayer)
     val worldEvents = worldStateMgr.update(updatesFromNetwork.worldUpdates)
-    audioStateMgr.update(worldEvents)
+    audioStateMgr.update(iSimFrame, worldEvents)
     renderer.update(iSimFrame, playerStateMgr.state, worldStateMgr.state, worldEvents)
   }
 
