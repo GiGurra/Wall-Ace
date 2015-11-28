@@ -1,22 +1,18 @@
 package se.gigurra.wallace.input
 
 import com.badlogic.gdx.{Input, InputProcessor}
-import se.gigurra.wallace.util.Vec2FixedPoint
+import se.gigurra.wallace.util.{SyncQue, Vec2FixedPoint}
 
 import scala.collection.mutable.ArrayBuffer
 
 class InputQue private() {
 
-  def pop(): Seq[InputEvent] = synchronized {
-    val out = events.toArray
-    events.clear()
-    out
-  }
+  private val q = SyncQue[InputEvent]()
 
-  private val events = new ArrayBuffer[InputEvent]()
+  def pop(): Seq[InputEvent] = q.pop()
 
-  private def add(event: InputEvent): Boolean = synchronized {
-    events += event
+  private def add(event: InputEvent): Boolean = {
+    q.add(event)
     true
   }
 

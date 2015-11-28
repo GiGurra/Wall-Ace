@@ -1,21 +1,23 @@
 package se.gigurra.wallace.client.stage.world.networkstate
 
-import se.gigurra.wallace.client.stage.world.clientstate.ClientStateManager
-import se.gigurra.wallace.client.stage.world.worldstate.WorldStateManager
-import se.gigurra.wallace.config.client.DynamicConfiguration
-import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
-import se.gigurra.wallace.gamemodel.TerrainStoring
+import se.gigurra.wallace.client.stage.world.playerstate.UpdatesFromPlayer
+import se.gigurra.wallace.gamemodel.{TerrainStoring, WorldSimFrameIndex, WorldUpdateBatch}
 
-case class NetworkStateManager(statCfg: StaticConfiguration,
-                               dynCfg: DynamicConfiguration) {
+case class UpdatesFromNetwork(worldUpdates: Seq[WorldUpdateBatch])
 
-  def update[T_TerrainStorage: TerrainStoring](clientStateMgr: ClientStateManager,
-                                               worldStateMgr: WorldStateManager[T_TerrainStorage]): Unit = {
+case class NetworkStateManager(isSinglePlayer: Boolean) {
 
+  def update[T_TerrainStorage: TerrainStoring](iSimFrame: WorldSimFrameIndex,
+                                              playerInput: UpdatesFromPlayer): UpdatesFromNetwork = {
+
+    // Short curcuit if single player!
+    if (isSinglePlayer)
+      return UpdatesFromNetwork(worldUpdates = Seq(playerInput.worldUpdates))
+
+    ???
   }
 
   def close(): Unit = {
-    
   }
 
 }

@@ -1,10 +1,10 @@
 package se.gigurra.wallace.client.stage.world
 
-import se.gigurra.wallace.client.stage.world.clientstate.ClientStateManager
+import se.gigurra.wallace.client.stage.world.playerstate.PlayerStateManager
 import se.gigurra.wallace.client.stage.world.networkstate.NetworkStateManager
 import se.gigurra.wallace.client.stage.world.renderer.{WorldRenderer, SpriteTerrainStorageFactory, SpriteTerrainStoring}
-import se.gigurra.wallace.client.stage.world.worldstate.WorldStateManager
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
+import se.gigurra.wallace.gamemodel.{WorldSimFrameIndex, WorldStateManager}
 import se.gigurra.wallace.input.InputEvent
 import se.gigurra.wallace.stage.{Stage, StageManager}
 import se.gigurra.wallace.client.stage.world.renderer.Renderables
@@ -18,35 +18,37 @@ class WorldStage(statCfg: StaticConfiguration,
   import Renderables._
   import SpriteTerrainStoring._
 
-  val networkStateMgr = NetworkStateManager(statCfg, dynCfg)
-  val clientStateMgr = ClientStateManager(statCfg, dynCfg)
-  val worldStateMgr = WorldStateManager(statCfg, dynCfg, SpriteTerrainStorageFactory)
+  val playerStateMgr = PlayerStateManager(statCfg, dynCfg)
+
+  val networkStateMgr = NetworkStateManager(isSinglePlayer)
+
+  val worldStateMgr = WorldStateManager(
+    SpriteTerrainStorageFactory,
+    statCfg.sim_dt,
+    dynCfg.game_isSinglePlayer)
+
   val renderer = WorldRenderer(statCfg, dynCfg)
+
+  //////////////////////////
+  // Callbacks
 
   override def consumeInputs(inputs: Seq[InputEvent]): Seq[InputEvent] = {
     inputs
   }
 
   override def update(): Unit = {
-    // TODO: Draw stuff... Run game sim.. etc .. or?? Network connections perhaps?
-
-    // Super simple single threaded design:
-    // update network
-    // update world
-    // update renderer
-    networkStateMgr.update(clientStateMgr, worldStateMgr)
-    clientStateMgr.update(networkStateMgr, worldStateMgr)
-    worldStateMgr.update()
-    renderer.update(clientStateMgr.state, worldStateMgr.state)
+    val updatesFromPlayer = playerStateMgr.update(iSimFrame)
+    val updatesFromNetwork = networkStateMgr.update(iSimFrame, updatesFromPlayer)
+    val worldEvents = worldStateMgr.update(updatesFromNetwork.worldUpdates)
+    renderer.update(iSimFrame, playerStateMgr.state, worldStateMgr.state, worldEvents)
   }
-
 
   override def onClose(): Unit = {
     networkStateMgr.close()
   }
 
-  override def onOpen(): Unit = {
+  def isSinglePlayer: Boolean = dynCfg.game_isSinglePlayer
 
-  }
+  def iSimFrame: WorldSimFrameIndex = worldStateMgr.iSimFrame
 
 }

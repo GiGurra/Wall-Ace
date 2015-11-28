@@ -1,8 +1,17 @@
-package se.gigurra.wallace.client.stage.world.renderer
+package se.gigurra.wallace.client.stage.world
 
 import com.badlogic.gdx.Gdx
+import se.gigurra.wallace.gamemodel._
 
-trait Frame2DRender {
+package object renderer {
+
+  def world2RenderEvent(iSimFrame: WorldSimFrameIndex, we: WorldEvent): RenderEvent[WorldEvent] = {
+    we match {
+      case _ =>
+        println(s"Unknown WorldEvent type ${we.getClass}")
+        NullRenderEvent(we)
+    }
+  }
 
   def frame2D[AssetsType](impl: => Unit)(implicit context: RenderContext[AssetsType]): Unit = {
     import context.state._

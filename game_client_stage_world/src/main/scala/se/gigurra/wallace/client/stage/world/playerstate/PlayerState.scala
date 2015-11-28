@@ -1,6 +1,6 @@
-package se.gigurra.wallace.client.stage.world.clientstate
+package se.gigurra.wallace.client.stage.world.playerstate
 
 import se.gigurra.wallace.WorldVector
 
-case class ClientState(var menuOpen: Boolean = false,
+case class PlayerState(var ownUnitId: Option[String],
                        var camera: Camera = new Camera(worldPosition = WorldVector()))
