@@ -7,7 +7,11 @@ object Time {
 
   type Seconds = Double
 
-  def seconds: Seconds = System.nanoTime()/1e9
+  type Milliseconds = Long
+
+  def seconds: Seconds = System.nanoTime / 1e9
+
+  def millis: Milliseconds = System.currentTimeMillis
 
   def measure[ReturnType](operation: => ReturnType): MeasuredOperation[ReturnType] = {
     val t0 = seconds

@@ -1,34 +1,31 @@
 package se.gigurra.wallace.gamemodel
 
-import scala.collection.mutable.ArrayBuffer
-
 case class WorldFrameUpdater() {
 
   def update(state: World[_],
-             externalUpdates: Seq[WorldUpdate]): Seq[WorldEvent] = {
+             externalUpdates: Seq[WorldUpdate])
+            (implicit eventReceiver: WorldEventReceiver): Unit = {
 
-    val worldStateEvents = new ArrayBuffer[WorldEvent]()
-
-    worldStateEvents ++= applyExternalUpdates(state, externalUpdates)
-    worldStateEvents ++= runSimulationFrame(state)
-
-    worldStateEvents
+    applyExternalUpdates(state, externalUpdates)
+    runSimulationFrame(state)
   }
 
   private def applyExternalUpdates(state: World[_],
-                                   externalUpdates: Seq[WorldUpdate]): Seq[WorldEvent] = {
+                                   externalUpdates: Seq[WorldUpdate])
+                                  (implicit emit: WorldEventReceiver): Unit = {
 
-    val events = externalUpdates.flatMap(_.apply(state))
-
-    events
+    for (update <- externalUpdates) {
+      val events = update.apply(state)
+      for (event <- events) {
+        emit(event)
+      }
+    }
   }
 
-  private def runSimulationFrame(state: World[_]): Seq[WorldEvent] = {
-
-    val worldStateEvents = new ArrayBuffer[WorldEvent]()
+  private def runSimulationFrame(state: World[_])
+                                (implicit emit: WorldEventReceiver): Unit = {
 
     // TODO: Accelerate, move, explode, yadayada
 
-    worldStateEvents
   }
 }

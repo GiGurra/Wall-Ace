@@ -6,9 +6,10 @@ package object gamemodel {
   type WorldSimFrameIndex = Long
   type WorldVector = Vec2FixedPoint
   type WorldUpdate = (World[_] => Seq[WorldEvent])
-}
+  type WorldEventReceiver = WorldEvent => Unit
 
-object WorldVector {
-  import gamemodel.WorldVector
-  def apply(x: Int = 0, y: Int = 0): WorldVector = new WorldVector(x, y)
+  def emitWorldEvent(event: WorldEvent)
+                    (implicit receiver: WorldEventReceiver): Unit = {
+    receiver.apply(event)
+  }
 }

@@ -1,5 +1,7 @@
 package se.gigurra.wallace.gamemodel
 
+import se.gigurra.wallace.util.Time
+
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
@@ -9,11 +11,12 @@ case class WorldStateManager[T_TerrainStorage: TerrainStoring](terrainStorageFac
 
   val state = World.create(terrainStorageFactory, 640, 640)
   private var _iSimFrame: Long = 0L
-  private var lastWorldTime = systemTime
+  private var _lastWorldTime = Time.millis
   private val queuedExternalUpdates = new mutable.HashMap[WorldSimFrameIndex, Seq[WorldUpdate]]
   private val worldFrameUpdater = WorldFrameUpdater()
 
   def iSimFrame: Long = _iSimFrame
+  def lastWorldTime: Time.Milliseconds = _lastWorldTime
 
   def update(externalUpdates: Seq[WorldUpdateBatch]): Seq[WorldEvent] = {
 
@@ -22,21 +25,21 @@ case class WorldStateManager[T_TerrainStorage: TerrainStoring](terrainStorageFac
     queueUpdates(externalUpdates)
 
     if (isSinglePlayer) {
-      while (lastWorldTime + dt < systemTime) {
-        worldStateEvents ++= doUpdate()
+      while (lastWorldTime + dt < Time.millis) {
+        updateOneFrame(worldStateEvents.+=(_))
       }
     } else {
       while (queuedExternalUpdates.nonEmpty) {
-        worldStateEvents ++= doUpdate()
+        updateOneFrame(worldStateEvents.+=(_))
       }
     }
 
     worldStateEvents
   }
 
-  private def doUpdate(): Seq[WorldEvent] = {
+  private def updateOneFrame(implicit eventReceiver: WorldEventReceiver) = {
     val out = worldFrameUpdater.update(state, popExternalUpdates(iSimFrame))
-    lastWorldTime += dt
+    _lastWorldTime += dt
     _iSimFrame += 1
     out
   }
@@ -60,10 +63,6 @@ case class WorldStateManager[T_TerrainStorage: TerrainStoring](terrainStorageFac
 
       queuedExternalUpdates.put(worldUpdate.iSimFrame, updatesForThisFrame)
     }
-  }
-
-  private def systemTime: Long = {
-    System.currentTimeMillis()
   }
 
   private def popExternalUpdates(iSimFrame: Long): Seq[WorldUpdate] = {
