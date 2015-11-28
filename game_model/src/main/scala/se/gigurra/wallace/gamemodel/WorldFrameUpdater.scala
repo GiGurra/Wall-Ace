@@ -4,7 +4,7 @@ case class WorldFrameUpdater() {
 
   def update(state: World[_],
              externalUpdates: Seq[WorldUpdate])
-            (implicit eventReceiver: WorldEventReceiver): Unit = {
+            (implicit emit: WorldEventReceiver): Unit = {
 
     applyExternalUpdates(state, externalUpdates)
     runSimulationFrame(state)
