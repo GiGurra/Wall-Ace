@@ -1,4 +1,4 @@
-package se.gigurra.wallace
+package se.gigurra.wallace.server
 
 object Main extends App {
 	println("HelloServer!")
