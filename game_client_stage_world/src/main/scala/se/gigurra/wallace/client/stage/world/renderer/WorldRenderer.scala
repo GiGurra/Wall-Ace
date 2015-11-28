@@ -10,13 +10,14 @@ case class WorldRenderer(statCfg: StaticConfiguration,
 
   import Renderables._
 
-  implicit val renderContext = RenderContext(new RenderAssets)
+  implicit val renderContext = RenderContext(RenderAssets())
   import renderContext._
 
-  private var events: Seq[RenderEvent[WorldEvent]] = Seq.empty
+  private var events = Seq.empty[RenderEvent[WorldEvent]]
 
-  // End of constructor
   ///////////////////////
+  // Public API
+  //
 
   def update[T_TerrainStorage: Rendering](iSimFrame: WorldSimFrameIndex,
                                           clientState: PlayerState,
@@ -25,20 +26,17 @@ case class WorldRenderer(statCfg: StaticConfiguration,
     addEvents(iSimFrame, worldEvents)
     drawTerrain(worldState.terrain)
     drawEvents()
-    drawWorldGui()
+    drawWorldGui(clientState, worldState)
     removeExpiredEvents()
   }
+
+  ///////////////////////
+  // Helpers
+  //
 
   private def addEvents(iSimFrame: WorldSimFrameIndex, worldEvents: Seq[WorldEvent]): Unit = {
     events ++= worldEvents.map(world2RenderEvent(iSimFrame, _))
   }
-
-  private def removeExpiredEvents(): Unit = {
-    val t = Time.seconds
-    events = events.filterNot(_.expired(t))
-  }
-
-  private def drawEvents(): Unit = {}
 
   private def drawTerrain[T_TerrainStorage: Rendering](terrain: Terrain[T_TerrainStorage]): Unit = {
 
@@ -52,7 +50,9 @@ case class WorldRenderer(statCfg: StaticConfiguration,
     }
   }
 
-  private def drawWorldGui(): Unit = {
+  private def drawEvents(): Unit = {}
+
+  private def drawWorldGui(clientState: PlayerState, worldState: World[_]): Unit = {
 
     val gdxLogoAsset = assets.sprites.getOrElseUpdate("gdxLogo", assets.libgdxLogo)
 
@@ -62,6 +62,11 @@ case class WorldRenderer(statCfg: StaticConfiguration,
       transform(_.center(gdxLogoAsset))(gdxLogoAsset.draw())
       assets.temporary(text) foreach { text => transform(_.center(text))(text.draw()) }
     }
+  }
+
+  private def removeExpiredEvents(): Unit = {
+    val t = Time.seconds
+    events = events.filterNot(_.expired(t))
   }
 
 }
