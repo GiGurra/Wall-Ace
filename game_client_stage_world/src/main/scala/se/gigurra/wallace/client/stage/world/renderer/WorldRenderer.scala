@@ -4,8 +4,8 @@ import se.gigurra.wallace.client.stage.world.clientstate.ClientState
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.gamemodel.{Terrain, World}
 
-case class GameRenderer(statCfg: StaticConfiguration,
-                        dynCfg: DynamicConfiguration) extends Frame2DRender {
+case class WorldRenderer(statCfg: StaticConfiguration,
+                         dynCfg: DynamicConfiguration) extends Frame2DRender {
 
   import Renderables._
 

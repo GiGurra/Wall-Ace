@@ -2,7 +2,7 @@ package se.gigurra.wallace.client.stage.world
 
 import se.gigurra.wallace.client.stage.world.clientstate.ClientStateManager
 import se.gigurra.wallace.client.stage.world.networkstate.NetworkStateManager
-import se.gigurra.wallace.client.stage.world.renderer.{GameRenderer, SpriteTerrainStorageFactory, SpriteTerrainStoring}
+import se.gigurra.wallace.client.stage.world.renderer.{WorldRenderer, SpriteTerrainStorageFactory, SpriteTerrainStoring}
 import se.gigurra.wallace.client.stage.world.worldstate.WorldStateManager
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.input.InputEvent
@@ -21,7 +21,7 @@ class WorldStage(statCfg: StaticConfiguration,
   val networkStateMgr = NetworkStateManager(statCfg, dynCfg)
   val clientStateMgr = ClientStateManager(statCfg, dynCfg)
   val worldStateMgr = WorldStateManager(statCfg, dynCfg, SpriteTerrainStorageFactory)
-  val renderer = GameRenderer(statCfg, dynCfg)
+  val renderer = WorldRenderer(statCfg, dynCfg)
 
   override def consumeInputs(inputs: Seq[InputEvent]): Seq[InputEvent] = {
     inputs
