@@ -2,8 +2,9 @@ package se.gigurra.wallace.client.stage.world.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Align
+import se.gigurra.wallace.util.Disposing
 
-case class RenderContext[AssetsType](_assets: AssetsType) {
+case class RenderContext[AssetsType : Disposing](_assets: AssetsType) {
 
   def fps = Gdx.graphics.getFramesPerSecond
 
@@ -22,6 +23,10 @@ case class RenderContext[AssetsType](_assets: AssetsType) {
                targetWidth: Float = 0.0f,
                wrap: Boolean = false): RichGlyphLayout = {
     font.prep(str, align, targetWidth, wrap)
+  }
+
+  def close(): Unit = {
+    implicitly[Disposing[AssetsType]].dispose(assets)
   }
 
 }

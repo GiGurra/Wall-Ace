@@ -1,5 +1,7 @@
 package se.gigurra.wallace.client.stage.world.renderer
 
+import java.io.Closeable
+
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture.TextureFilter
@@ -9,13 +11,19 @@ import com.badlogic.gdx.graphics.g2d.{BitmapFont, GlyphLayout, PixmapPacker}
 import com.badlogic.gdx.utils.Align
 import se.gigurra.wallace.util.Decorated
 
-class Font(_base: BitmapFont) extends Decorated[BitmapFont](_base) {
+class Font(_base: BitmapFont)
+  extends Decorated[BitmapFont](_base)
+  with Closeable {
 
   def prep(str: CharSequence,
            align: Int = Align.left,
            targetWidth: Float = 0.0f,
            wrap: Boolean = false): RichGlyphLayout = {
     new RichGlyphLayout(new GlyphLayout(this, str, _base.getColor, targetWidth, align, wrap), this)
+  }
+
+  override def close(): Unit = {
+    // Nothing really cached yet..
   }
 
 }

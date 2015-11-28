@@ -1,5 +1,7 @@
 package se.gigurra.wallace.client.stage.world.renderer.elements
 
+import java.io.Closeable
+
 import se.gigurra.wallace.client.stage.world.renderer._
 import se.gigurra.wallace.gamemodel.Terrain
 

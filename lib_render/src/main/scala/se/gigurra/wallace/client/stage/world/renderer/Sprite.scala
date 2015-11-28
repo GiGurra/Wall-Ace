@@ -1,5 +1,6 @@
 package se.gigurra.wallace.client.stage.world.renderer
 
+import java.io.Closeable
 import java.nio.ByteBuffer
 
 import com.badlogic.gdx.graphics.Pixmap.Format
@@ -11,7 +12,8 @@ case class Sprite(imgData: Pixmap,
                   useMipMaps: Boolean,
                   disposeOnUpload: Boolean = false,
                   reloadOnContextLoss: Boolean = true)
-  extends DecoratedTrait[Texture] {
+  extends DecoratedTrait[Texture]
+  with Closeable {
 
   val textureData = TextureData.fromImgData(
     imgData = imgData,
@@ -35,6 +37,8 @@ case class Sprite(imgData: Pixmap,
   def upload(): Unit = texture.load(textureData)
 
   def dispose(): Unit = texture.dispose()
+
+  override def close(): Unit = dispose()
 
   override def _base0: Texture = texture
 }

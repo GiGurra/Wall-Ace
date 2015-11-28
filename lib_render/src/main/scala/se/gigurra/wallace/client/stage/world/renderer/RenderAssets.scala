@@ -1,9 +1,23 @@
 package se.gigurra.wallace.client.stage.world.renderer
 
+import java.io.Closeable
+
+import se.gigurra.wallace.util.{Tuple2List, Disposing}
+
 import scala.collection.mutable
 
-class RenderAssetsCategory[SourceType] {
+class RenderAssetsCategory[SourceType] extends Closeable {
+
   private val data = new mutable.HashMap[String, RenderAsset[SourceType]]()
+
+  def close(): Unit = {
+    data.values.foreach(_.dispose())
+    data.clear()
+  }
+
+  def dispose(): Unit = {
+    close()
+  }
 
   def ensureHas[T1 <: SourceType : Rendering, AssetsType](id: String, source: T1)(implicit renderContext: RenderContext[AssetsType]): RenderAssetsCategory[SourceType] = {
     getOrElseUpdate(id, source)
@@ -44,12 +58,14 @@ class RenderAssetsCategory[SourceType] {
   }
 }
 
-case class RenderAssets() {
-  val font20 = Font.fromTtfFile("fonts/pt-mono/PTM55FT.ttf", size = 40)
-  val libgdxLogo = Sprite.fromFile("libgdxlogo.png", useMipMaps = false)
+case class RenderAssets(font20: Font = Font.fromTtfFile("fonts/pt-mono/PTM55FT.ttf", size = 40),
+                        libgdxLogo: Sprite = Sprite.fromFile("libgdxlogo.png", useMipMaps = false),
+                        maps: RenderAssetsCategory[AnyRef] = new RenderAssetsCategory[AnyRef],
+                        sprites: RenderAssetsCategory[Sprite] = new RenderAssetsCategory[Sprite]) {
 
-  val maps = new RenderAssetsCategory[AnyRef]
-  val sprites = new RenderAssetsCategory[Sprite]
+  def close(): Unit = {
+    Tuple2List(RenderAssets.unapply(this).get).foreach(_.close())
+  }
 
   def temporary[T: Rendering : Manifest, AssetsType](t: T)(implicit renderContext: RenderContext[AssetsType]) = {
     import resource._
@@ -57,4 +73,10 @@ case class RenderAssets() {
     managed(implicitly[Rendering[T]].buildRenderAsset(t))
   }
 
+}
+
+object RenderAssets {
+  implicit val closing = new Disposing[RenderAssets] {
+    override def dispose(r: RenderAssets): Unit = r.close()
+  }
 }
