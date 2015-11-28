@@ -1,13 +1,15 @@
 package se.gigurra.wallace.client.stage.world
 
+import com.badlogic.gdx.Gdx
 import se.gigurra.wallace.client.stage.world.audio.AudioStateManager
-import se.gigurra.wallace.client.stage.world.player.PlayerStateManager
-import se.gigurra.wallace.client.stage.world.network.NetworkStateManager
+import se.gigurra.wallace.client.stage.world.gui.WorldGui
+import se.gigurra.wallace.client.stage.world.player.{PlayerState, PlayerStateManager}
+import se.gigurra.wallace.client.stage.world.network.{UpdatesFromNetwork, UpdateToNetwork, NetworkStateManager}
 import se.gigurra.wallace.client.stage.world.renderer.elements.Renderables
 import se.gigurra.wallace.client.stage.world.renderer.terrainstorage.{SpriteTerrainStorageFactory, SpriteTerrainStoring}
-import se.gigurra.wallace.client.stage.world.renderer.WorldRenderer
+import se.gigurra.wallace.client.stage.world.renderer._
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
-import se.gigurra.wallace.gamemodel.{WorldSimFrameIndex, WorldStateManager}
+import se.gigurra.wallace.gamemodel._
 import se.gigurra.wallace.input.InputEvent
 import se.gigurra.wallace.stage.{Stage, StageManager}
 
@@ -20,6 +22,10 @@ class WorldStage(statCfg: StaticConfiguration,
   import Renderables._
   import SpriteTerrainStoring._
 
+  //////////////////////////
+  // States
+  //
+
   val playerStateMgr = PlayerStateManager(statCfg, dynCfg)
 
   val networkStateMgr = NetworkStateManager(isSinglePlayer)
@@ -31,29 +37,69 @@ class WorldStage(statCfg: StaticConfiguration,
 
   val audioStateMgr = AudioStateManager(statCfg, dynCfg)
 
-  val renderer = WorldRenderer(statCfg, dynCfg)
+  val worldRenderContext = RenderContext(RenderAssets())
+  val worldRenderer = WorldRenderer(statCfg, dynCfg)(worldRenderContext)
+  val worldGui = WorldGui(statCfg, dynCfg)(worldRenderContext)
+
 
   //////////////////////////
   // Callbacks
+  //
 
   override def consumeInputs(inputs: Seq[InputEvent]): Seq[InputEvent] = {
     inputs
   }
 
+  private def getUpdates(iSimFrame: WorldSimFrameIndex): UpdatesFromNetwork = {
+    networkStateMgr.update(iSimFrame, UpdateToNetwork(getLocalUpdates(iSimFrame)))
+  }
+
   override def update(): Unit = {
-    val updatesFromPlayer = playerStateMgr.update(iSimFrame)
-    val updatesFromNetwork = networkStateMgr.update(iSimFrame, updatesFromPlayer)
-    val worldEvents = worldStateMgr.update(updatesFromNetwork.worldUpdates)
-    audioStateMgr.update(iSimFrame, worldEvents)
-    renderer.update(iSimFrame, playerStateMgr.state, worldStateMgr.state, worldEvents)
+    val updates = getUpdates(iSimFrame)
+    val worldEvents = worldStateMgr.update(updates.worldUpdates)
+    playAudio(iSimFrame, worldEvents)
+    render(iSimFrame, playerStateMgr.state, worldStateMgr.state, worldEvents)
   }
 
   override def onClose(): Unit = {
     networkStateMgr.close()
   }
 
-  def isSinglePlayer: Boolean = dynCfg.game_isSinglePlayer
+  //////////////////////////
+  // Helpers
+  //
 
-  def iSimFrame: WorldSimFrameIndex = worldStateMgr.iSimFrame
+  private def getLocalUpdates(iSimFrame: WorldSimFrameIndex): LocalUpdates = {
+    val updatesFromPlayer = playerStateMgr.update(iSimFrame)
+    val updatesFromGui = worldGui.popQueued
+    val rawWorldUpdates = updatesFromPlayer.worldUpdates ++ updatesFromGui.worldUpdates
+    LocalUpdates(rawWorldUpdates)
+  }
+
+  private def playAudio(iSimFrame: WorldSimFrameIndex,
+                        worldEvents: Seq[WorldEvent]): Unit = {
+    audioStateMgr.update(iSimFrame, worldEvents)
+  }
+
+  private def render(iSimFrame: WorldSimFrameIndex,
+                     playerState: PlayerState,
+                     worldState: World[Sprite],
+                     worldEvents: Seq[WorldEvent]): Unit = {
+
+    implicit val _wrctx = worldRenderContext
+
+    worldRenderContext.state.batch {
+      Projections.ortho11(Gdx.graphics.getWidth, Gdx.graphics.getHeight)
+      worldRenderer.update(iSimFrame, playerStateMgr.state, worldStateMgr.state, worldEvents)
+      worldGui.update(iSimFrame, playerStateMgr.state, worldStateMgr.state)
+    }
+  }
+
+
+  private def isSinglePlayer: Boolean = dynCfg.game_isSinglePlayer
+
+  private def iSimFrame: WorldSimFrameIndex = worldStateMgr.iSimFrame
 
 }
+
+case class LocalUpdates(worldUpdates: Seq[WorldUpdate])
