@@ -5,7 +5,8 @@ import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfigurati
 import se.gigurra.wallace.input.InputEvent
 import se.gigurra.wallace.stage.StageInput
 
-case class ClientWindowManger(statCfg: StaticConfiguration, dynCfg: DynamicConfiguration) extends StageInput {
+case class ClientWindowManger(statCfg: StaticConfiguration, dynCfg: DynamicConfiguration)
+  extends StageInput[InputEvent] {
 
   /**
     * @param inputs

@@ -1,10 +1,10 @@
 package se.gigurra.wallace.stage
 
-trait StageManager {
+trait StageManager[InputType] {
   def hasStage(stageId: String): Boolean
-  def pushStage(stage: Stage): Unit
-  def insertBefore(stageId: String, stage: Stage): Unit
-  def insertAfter(stageId: String, stage: Stage): Unit
-  def appendStage(stage: Stage): Unit
+  def pushStage(stage: Stage[InputType]): Unit
+  def insertBefore(stageId: String, stage: Stage[InputType]): Unit
+  def insertAfter(stageId: String, stage: Stage[InputType]): Unit
+  def appendStage(stage: Stage[InputType]): Unit
   def removeStage(stageId: String): Unit
 }

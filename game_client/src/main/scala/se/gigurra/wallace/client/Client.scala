@@ -5,7 +5,7 @@ import se.gigurra.wallace.client.stage.menu.MainMenuStage
 import se.gigurra.wallace.client.stage.world.WorldStage
 import se.gigurra.wallace.client.toplevelmanagers.{ClientStageManager, ClientWindowManger}
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
-import se.gigurra.wallace.input.InputQue
+import se.gigurra.wallace.input.{InputEvent, InputQue}
 import se.gigurra.wallace.stage.StageManager
 
 case class ClientState(statCfg: StaticConfiguration,
@@ -38,7 +38,7 @@ class Client(statCfg: StaticConfiguration,
 object Client {
   def addDefaultStages(statCfg: StaticConfiguration,
                        dynCfg: DynamicConfiguration,
-                       stageManager: StageManager): Unit = {
+                       stageManager: StageManager[InputEvent]): Unit = {
 
     stageManager.appendStage(new MainMenuStage(statCfg, dynCfg, stageManager))
     stageManager.appendStage(new WorldStage(statCfg, dynCfg, stageManager))

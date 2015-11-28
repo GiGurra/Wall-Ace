@@ -1,8 +1,6 @@
 package se.gigurra.wallace.stage
 
-import se.gigurra.wallace.input.InputEvent
-
-trait Stage {
+trait Stage[InputType] {
 
   def stageId: String
 
@@ -10,7 +8,7 @@ trait Stage {
     * @param inputs
     * @return Remaining InputEvents that were not consumed
     */
-  def consumeInputs(inputs: Seq[InputEvent]): Seq[InputEvent] = {
+  def consumeInputs(inputs: Seq[InputType]): Seq[InputType] = {
     inputs
   }
 

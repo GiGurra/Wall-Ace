@@ -8,10 +8,10 @@ import scala.collection.mutable.ArrayBuffer
 
 case class ClientStageManager(statCfg: StaticConfiguration,
                               dynCfg: DynamicConfiguration)
-  extends StageInput
-  with StageManager {
+  extends StageInput[InputEvent]
+  with StageManager[InputEvent] {
 
-  private val stages = new ArrayBuffer[Stage]()
+  private val stages = new ArrayBuffer[Stage[InputEvent]]()
 
   /**
     * @param inputs
@@ -29,13 +29,13 @@ case class ClientStageManager(statCfg: StaticConfiguration,
     stages.exists(_.stageId == stageId)
   }
 
-  def pushStage(stage: Stage): Unit = {
+  def pushStage(stage: Stage[InputEvent]): Unit = {
     require(!stages.exists(_.stageId == stage.stageId), "Duplicate stage id detected, bailing!")
     stages.insert(0, stage)
     stage.onOpen()
   }
 
-  def insertBefore(stageId: String, stage: Stage): Unit = {
+  def insertBefore(stageId: String, stage: Stage[InputEvent]): Unit = {
     require(!stages.exists(_.stageId == stage.stageId), "Duplicate stage id detected, bailing!")
     val i = stages.indexWhere(_.stageId == stageId)
     if (i >= 0) {
@@ -47,7 +47,7 @@ case class ClientStageManager(statCfg: StaticConfiguration,
     }
   }
 
-  def insertAfter(stageId: String, stage: Stage): Unit = {
+  def insertAfter(stageId: String, stage: Stage[InputEvent]): Unit = {
     require(!stages.exists(_.stageId == stage.stageId), "Duplicate stage id detected, bailing!")
     val i = stages.indexWhere(_.stageId == stageId)
     if (i >= 0) {
@@ -59,7 +59,7 @@ case class ClientStageManager(statCfg: StaticConfiguration,
     }
   }
 
-  def appendStage(stage: Stage): Unit = {
+  def appendStage(stage: Stage[InputEvent]): Unit = {
     require(!stages.exists(_.stageId == stage.stageId), "Duplicate stage id detected, bailing!")
     stages += stage
     stage.onOpen()

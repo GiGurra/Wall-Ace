@@ -13,7 +13,7 @@ import se.gigurra.wallace.stage.{Stage, StageManager}
 
 class WorldStage(statCfg: StaticConfiguration,
                  dynCfg: DynamicConfiguration,
-                 stageManager: StageManager) extends Stage {
+                 stageManager: StageManager[InputEvent]) extends Stage[InputEvent] {
 
   override def stageId: String = "game-simulation"
 

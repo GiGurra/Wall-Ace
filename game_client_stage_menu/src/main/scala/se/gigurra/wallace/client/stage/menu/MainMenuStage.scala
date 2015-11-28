@@ -6,7 +6,7 @@ import se.gigurra.wallace.stage.{Stage, StageManager}
 
 class MainMenuStage(statCfg: StaticConfiguration,
                     dynCfg: DynamicConfiguration,
-                    stageManager: StageManager) extends Stage {
+                    stageManager: StageManager[InputEvent]) extends Stage[InputEvent] {
 
   override def stageId: String = "main-menu"
 

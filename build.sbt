@@ -76,15 +76,15 @@ lazy val lib_render = project in file("lib_render") settings (sharedSettings: _*
   )
 )
 
-lazy val lib_stage = project in file("lib_stage") settings (sharedSettings: _*) dependsOn(lib_util, lib_input) settings(
+lazy val lib_stage = project in file("lib_stage") settings (sharedSettings: _*) dependsOn(lib_util) settings(
   name := baseName + "-lib_stage"
 )
 
-lazy val game_client_stage_menu = project in file("game_client_stage_menu") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_render, lib_audio, game_config) settings(
+lazy val game_client_stage_menu = project in file("game_client_stage_menu") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config) settings(
   name := baseName + "-game_client_stage_menu"
 )
 
-lazy val game_client_stage_world = project in file("game_client_stage_world") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_render, lib_audio, game_config, game_model) settings(
+lazy val game_client_stage_world = project in file("game_client_stage_world") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config, game_model) settings(
   name := baseName + "-game_client_stage_world"
 )
 
