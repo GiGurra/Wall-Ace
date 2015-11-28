@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx
 import se.gigurra.wallace.client.stage.world.audio.AudioStateManager
 import se.gigurra.wallace.client.stage.world.gui.WorldGui
 import se.gigurra.wallace.client.stage.world.player.{PlayerState, PlayerStateManager}
-import se.gigurra.wallace.client.stage.world.network.{UpdatesFromNetwork, UpdateToNetwork, NetworkStateManager}
+import se.gigurra.wallace.client.stage.world.network.{UpdateToNetwork, NetworkStateManager}
 import se.gigurra.wallace.client.stage.world.renderer.elements.Renderables
 import se.gigurra.wallace.client.stage.world.renderer.terrainstorage.{SpriteTerrainStorageFactory, SpriteTerrainStoring}
 import se.gigurra.wallace.client.stage.world.renderer._
@@ -51,8 +51,7 @@ class WorldStage(statCfg: StaticConfiguration,
   }
 
   override def update(): Unit = {
-    val updates = getUpdates(iSimFrame)
-    val worldEvents = worldStateMgr.update(updates.worldUpdates)
+    val worldEvents = simulate(iSimFrame)
     playAudio(iSimFrame, worldEvents)
     render(iSimFrame, playerStateMgr.state, worldStateMgr.state, worldEvents)
   }
@@ -66,8 +65,10 @@ class WorldStage(statCfg: StaticConfiguration,
   // Helpers
   //
 
-  private def getUpdates(iSimFrame: WorldSimFrameIndex): UpdatesFromNetwork = {
-    networkStateMgr.update(iSimFrame, UpdateToNetwork(getLocalUpdates(iSimFrame)))
+  private def simulate(iSimFrame: WorldSimFrameIndex): Seq[WorldEvent] = {
+    val localUpdates = getLocalUpdates(iSimFrame)
+    val updates = networkStateMgr.update(iSimFrame, UpdateToNetwork(localUpdates))
+    worldStateMgr.update(updates.worldUpdates)
   }
 
   private def getLocalUpdates(iSimFrame: WorldSimFrameIndex): LocalUpdates = {
