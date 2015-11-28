@@ -4,7 +4,7 @@ case class WorldFrameUpdater() {
 
   def update(state: World[_],
              externalUpdates: Seq[WorldUpdate])
-            (implicit emit: WorldEventReceiver): Unit = {
+            (implicit eventReceiver: WorldEventReceiver): Unit = {
 
     applyExternalUpdates(state, externalUpdates)
     runSimulationFrame(state)
@@ -12,7 +12,7 @@ case class WorldFrameUpdater() {
 
   private def applyExternalUpdates(state: World[_],
                                    externalUpdates: Seq[WorldUpdate])
-                                  (implicit emit: WorldEventReceiver): Unit = {
+                                  (implicit eventReceiver: WorldEventReceiver): Unit = {
 
     for (update <- externalUpdates) {
       val events = update.apply(state)
@@ -23,7 +23,7 @@ case class WorldFrameUpdater() {
   }
 
   private def runSimulationFrame(state: World[_])
-                                (implicit emit: WorldEventReceiver): Unit = {
+                                (implicit eventReceiver: WorldEventReceiver): Unit = {
 
     // TODO: Accelerate, move, explode, yadayada
 

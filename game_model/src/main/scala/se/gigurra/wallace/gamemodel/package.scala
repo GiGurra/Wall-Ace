@@ -8,8 +8,8 @@ package object gamemodel {
   type WorldUpdate = (World[_] => Seq[WorldEvent])
   type WorldEventReceiver = WorldEvent => Unit
 
-  def emitWorldEvent(event: WorldEvent)
-                    (implicit receiver: WorldEventReceiver): Unit = {
+  def emit(event: WorldEvent)
+          (implicit receiver: WorldEventReceiver): Unit = {
     receiver.apply(event)
   }
 }
