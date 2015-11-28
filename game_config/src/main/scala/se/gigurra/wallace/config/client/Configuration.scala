@@ -11,7 +11,8 @@ case class DynamicConfiguration(var window_position: Vec2FixedPoint,
                                 var app_vsyncEnabled: Boolean = true,
                                 var app_foregroundFps: Int = 0,
                                 var app_backgroundFps: Int = 0,
-                                var game_isSinglePlayer: Boolean = true)
+                                var game_isSinglePlayer: Boolean = true,
+                                var audio_volume: Float = 0.5f)
 
 object Configuration {
 

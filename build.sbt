@@ -45,6 +45,13 @@ lazy val game_model = project in file("game_model") settings (sharedSettings: _*
   name := baseName + "-game_model"
 )
 
+lazy val lib_audio = project in file("lib_audio") settings (sharedSettings: _*) dependsOn lib_util settings(
+  name := baseName + "-lib_audio",
+  libraryDependencies ++= Seq(
+    "com.badlogicgames.gdx" % "gdx" % libgdxVersion
+  )
+)
+
 lazy val lib_comm = project in file("lib_comm") settings (sharedSettings: _*) dependsOn lib_util settings(
   name := baseName + "-lib_comm",
   libraryDependencies ++= Seq(
@@ -73,11 +80,11 @@ lazy val lib_stage = project in file("lib_stage") settings (sharedSettings: _*) 
   name := baseName + "-lib_stage"
 )
 
-lazy val game_client_stage_menu = project in file("game_client_stage_menu") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_render, game_config) settings(
+lazy val game_client_stage_menu = project in file("game_client_stage_menu") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_render, lib_audio, game_config) settings(
   name := baseName + "-game_client_stage_menu"
 )
 
-lazy val game_client_stage_world = project in file("game_client_stage_world") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_render, game_config, game_model) settings(
+lazy val game_client_stage_world = project in file("game_client_stage_world") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_render, lib_audio, game_config, game_model) settings(
   name := baseName + "-game_client_stage_world"
 )
 
@@ -102,6 +109,7 @@ lazy val platform_desktop = project in file("platform_desktop") settings (shared
 lazy val all = project.in(file("."))
   .aggregate(
     lib_util,
+    lib_audio,
     lib_comm,
     lib_input,
     lib_render,

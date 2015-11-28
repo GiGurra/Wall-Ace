@@ -1,5 +1,6 @@
-package se.gigurra.wallace.client.stage.world.renderer
+package se.gigurra.wallace.client.stage.world.renderer.terrainstorage
 
+import se.gigurra.wallace.client.stage.world.renderer.Sprite
 import se.gigurra.wallace.gamemodel.{TerrainPatch, TerrainStorageFactory, TerrainStoring}
 
 object SpriteTerrainStoring {

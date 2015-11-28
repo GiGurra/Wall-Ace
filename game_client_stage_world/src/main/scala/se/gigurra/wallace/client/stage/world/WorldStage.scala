@@ -2,12 +2,13 @@ package se.gigurra.wallace.client.stage.world
 
 import se.gigurra.wallace.client.stage.world.playerstate.PlayerStateManager
 import se.gigurra.wallace.client.stage.world.networkstate.NetworkStateManager
-import se.gigurra.wallace.client.stage.world.renderer.{WorldRenderer, SpriteTerrainStorageFactory, SpriteTerrainStoring}
+import se.gigurra.wallace.client.stage.world.renderer.elements.Renderables
+import se.gigurra.wallace.client.stage.world.renderer.terrainstorage.{SpriteTerrainStorageFactory, SpriteTerrainStoring}
+import se.gigurra.wallace.client.stage.world.renderer.WorldRenderer
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.gamemodel.{WorldSimFrameIndex, WorldStateManager}
 import se.gigurra.wallace.input.InputEvent
 import se.gigurra.wallace.stage.{Stage, StageManager}
-import se.gigurra.wallace.client.stage.world.renderer.Renderables
 
 class WorldStage(statCfg: StaticConfiguration,
                  dynCfg: DynamicConfiguration,
@@ -27,6 +28,8 @@ class WorldStage(statCfg: StaticConfiguration,
     statCfg.sim_dt,
     dynCfg.game_isSinglePlayer)
 
+  val audioStateMgr = AudioStateManager(statCfg, dynCfg)
+
   val renderer = WorldRenderer(statCfg, dynCfg)
 
   //////////////////////////
@@ -40,6 +43,7 @@ class WorldStage(statCfg: StaticConfiguration,
     val updatesFromPlayer = playerStateMgr.update(iSimFrame)
     val updatesFromNetwork = networkStateMgr.update(iSimFrame, updatesFromPlayer)
     val worldEvents = worldStateMgr.update(updatesFromNetwork.worldUpdates)
+    audioStateMgr.update(worldEvents)
     renderer.update(iSimFrame, playerStateMgr.state, worldStateMgr.state, worldEvents)
   }
 

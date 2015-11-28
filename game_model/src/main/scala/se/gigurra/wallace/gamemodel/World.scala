@@ -6,21 +6,23 @@ import scala.language.implicitConversions
 
 case class World[T_TerrainStorage : TerrainStoring](terrain: Terrain[T_TerrainStorage]) {
 
-  private val entities = new ArrayBuffer[Entity]()
+  private val _entities = new ArrayBuffer[Entity]()
 
-  def entities[EntityType <: Entity : ClassTag](pos: WorldVector = new WorldVector(),
+  def entitiesAt[EntityType <: Entity : ClassTag](pos: WorldVector = new WorldVector(),
                                                 maxDelta: Int = 0,
                                                 filter: EntityType => Boolean = (e: EntityType) => true): Seq[EntityType] = {
     terrain.requireInside(pos)
-    entities
+    _entities
       .filter(_.isWithin(maxDelta, pos))
       .collect { case e: EntityType => e }
       .filter(filter)
   }
 
+  def allEntities: Seq[Entity] = _entities
+
   def addEntity(entity: Entity): Unit = {
     terrain.requireInside(entity.position)
-    entities += entity
+    _entities += entity
   }
 
 }
