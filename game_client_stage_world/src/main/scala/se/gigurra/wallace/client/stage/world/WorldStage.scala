@@ -50,10 +50,6 @@ class WorldStage(statCfg: StaticConfiguration,
     inputs
   }
 
-  private def getUpdates(iSimFrame: WorldSimFrameIndex): UpdatesFromNetwork = {
-    networkStateMgr.update(iSimFrame, UpdateToNetwork(getLocalUpdates(iSimFrame)))
-  }
-
   override def update(): Unit = {
     val updates = getUpdates(iSimFrame)
     val worldEvents = worldStateMgr.update(updates.worldUpdates)
@@ -68,6 +64,10 @@ class WorldStage(statCfg: StaticConfiguration,
   //////////////////////////
   // Helpers
   //
+
+  private def getUpdates(iSimFrame: WorldSimFrameIndex): UpdatesFromNetwork = {
+    networkStateMgr.update(iSimFrame, UpdateToNetwork(getLocalUpdates(iSimFrame)))
+  }
 
   private def getLocalUpdates(iSimFrame: WorldSimFrameIndex): LocalUpdates = {
     val updatesFromPlayer = playerStateMgr.update(iSimFrame)
