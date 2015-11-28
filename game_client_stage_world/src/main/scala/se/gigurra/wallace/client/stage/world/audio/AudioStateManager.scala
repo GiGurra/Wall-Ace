@@ -1,4 +1,4 @@
-package se.gigurra.wallace.client.stage.world
+package se.gigurra.wallace.client.stage.world.audio
 
 import se.gigurra.wallace.audio.AudioManager
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}

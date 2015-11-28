@@ -1,6 +1,6 @@
-package se.gigurra.wallace.client.stage.world.networkstate
+package se.gigurra.wallace.client.stage.world.network
 
-import se.gigurra.wallace.client.stage.world.playerstate.UpdatesFromPlayer
+import se.gigurra.wallace.client.stage.world.player.UpdatesFromPlayer
 import se.gigurra.wallace.gamemodel.{TerrainStoring, WorldSimFrameIndex, WorldUpdateBatch}
 
 case class UpdatesFromNetwork(worldUpdates: Seq[WorldUpdateBatch])

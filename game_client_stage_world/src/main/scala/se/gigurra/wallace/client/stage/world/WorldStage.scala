@@ -1,7 +1,8 @@
 package se.gigurra.wallace.client.stage.world
 
-import se.gigurra.wallace.client.stage.world.playerstate.PlayerStateManager
-import se.gigurra.wallace.client.stage.world.networkstate.NetworkStateManager
+import se.gigurra.wallace.client.stage.world.audio.AudioStateManager
+import se.gigurra.wallace.client.stage.world.player.PlayerStateManager
+import se.gigurra.wallace.client.stage.world.network.NetworkStateManager
 import se.gigurra.wallace.client.stage.world.renderer.elements.Renderables
 import se.gigurra.wallace.client.stage.world.renderer.terrainstorage.{SpriteTerrainStorageFactory, SpriteTerrainStoring}
 import se.gigurra.wallace.client.stage.world.renderer.WorldRenderer

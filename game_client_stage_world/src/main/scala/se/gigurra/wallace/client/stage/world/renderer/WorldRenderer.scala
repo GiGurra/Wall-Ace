@@ -1,7 +1,7 @@
 package se.gigurra.wallace.client.stage.world.renderer
 
 import com.badlogic.gdx.Gdx
-import se.gigurra.wallace.client.stage.world.playerstate.PlayerState
+import se.gigurra.wallace.client.stage.world.player.PlayerState
 import se.gigurra.wallace.client.stage.world.renderer.elements._
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.gamemodel._

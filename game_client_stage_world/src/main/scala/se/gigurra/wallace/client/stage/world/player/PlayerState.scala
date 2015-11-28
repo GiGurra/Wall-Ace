@@ -1,4 +1,4 @@
-package se.gigurra.wallace.client.stage.world.playerstate
+package se.gigurra.wallace.client.stage.world.player
 
 import se.gigurra.wallace.gamemodel.WorldVector
 
