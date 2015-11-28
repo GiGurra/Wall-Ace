@@ -1,7 +1,5 @@
 package se.gigurra.wallace.client.toplevelmanagers
 
-import se.gigurra.wallace.client.stage.{MainMenuStage, GameSimulationStage}
-import se.gigurra.wallace.config.client.DynamicConfiguration
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.input.InputEvent
 import se.gigurra.wallace.stage.{StageInput, StageManager, Stage}

@@ -1,7 +1,7 @@
 package se.gigurra.wallace.platform.desktop
 
 import com.badlogic.gdx.backends.lwjgl.{LwjglApplication, LwjglApplicationConfiguration}
-import se.gigurra.wallace.client.gdxbridge.GdxBridge
+import se.gigurra.wallace.client.Client
 import se.gigurra.wallace.config.client.{Configuration, DynamicConfiguration, StaticConfiguration}
 
 object Main extends App {
@@ -24,6 +24,6 @@ object Main extends App {
   val dynCfg = Configuration.readDynamic()
   val lwjglCfg = buildLwjglCfg(statCfg, dynCfg)
 
-  new LwjglApplication(new GdxBridge(statCfg, dynCfg), lwjglCfg)
+  new LwjglApplication(new Client(statCfg, dynCfg), lwjglCfg)
 
 }
