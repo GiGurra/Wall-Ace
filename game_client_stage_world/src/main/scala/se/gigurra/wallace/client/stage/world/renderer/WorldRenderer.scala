@@ -2,7 +2,7 @@ package se.gigurra.wallace.client.stage.world.renderer
 
 import se.gigurra.wallace.client.stage.world.playerstate.PlayerState
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
-import se.gigurra.wallace.gamemodel.{WorldSimFrameIndex, WorldEvent, Terrain, World}
+import se.gigurra.wallace.gamemodel._
 import se.gigurra.wallace.util.Time
 
 case class WorldRenderer(statCfg: StaticConfiguration,
@@ -11,6 +11,7 @@ case class WorldRenderer(statCfg: StaticConfiguration,
   import Renderables._
 
   implicit val renderContext = RenderContext(RenderAssets())
+
   import renderContext._
 
   private var events = Seq.empty[RenderEvent[WorldEvent]]
@@ -23,20 +24,15 @@ case class WorldRenderer(statCfg: StaticConfiguration,
                                           clientState: PlayerState,
                                           worldState: World[T_TerrainStorage],
                                           worldEvents: Seq[WorldEvent]) = frame2D {
-    addEvents(iSimFrame, worldEvents)
     drawTerrain(worldState.terrain)
-    drawEvents()
+    drawEntities(worldState.entities())
+    drawEvents(iSimFrame, worldEvents)
     drawWorldGui(clientState, worldState)
-    removeExpiredEvents()
   }
 
   ///////////////////////
   // Helpers
   //
-
-  private def addEvents(iSimFrame: WorldSimFrameIndex, worldEvents: Seq[WorldEvent]): Unit = {
-    events ++= worldEvents.map(world2RenderEvent(iSimFrame, _))
-  }
 
   private def drawTerrain[T_TerrainStorage: Rendering](terrain: Terrain[T_TerrainStorage]): Unit = {
 
@@ -50,7 +46,17 @@ case class WorldRenderer(statCfg: StaticConfiguration,
     }
   }
 
-  private def drawEvents(): Unit = {}
+  private def drawEntities(seq: Seq[Entity]) = {}
+
+  private def drawEvents(iSimFrame: WorldSimFrameIndex, worldEvents: Seq[WorldEvent]) = {
+
+    events ++= worldEvents.map(world2RenderEvent(iSimFrame, _))
+
+    // TODO: Some drawing here..
+
+    val t = Time.seconds
+    events = events.filterNot(_.expired(t))
+  }
 
   private def drawWorldGui(clientState: PlayerState, worldState: World[_]): Unit = {
 
@@ -62,11 +68,6 @@ case class WorldRenderer(statCfg: StaticConfiguration,
       transform(_.center(gdxLogoAsset))(gdxLogoAsset.draw())
       assets.temporary(text) foreach { text => transform(_.center(text))(text.draw()) }
     }
-  }
-
-  private def removeExpiredEvents(): Unit = {
-    val t = Time.seconds
-    events = events.filterNot(_.expired(t))
   }
 
 }

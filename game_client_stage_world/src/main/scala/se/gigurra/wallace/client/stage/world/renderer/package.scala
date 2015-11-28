@@ -8,7 +8,7 @@ package object renderer {
   def world2RenderEvent(iSimFrame: WorldSimFrameIndex, we: WorldEvent): RenderEvent[WorldEvent] = {
     we match {
       case _ =>
-        println(s"Unknown WorldEvent type ${we.getClass}")
+        println(s"world2RenderEvent: Unknown WorldEvent type ${we.getClass}")
         NullRenderEvent(we)
     }
   }
