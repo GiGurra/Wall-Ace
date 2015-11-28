@@ -26,11 +26,11 @@ case class WorldStateManager[T_TerrainStorage: TerrainStoring](terrainStorageFac
 
     if (isSinglePlayer) {
       while (lastWorldTime + dt < Time.millis) {
-        updateOneFrame(worldStateEvents.+=(_))
+        updateOneFrame(eventReceiver = worldStateEvents.+=(_))
       }
     } else {
       while (queuedExternalUpdates.nonEmpty) {
-        updateOneFrame(worldStateEvents.+=(_))
+        updateOneFrame(eventReceiver = worldStateEvents.+=(_))
       }
     }
 
