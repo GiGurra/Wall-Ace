@@ -15,4 +15,8 @@ case class AudioStateManager(statCfg: StaticConfiguration,
     audioManager.update()
   }
 
+  def close(): Unit = {
+    audioManager.close()
+  }
+
 }

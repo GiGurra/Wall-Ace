@@ -16,6 +16,11 @@ case class AudioManager(loader: AudioLoader) {
     expired.foreach(_.stopNow())
   }
 
+  def close(): Unit = {
+    playingSounds.foreach(_.stopNow())
+    playingSounds.clear()
+  }
+
   def playOnce(id: String,
                volume: Float = 1.0f): Sound = ???
 

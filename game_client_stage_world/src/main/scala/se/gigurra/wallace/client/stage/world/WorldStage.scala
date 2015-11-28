@@ -59,6 +59,7 @@ class WorldStage(statCfg: StaticConfiguration,
 
   override def onClose(): Unit = {
     networkStateMgr.close()
+    audioStateMgr.close()
   }
 
   //////////////////////////
