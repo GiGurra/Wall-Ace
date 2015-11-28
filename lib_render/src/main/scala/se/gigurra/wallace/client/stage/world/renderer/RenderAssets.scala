@@ -64,6 +64,7 @@ case class RenderAssets(font20: Font = Font.fromTtfFile("fonts/pt-mono/PTM55FT.t
                         sprites: RenderAssetsCategory[Sprite] = new RenderAssetsCategory[Sprite]) {
 
   def close(): Unit = {
+    println("Close me")
     Tuple2List(RenderAssets.unapply(this).get).foreach(_.close())
   }
 

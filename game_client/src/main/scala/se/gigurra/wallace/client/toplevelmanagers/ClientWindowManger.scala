@@ -20,4 +20,8 @@ case class ClientWindowManger(statCfg: StaticConfiguration, dynCfg: DynamicConfi
     // TODO: Something. Resize window if requested?
   }
 
+  def close(): Unit = {
+
+  }
+
 }

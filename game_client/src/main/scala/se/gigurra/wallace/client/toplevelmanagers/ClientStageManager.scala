@@ -71,4 +71,8 @@ case class ClientStageManager(statCfg: StaticConfiguration,
       stages.remove(i).onClose()
   }
 
+  def close(): Unit = {
+    stages.reverse.foreach(stage => removeStage(stage.stageId))
+  }
+
 }
