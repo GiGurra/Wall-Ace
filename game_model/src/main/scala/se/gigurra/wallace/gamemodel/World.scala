@@ -4,13 +4,14 @@ import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 import scala.language.implicitConversions
 
-case class World[T_TerrainStorage : TerrainStoring](terrain: Terrain[T_TerrainStorage]) {
+case class World[T_TerrainStorage: TerrainStoring](var iSimFrame: WorldSimFrameIndex,
+                                                   terrain: Terrain[T_TerrainStorage]) {
 
   private val _entities = new ArrayBuffer[Entity]()
 
   def entitiesAt[EntityType <: Entity : ClassTag](pos: WorldVector = new WorldVector(),
-                                                maxDelta: Int = 0,
-                                                filter: EntityType => Boolean = (e: EntityType) => true): Seq[EntityType] = {
+                                                  maxDelta: Int = 0,
+                                                  filter: EntityType => Boolean = (e: EntityType) => true): Seq[EntityType] = {
     terrain.requireInside(pos)
     _entities
       .filter(_.isWithin(maxDelta, pos))
@@ -29,14 +30,14 @@ case class World[T_TerrainStorage : TerrainStoring](terrain: Terrain[T_TerrainSt
 
 object World {
 
-  implicit def world2terrain[T_TerrainStorage : TerrainStoring](world: World[T_TerrainStorage]): Terrain[T_TerrainStorage] = world.terrain
+  implicit def world2terrain[T_TerrainStorage: TerrainStoring](world: World[T_TerrainStorage]): Terrain[T_TerrainStorage] = world.terrain
 
-  def create[T_TerrainStorage : TerrainStoring](storageFactory: TerrainStorageFactory[T_TerrainStorage],
-                                                 patchWidth: Int,
-                                                 patchHeight: Int,
-                                                 seed: String = "MyMapSeed"): World[T_TerrainStorage] = {
+  def create[T_TerrainStorage: TerrainStoring](storageFactory: TerrainStorageFactory[T_TerrainStorage],
+                                               patchWidth: Int,
+                                               patchHeight: Int,
+                                               seed: String = "MyMapSeed"): World[T_TerrainStorage] = {
     val terrainStorage = storageFactory.create(patchWidth, patchHeight)
-    val out = World(Terrain(terrainStorage))
+    val out = World(iSimFrame = 0L, terrain = Terrain(terrainStorage))
     TerrainGenerator.generate("MyMapSeed", out)
     out
   }

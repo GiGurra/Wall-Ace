@@ -31,9 +31,9 @@ class WorldStage(statCfg: StaticConfiguration,
   val networkStateMgr = NetworkStateManager(isSinglePlayer)
 
   val worldStateMgr = WorldStateManager(
-    SpriteTerrainStorageFactory,
-    statCfg.sim_dt,
-    dynCfg.game_isSinglePlayer)
+    timeStep = statCfg.sim_dt,
+    isSinglePlayer = dynCfg.game_isSinglePlayer,
+    startWorld = World.create(SpriteTerrainStorageFactory, 640, 640))
 
   val audioStateMgr = AudioStateManager(statCfg, dynCfg)
 
@@ -55,7 +55,7 @@ class WorldStage(statCfg: StaticConfiguration,
   override def update(): Unit = {
     val worldEvents = simulate(iSimFrame)
     playAudio(iSimFrame, worldEvents)
-    render(iSimFrame, playerStateMgr.state, worldStateMgr.state, worldEvents)
+    render(iSimFrame, playerStateMgr.state, worldStateMgr.world, worldEvents)
   }
 
   override def onClose(): Unit = {
@@ -86,17 +86,17 @@ class WorldStage(statCfg: StaticConfiguration,
     audioStateMgr.update(iSimFrame, worldEvents)
   }
 
-  private def render(iSimFrame: WorldSimFrameIndex,
-                     playerState: PlayerState,
-                     worldState: World[Sprite],
-                     worldEvents: Seq[WorldEvent]): Unit = {
+  private def render[T: Rendering](iSimFrame: WorldSimFrameIndex,
+                                   playerState: PlayerState,
+                                   worldState: World[T],
+                                   worldEvents: Seq[WorldEvent]): Unit = {
 
     implicit val _wrctx = worldRenderContext
 
     worldRenderContext.state.batch {
       Projections.ortho11(Gdx.graphics.getWidth, Gdx.graphics.getHeight)
-      worldRenderer.update(iSimFrame, playerStateMgr.state, worldStateMgr.state, worldEvents)
-      worldGui.update(iSimFrame, playerStateMgr.state, worldStateMgr.state)
+      worldRenderer.update(iSimFrame, playerState, worldState, worldEvents)
+      worldGui.update(iSimFrame, playerState, worldState)
     }
   }
 
