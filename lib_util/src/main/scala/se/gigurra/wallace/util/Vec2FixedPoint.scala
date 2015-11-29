@@ -3,15 +3,16 @@ package se.gigurra.wallace.util
 case class Vec2FixedPoint(var x: Int = 0, var y: Int = 0) {
   import Vec2FixedPoint._
 
-  def +(other: Vec2FixedPoint) = new Vec2FixedPoint(x + other.x, y + other.y)
-  def -(other: Vec2FixedPoint) = new Vec2FixedPoint(x - other.x, y - other.y)
+  def +(other: Vec2FixedPoint) = Vec2FixedPoint(x + other.x, y + other.y)
+  def -(other: Vec2FixedPoint) = Vec2FixedPoint(x - other.x, y - other.y)
   def isWithin(maxDelta: Int, otherPosition: Vec2FixedPoint) = distance(this, otherPosition) <= maxDelta
   def *(other: Vec2FixedPoint) = x * other.x + y * other.y
-  def *(k: Int) = new Vec2FixedPoint(x * k, y * k)
-  def /(d: Int) = new Vec2FixedPoint(x / d, y / d)
-  def +(d: Int) = new Vec2FixedPoint(x + d, y + d)
-  def -(d: Int) = new Vec2FixedPoint(x - d, y - d)
+  def *(k: Int) = Vec2FixedPoint(x * k, y * k)
+  def /(d: Int) = Vec2FixedPoint(x / d, y / d)
+  def +(d: Int) = Vec2FixedPoint(x + d, y + d)
+  def -(d: Int) = Vec2FixedPoint(x - d, y - d)
   def length = distance(zero, this)
+  def unary_- : Vec2FixedPoint = this * (-1)
 }
 
 object Vec2FixedPoint {

@@ -12,10 +12,7 @@ case class TerrainRenderer()(implicit renderContext: RenderContext[RenderAssets]
 
     val mapSprite = assets.maps.getOrElseUpdate("mapSprite", terrain)
 
-    transform(_
-      .unitSize(mapSprite)
-      .scalexy(maxAspect)
-      .center(mapSprite)) {
+    transform(_.scalexy(terrain.patch2WorldScale)) {
       mapSprite.uploaded.draw()
     }
   }
