@@ -89,7 +89,7 @@ object WorldRenderer {
 
     val relOffset = worldPos - camera.worldPosition
     val x = xCtrPixels.toInt + math.round(relOffset.x.toFloat * halfDimMin.toFloat) / camera.zoom_distUnitPerScreenUnit
-    val y = yCtrPixels.toInt + math.round(relOffset.y.toFloat * halfDimMin.toFloat)/ camera.zoom_distUnitPerScreenUnit
+    val y = yCtrPixels.toInt + math.round(relOffset.y.toFloat * halfDimMin.toFloat) / camera.zoom_distUnitPerScreenUnit
 
     Vec2FixedPoint(x, heightPixels - y)
   }
