@@ -37,11 +37,10 @@ case class WorldStateManager[T_TerrainStorage: TerrainStoring](terrainStorageFac
     worldStateEvents
   }
 
-  private def updateOneFrame(implicit eventReceiver: WorldEventReceiver) = {
-    val out = worldFrameUpdater.update(state, popExternalUpdates(iSimFrame))
+  private def updateOneFrame(implicit eventReceiver: WorldEventReceiver): Unit = {
+    worldFrameUpdater.update(state, popExternalUpdates(iSimFrame))
     _lastWorldTime += dt
     _iSimFrame += 1
-    out
   }
 
   private def isMultiPlayer = !isSinglePlayer

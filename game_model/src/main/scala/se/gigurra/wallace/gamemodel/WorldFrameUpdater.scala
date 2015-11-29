@@ -13,12 +13,8 @@ case class WorldFrameUpdater() {
   private def applyExternalUpdates(state: World[_],
                                    externalUpdates: Seq[WorldUpdate])
                                   (implicit eventReceiver: WorldEventReceiver): Unit = {
-
     for (update <- externalUpdates) {
-      val events = update.apply(state)
-      for (event <- events) {
-        emit(event)
-      }
+      update.apply(state)
     }
   }
 
