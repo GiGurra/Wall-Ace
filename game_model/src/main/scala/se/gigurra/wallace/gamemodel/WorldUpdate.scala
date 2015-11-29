@@ -14,7 +14,11 @@ trait WorldUpdate {
 
 object WorldUpdate {
 
-  case class RichWorld(state: World[_], eventReceiver: WorldEventReceiver) extends Decorated[World[_]](state)
+  case class RichWorld(state: World[_], eventReceiver: WorldEventReceiver) extends Decorated[World[_]](state) {
+    def emit(event: WorldEvent): Unit = {
+      eventReceiver.apply(event)
+    }
+  }
 
   def apply(f: (World[_], WorldEventReceiver) => Unit): WorldUpdate = {
     new WorldUpdate {
