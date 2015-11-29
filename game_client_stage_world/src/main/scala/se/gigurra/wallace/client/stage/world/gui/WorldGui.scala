@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import se.gigurra.wallace.client.stage.world.player.PlayerState
 import se.gigurra.wallace.client.stage.world.renderer.elements.WorldGuiRenderer
-import se.gigurra.wallace.client.stage.world.renderer.{RenderAssets, RenderContext}
+import se.gigurra.wallace.client.stage.world.renderer.{WorldRenderer, RenderAssets, RenderContext}
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.gamemodel.{World, WorldSimFrameIndex, WorldUpdate}
 import se.gigurra.wallace.input.InputEvent
@@ -35,18 +35,21 @@ case class WorldGui(statCfg: StaticConfiguration,
 
     import renderContext._
 
-
-    val greenClear = new Color(0, 1, 0, 0)
-    batch {
-      drawShapes(ShapeType.Filled) { sr =>
-        transform(_.scalexy(0.25f)) {
-          sr.rect(-0.5f, -0.5f, 1.0f, 1.0f, Color.RED, greenClear, greenClear, Color.RED)
-        }
-      }
-    }
+    import se.gigurra.wallace.client.stage.world.renderer._
 
     // TODO: Draw something here ..
     guiRenderer.render(player, world)
+
+    val greenClear = new Color(0, 1, 0, 0)
+    batch(transform(
+      WorldRenderer.toWorldSpace(_, player.camera)
+        .translate(player.cursorWorldPosition)) {
+      drawShapes(ShapeType.Filled) { sr =>
+        sr.setColor(Color.YELLOW)
+        sr.circle(0, 0, world.m2World * 20, 50)
+      }
+    })
+
   }
 
 }

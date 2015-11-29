@@ -32,7 +32,7 @@ case class WorldRenderer(statCfg: StaticConfiguration,
     val ownPosScreen = new Vector3(0.0f, 0.0f, 0.0f)
 
     batch {
-      transform(toWorldSpace(_, camera)) {
+      transform(x => toWorldSpace(x, camera)) {
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
         glClear(GL20.GL_COLOR_BUFFER_BIT)
