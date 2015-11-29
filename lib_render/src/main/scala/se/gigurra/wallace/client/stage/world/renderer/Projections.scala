@@ -19,6 +19,6 @@ object Projections {
 
     cam.update()
     renderContext.state.batch.setProjectionMatrix(cam.combined)
-    renderContext.shapeRenderer.setProjectionMatrix(cam.combined)
+    renderContext.state.shapeRenderer.setProjectionMatrix(cam.combined)
   }
 }

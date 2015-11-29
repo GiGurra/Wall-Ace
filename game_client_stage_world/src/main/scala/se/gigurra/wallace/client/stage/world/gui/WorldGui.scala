@@ -38,8 +38,8 @@ case class WorldGui(statCfg: StaticConfiguration,
 
     val greenClear = new Color(0, 1, 0, 0)
     batch {
-      transform(_.scalexy(0.25f)) {
-        drawShapes(ShapeType.Filled) { sr =>
+      drawShapes(ShapeType.Filled) { sr =>
+        transform(_.scalexy(0.25f)) {
           sr.rect(-0.5f, -0.5f, 1.0f, 1.0f, Color.RED, greenClear, greenClear, Color.RED)
         }
       }

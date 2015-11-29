@@ -1,14 +1,14 @@
 package se.gigurra.wallace.client.stage.world.renderer
 
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.{Batch, GlyphLayout}
+import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.math.{Matrix4, Vector3}
 
 import scala.language.implicitConversions
 
 object Matrix4Stack {
 
-  class Matrix4Stack(depth: Int, batch: Batch) {
+  class Matrix4Stack(depth: Int, uploader: Matrix4 => Unit) {
     private val stack = (0 until depth).map(_ => new Matrix4).toArray
     private var i = 0
 
@@ -56,7 +56,7 @@ object Matrix4Stack {
     def centerY(texture: Texture) = translate(0.0f, -texture.getHeight.toFloat / 2.0f)
     def centerY(text: GlyphLayout) = translate(0.0f, text.height / 2.0f)
 
-    def upload(): this.type = { batch.setTransformMatrix(current); this }
+    def upload(): this.type = { uploader(current); this }
     def transform(f: Matrix4 => Unit) = { f(current); upload() }
     def translate(t: Vector3) = transform(_.translate(t))
     def translate(x: Float = 0.0f, y: Float = 0.0f, z: Float = 0.0f) = transform(_.translate(x, y, z))

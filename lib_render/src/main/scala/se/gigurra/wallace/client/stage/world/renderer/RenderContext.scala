@@ -15,7 +15,6 @@ case class RenderContext[AssetsType : Disposing](_assets: AssetsType) {
   val glShortcuts = com.badlogic.gdx.Gdx.gl
   val transform = state.transform
   val batch = state.batch
-  val shapeRenderer = new ShapeRenderer
 
   def aspect = Gdx.graphics.getWidth.toFloat / Gdx.graphics.getHeight.toFloat
 
@@ -31,10 +30,9 @@ case class RenderContext[AssetsType : Disposing](_assets: AssetsType) {
 
   def drawShapes[AnyReturnType](shapeType: ShapeType)
                                (impl: ShapeRenderer => AnyReturnType): AnyReturnType = {
-    shapeRenderer.setTransformMatrix(state.batch.getTransformMatrix)
-    shapeRenderer.begin(shapeType)
-    val out = impl(shapeRenderer)
-    shapeRenderer.end()
+    state.shapeRenderer.begin(shapeType)
+    val out = impl(state.shapeRenderer)
+    state.shapeRenderer.end()
     out
   }
 
