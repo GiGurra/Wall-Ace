@@ -35,8 +35,8 @@ object HardwareCursor {
 
   lazy val all: HardwareCursor =
     new HardwareCursor {
-      override protected def _default: Cursor = makeCursor("hackyCursor8.png", 0.1f, 0.1f)
-      override protected def _button: Cursor = makeCursor("hackyCursor8.png", 0.1f, 0.1f)
+      override protected def _default: Cursor = makeCursor("hackyCursor8.png", 0.11f, 0.15f)
+      override protected def _button: Cursor = makeCursor("hackyCursor8.png", 0.11f, 0.15f)
       override protected def _aim: Cursor = makeCursor("crosshair.png", 0.5f, 0.5f)
       override protected def _invisible: Cursor = {
         val emptySprite = Sprite.fromSize(64, 64, false)
