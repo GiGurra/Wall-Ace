@@ -60,17 +60,6 @@ case class WorldGui(statCfg: StaticConfiguration,
 
     import se.gigurra.wallace.client.stage.world.renderer._
 
-    if (!HardwareCursor.isVisible) {
-      batch(transform(
-        WorldRenderer.toWorldSpace(_, player.camera)
-          .translate(player.cursorWorldPosition)) {
-        drawShapes(ShapeType.Filled) { sr =>
-          sr.setColor(Color.YELLOW)
-          sr.circle(0, 0, world.m2World * 20, 50)
-        }
-      })
-    }
-
     // TODO: Draw something here ..
     guiRenderer.render(player, world)
 

@@ -22,7 +22,7 @@ case class WorldRenderer(statCfg: StaticConfiguration,
   private val eventsRenderer = EventsRenderer()
 
   def consumeInput(remainingInput: InputEvent): Option[InputEvent] = {
-    HardwareCursor.invisible.set()
+    HardwareCursor.aim.set()
     None
   }
 
