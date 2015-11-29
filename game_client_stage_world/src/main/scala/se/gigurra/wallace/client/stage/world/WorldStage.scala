@@ -47,7 +47,9 @@ class WorldStage(statCfg: StaticConfiguration,
   //
 
   override def consumeInputs(inputs: Seq[InputEvent]): Seq[InputEvent] = {
-    inputs
+    val inputConsumers = Seq(worldGui, playerStateMgr)
+    val inputsLeft = inputConsumers.foldLeft(inputs)((inputs, item) => item.consumeInputs(inputs))
+    inputsLeft
   }
 
   override def update(): Unit = {
