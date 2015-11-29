@@ -30,8 +30,8 @@ case class WorldGui(statCfg: StaticConfiguration,
 
     val offsFromBottom = (Gdx.graphics.getHeight - position.y).toFloat / Gdx.graphics.getHeight.toFloat
 
-    if (offsFromBottom < 0.1f) {
-      HardwareCursor.default.set()
+    if (offsFromBottom < 0.15f) {
+      HardwareCursor.standard.set()
       None
     } else {
       Some(input)

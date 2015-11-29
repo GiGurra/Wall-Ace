@@ -1,6 +1,6 @@
 package se.gigurra.wallace.client.stage.world.renderer.elements
 
-import se.gigurra.wallace.client.stage.world.renderer.{RenderAssets, RenderContext, Rendering}
+import se.gigurra.wallace.client.stage.world.renderer.{Sprite, RenderAssets, RenderContext, Rendering}
 import se.gigurra.wallace.gamemodel.Terrain
 
 case class TerrainRenderer()(implicit renderContext: RenderContext[RenderAssets]) {
@@ -15,6 +15,7 @@ case class TerrainRenderer()(implicit renderContext: RenderContext[RenderAssets]
     transform(_.scalexy(terrain.patch2WorldScale)) {
       mapSprite.uploaded.draw()
     }
+
   }
 
 }

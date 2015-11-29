@@ -35,8 +35,8 @@ object HardwareCursor {
 
   lazy val all: HardwareCursor =
     new HardwareCursor {
-      override protected def _default: Cursor = _systemDefault
-      override protected def _button: Cursor = _systemDefault
+      override protected def _default: Cursor = makeCursor("hackyCursor8.png", 0.1f, 0.1f)
+      override protected def _button: Cursor = makeCursor("hackyCursor8.png", 0.1f, 0.1f)
       override protected def _aim: Cursor = makeCursor("crosshair.png", 0.5f, 0.5f)
       override protected def _invisible: Cursor = {
         val emptySprite = Sprite.fromSize(64, 64, false)
@@ -73,9 +73,9 @@ object HardwareCursor {
       math.round(ys * unresizedMap.getHeight.toFloat))
   }
 
-  def systemDefault = all.systemDefault
-  def default = all.default
-  def aim = all.aim
-  def button = all.button
-  def invisible = all.invisible
+  def systemDefault: SettableHardwareCursor = all.systemDefault
+  def standard: SettableHardwareCursor = all.default
+  def aim: SettableHardwareCursor = all.aim
+  def button: SettableHardwareCursor = all.button
+  def invisible: SettableHardwareCursor = all.invisible
 }
