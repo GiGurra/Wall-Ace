@@ -10,14 +10,15 @@ object Projections {
     val cam = new OrthographicCamera
 
     if (w > h) {
-      cam.viewportHeight = 1.0f
-      cam.viewportWidth = 1.0f * w.toFloat/h.toFloat
+      cam.viewportHeight = 2.0f
+      cam.viewportWidth = 2.0f * w.toFloat/h.toFloat
     } else {
-      cam.viewportWidth = 1.0f
-      cam.viewportHeight = 1.0f * h.toFloat/w.toFloat
+      cam.viewportWidth = 2.0f
+      cam.viewportHeight = 2.0f * h.toFloat/w.toFloat
     }
 
     cam.update()
     renderContext.state.batch.setProjectionMatrix(cam.combined)
+    renderContext.shapeRenderer.setProjectionMatrix(cam.combined)
   }
 }

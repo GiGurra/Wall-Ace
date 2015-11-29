@@ -5,9 +5,14 @@ import scala.reflect.ClassTag
 import scala.language.implicitConversions
 
 case class World[T_TerrainStorage: TerrainStoring](var iSimFrame: WorldSimFrameIndex,
-                                                   terrain: Terrain[T_TerrainStorage]) {
+                                                   terrain: Terrain[T_TerrainStorage],
+                                                   patch2WorldScale: Int) {
 
   private val _entities = new ArrayBuffer[Entity]()
+
+  def m2World: Int = patch2WorldScale
+
+  def cm2World: Int = patch2WorldScale / 100
 
   def entitiesAt[EntityType <: Entity : ClassTag](pos: WorldVector = new WorldVector(),
                                                   maxDelta: Int = 0,
@@ -35,9 +40,14 @@ object World {
   def create[T_TerrainStorage: TerrainStoring](storageFactory: TerrainStorageFactory[T_TerrainStorage],
                                                patchWidth: Int,
                                                patchHeight: Int,
+                                               patch2WorldScale: Int = ModelDefaults.patch2WorldScale,
                                                seed: String = "MyMapSeed"): World[T_TerrainStorage] = {
     val terrainStorage = storageFactory.create(patchWidth, patchHeight)
-    val out = World(iSimFrame = 0L, terrain = Terrain(terrainStorage))
+    val out = World(
+      iSimFrame = 0L,
+      terrain = Terrain(terrainStorage, patch2WorldScale),
+      patch2WorldScale = patch2WorldScale
+    )
     TerrainGenerator.generate("MyMapSeed", out)
     out
   }

@@ -13,6 +13,7 @@ import se.gigurra.wallace.util.Vec2FixedPoint
 case class WorldRenderer(statCfg: StaticConfiguration,
                          dynCfg: DynamicConfiguration)
                         (implicit renderContext: RenderContext[RenderAssets]) {
+  import WorldRenderer._
 
   private val terrainRenderer = TerrainRenderer()
   private val entitiesRenderer = EntitiesRenderer()
@@ -30,26 +31,28 @@ case class WorldRenderer(statCfg: StaticConfiguration,
     val ownPosWorld = player.camera.worldPosition
     val ownPosScreen = new Vector3(0.0f, 0.0f, 0.0f)
 
-    state.transform(cameraTransform(_, camera)) {
+    batch {
+      transform(toWorldSpace(_, camera)) {
 
-      glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
-      glClear(GL20.GL_COLOR_BUFFER_BIT)
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
+        glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-      terrainRenderer.render(worldState.terrain)
-      entitiesRenderer.render(worldState.allEntities)
-      eventsRenderer.render(iSimFrame, worldEvents)
+        terrainRenderer.render(worldState.terrain)
+        entitiesRenderer.render(worldState.allEntities)
+        eventsRenderer.render(iSimFrame, worldEvents)
+      }
     }
-  }
-
-  private def cameraTransform(stack: Matrix4Stack, camera: Camera): Unit = {
-    stack
-      .scalexy(0.5f / camera.zoom_distUnitPerScreenUnit)
-      .translate(-camera.worldPosition)
   }
 
 }
 
 object WorldRenderer {
+
+  def toWorldSpace(stack: Matrix4Stack, camera: Camera): Matrix4Stack = {
+    stack
+      .scalexy(1.0f / camera.zoom_distUnitPerScreenUnit)
+      .translate(-camera.worldPosition)
+  }
 
   def pixelPos2WorldPos(mousePos: Vec2FixedPoint,
                         camera: Camera): WorldVector = {

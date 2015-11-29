@@ -1,7 +1,7 @@
 package se.gigurra.wallace.gamemodel
 
 case class Terrain[T_TerrainStorage : TerrainStoring](storage: T_TerrainStorage,
-                                                      patch2WorldScale: Int = ModelDefaults.patch2WorldScale) {
+                                                      patch2WorldScale: Int) {
 
   val storing = implicitly[TerrainStoring[T_TerrainStorage]]
 

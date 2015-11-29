@@ -18,15 +18,16 @@ case class PlayerStateManager(statCfg: StaticConfiguration,
   override def consumeInputs(inputs: Seq[InputEvent]): Seq[InputEvent] = {
 
     // TODO: Act on it... kind of
-    inputs.filter( _ match {
+    inputs.filter {
       case MousePositionUpdate(_, position) =>
         val mouseWorldPos = WorldRenderer.pixelPos2WorldPos(position, state.camera)
-        val pixelPosBack = WorldRenderer.worldPos2PixelPos(mouseWorldPos, state.camera)
-        println(s"mousePixelPos / pixelPosBack / mouseWorldPos: ${position} / ${pixelPosBack} / ${mouseWorldPos}")
+        // val pixelPosBack = WorldRenderer.worldPos2PixelPos(mouseWorldPos, state.camera)
+        // println(s"mousePixelPos / pixelPosBack / mouseWorldPos: ${position} / ${pixelPosBack} / ${mouseWorldPos}")
+        state.cursorWorldPosition = mouseWorldPos
         true
       case _ =>
         true
-    })
+    }
   }
 
   def update(iSimFrame: WorldSimFrameIndex): UpdatesFromPlayer = {

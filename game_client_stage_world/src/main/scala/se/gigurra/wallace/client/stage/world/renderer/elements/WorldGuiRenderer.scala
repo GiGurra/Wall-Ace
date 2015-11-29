@@ -15,9 +15,11 @@ case class WorldGuiRenderer()(implicit renderContext: RenderContext[RenderAssets
 
     val text = prepText(font = assets.font20, str = s"Fps: ${renderContext.fps}")
 
-    transform(_.scalexy(1.0f / 400.0f)) {
-      transform(_.center(gdxLogoAsset))(gdxLogoAsset.draw())
-      assets.temporary(text) foreach { text => transform(_.center(text))(text.draw()) }
+    batch {
+      transform(_.scalexy(1.0f / 200.0f)) {
+        transform(_.center(gdxLogoAsset))(gdxLogoAsset.draw())
+        assets.temporary(text) foreach { text => transform(_.center(text))(text.draw()) }
+      }
     }
   }
 

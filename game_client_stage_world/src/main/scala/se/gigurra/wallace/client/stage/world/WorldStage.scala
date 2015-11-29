@@ -93,11 +93,9 @@ class WorldStage(statCfg: StaticConfiguration,
 
     implicit val _wrctx = worldRenderContext
 
-    worldRenderContext.state.batch {
-      Projections.ortho11(Gdx.graphics.getWidth, Gdx.graphics.getHeight)
-      worldRenderer.update(iSimFrame, playerState, worldState, worldEvents)
-      worldGui.update(iSimFrame, playerState, worldState)
-    }
+    Projections.ortho11(Gdx.graphics.getWidth, Gdx.graphics.getHeight)
+    worldRenderer.update(iSimFrame, playerState, worldState, worldEvents)
+    worldGui.update(iSimFrame, playerState, worldState)
   }
 
 
