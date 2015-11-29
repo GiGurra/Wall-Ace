@@ -2,7 +2,7 @@ package se.gigurra.wallace.cursors
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Cursor
-import se.gigurra.wallace.client.stage.world.renderer.Sprite
+import se.gigurra.wallace.client.stage.world.renderer.{ImageData, Sprite}
 
 class SettableHardwareCursor(cursor: Cursor, visible: Boolean = true) {
   def set(): Unit = {
@@ -28,6 +28,8 @@ trait HardwareCursor {
 object HardwareCursor {
 
   @volatile var isVisible = false
+
+  val crosshairImage = ImageData.fromFile("crosshair.png")
 
   lazy val all: HardwareCursor =
     new HardwareCursor {
