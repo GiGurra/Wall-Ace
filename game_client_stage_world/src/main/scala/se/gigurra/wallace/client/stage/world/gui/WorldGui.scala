@@ -1,15 +1,17 @@
 package se.gigurra.wallace.client.stage.world.gui
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import se.gigurra.wallace.client.stage.world.player.PlayerState
 import se.gigurra.wallace.client.stage.world.renderer.elements.WorldGuiRenderer
 import se.gigurra.wallace.client.stage.world.renderer.{WorldRenderer, RenderAssets, RenderContext}
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
+import se.gigurra.wallace.cursors.HardwareCursor
 import se.gigurra.wallace.gamemodel.{World, WorldSimFrameIndex, WorldUpdate}
-import se.gigurra.wallace.input.InputEvent
+import se.gigurra.wallace.input.{MousePositionUpdate, InputEvent}
 import se.gigurra.wallace.stage.Stage
-import se.gigurra.wallace.util.SyncQue
+import se.gigurra.wallace.util.{Vec2FixedPoint, SyncQue}
 
 case class UpdatesFromGui(worldUpdates: Seq[WorldUpdate])
 
@@ -23,8 +25,29 @@ case class WorldGui(statCfg: StaticConfiguration,
   private val guiRenderer = WorldGuiRenderer()
   private val queuedWorldUpdates = SyncQue[WorldUpdate]
 
-  override def consumeInputs(inputs: Seq[InputEvent]): Seq[InputEvent] = {
-    inputs
+  def handleMouseOnTopOfGui(input: MousePositionUpdate,
+                            position: Vec2FixedPoint): Option[InputEvent] = {
+
+    val offsFromBottom = (Gdx.graphics.getHeight - position.y).toFloat / Gdx.graphics.getHeight.toFloat
+
+    if (offsFromBottom < 0.1f) {
+      HardwareCursor.default.set()
+      None
+    } else {
+      Some(input)
+    }
+
+  }
+
+  override def consumeInput(input: InputEvent): Option[InputEvent] = {
+
+    // TODO: Act on it... kind of
+    input match {
+      case input @ MousePositionUpdate(dragged @ false, position) =>
+        handleMouseOnTopOfGui(input, position)
+      case _ =>
+        Some(input)
+    }
   }
 
   def popQueued: UpdatesFromGui = UpdatesFromGui(queuedWorldUpdates.pop())
@@ -37,18 +60,20 @@ case class WorldGui(statCfg: StaticConfiguration,
 
     import se.gigurra.wallace.client.stage.world.renderer._
 
+    if (!HardwareCursor.isVisible) {
+      batch(transform(
+        WorldRenderer.toWorldSpace(_, player.camera)
+          .translate(player.cursorWorldPosition)) {
+        drawShapes(ShapeType.Filled) { sr =>
+          sr.setColor(Color.YELLOW)
+          sr.circle(0, 0, world.m2World * 20, 50)
+        }
+      })
+    }
+
     // TODO: Draw something here ..
     guiRenderer.render(player, world)
 
-    val greenClear = new Color(0, 1, 0, 0)
-    batch(transform(
-      WorldRenderer.toWorldSpace(_, player.camera)
-        .translate(player.cursorWorldPosition)) {
-      drawShapes(ShapeType.Filled) { sr =>
-        sr.setColor(Color.YELLOW)
-        sr.circle(0, 0, world.m2World * 20, 50)
-      }
-    })
 
   }
 

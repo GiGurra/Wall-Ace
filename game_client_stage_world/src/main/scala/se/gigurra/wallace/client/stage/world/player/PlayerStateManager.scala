@@ -2,7 +2,7 @@ package se.gigurra.wallace.client.stage.world.player
 
 import se.gigurra.wallace.client.stage.world.renderer.WorldRenderer
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
-import se.gigurra.wallace.gamemodel.{WorldUpdate, WorldSimFrameIndex, WorldUpdateBatch}
+import se.gigurra.wallace.gamemodel.{WorldUpdate, WorldSimFrameIndex}
 import se.gigurra.wallace.input.{MousePositionUpdate, InputEvent}
 import se.gigurra.wallace.stage.Stage
 
@@ -15,19 +15,19 @@ case class PlayerStateManager(statCfg: StaticConfiguration,
 
   val state = new PlayerState(ownUnitId = if (dynCfg.game_isSinglePlayer) Some("own-unit") else None)
 
-  override def consumeInputs(inputs: Seq[InputEvent]): Seq[InputEvent] = {
+  override def consumeInput(input: InputEvent): Option[InputEvent] = {
 
     // TODO: Act on it... kind of
-    inputs.filter {
+    input match {
       case MousePositionUpdate(_, position) =>
         val mouseWorldPos = WorldRenderer.pixelPos2WorldPos(position, state.camera)
         // val pixelPosBack = WorldRenderer.worldPos2PixelPos(mouseWorldPos, state.camera)
         // println(s"mousePixelPos / pixelPosBack / mouseWorldPos: ${position} / ${pixelPosBack} / ${mouseWorldPos}")
         state.cursorWorldPosition = mouseWorldPos
-        true
       case _ =>
-        true
     }
+
+    Some(input)
   }
 
   def update(iSimFrame: WorldSimFrameIndex): UpdatesFromPlayer = {

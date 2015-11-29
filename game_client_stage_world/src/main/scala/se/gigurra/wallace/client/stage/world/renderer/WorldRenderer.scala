@@ -2,22 +2,29 @@ package se.gigurra.wallace.client.stage.world.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.math.Vector3
 import se.gigurra.wallace.client.stage.world.player.{Camera, PlayerState}
 import se.gigurra.wallace.client.stage.world.renderer.Matrix4Stack.Matrix4Stack
 import se.gigurra.wallace.client.stage.world.renderer.elements._
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
+import se.gigurra.wallace.cursors.HardwareCursor
 import se.gigurra.wallace.gamemodel._
+import se.gigurra.wallace.input.InputEvent
 import se.gigurra.wallace.util.Vec2FixedPoint
 
 case class WorldRenderer(statCfg: StaticConfiguration,
                          dynCfg: DynamicConfiguration)
                         (implicit renderContext: RenderContext[RenderAssets]) {
+
   import WorldRenderer._
 
   private val terrainRenderer = TerrainRenderer()
   private val entitiesRenderer = EntitiesRenderer()
   private val eventsRenderer = EventsRenderer()
+
+  def consumeInput(remainingInput: InputEvent): Option[InputEvent] = {
+    HardwareCursor.invisible.set()
+    None
+  }
 
   def update[T_TerrainStorage: Rendering](iSimFrame: WorldSimFrameIndex,
                                           player: PlayerState,
@@ -27,12 +34,8 @@ case class WorldRenderer(statCfg: StaticConfiguration,
     import renderContext._
     import renderContext.glShortcuts._
 
-    val camera = player.camera
-    val ownPosWorld = player.camera.worldPosition
-    val ownPosScreen = new Vector3(0.0f, 0.0f, 0.0f)
-
     batch {
-      transform(x => toWorldSpace(x, camera)) {
+      transform(toWorldSpace(_, player.camera)) {
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
         glClear(GL20.GL_COLOR_BUFFER_BIT)

@@ -17,14 +17,11 @@ case class ClientState(statCfg: StaticConfiguration,
   case class Managers(clientWindowManager: ClientWindowManger = new ClientWindowManger(statCfg, dynCfg),
                       clientStageManager: ClientStageManager = new ClientStageManager(statCfg, dynCfg))
 
-  object Managers {
-    implicit def toList(m: Managers) = Tuple2List(Managers.unapply(managers).get)
-  }
-
   val inputQue = InputQue.capture(Gdx.input)
-  val managers = Managers()
+  val _managers = Managers()
+  val managers = Tuple2List(Managers.unapply(_managers).get).toSeq
 
-  Client.addDefaultStages(statCfg, dynCfg, managers.clientStageManager)
+  Client.addDefaultStages(statCfg, dynCfg, _managers.clientStageManager)
 }
 
 class Client(statCfg: StaticConfiguration,
@@ -36,14 +33,12 @@ class Client(statCfg: StaticConfiguration,
 
   // LibGDX Callbacks
   override def render(): Unit = {
-    managers.foldLeft(inputQue.pop())((inputs, manager) => manager.consumeInputs(inputs))
+    inputQue.pop foreach managers.consume
     managers.reverse.foreach(_.update())
   }
-
   override def dispose(): Unit = {
     managers.foreach(_.close())
   }
-
   override def pause(): Unit = {}
   override def resume(): Unit = {}
   override def create(): Unit = {}

@@ -15,7 +15,8 @@ import se.gigurra.wallace.stage.{Stage, StageManager}
 
 class WorldStage(statCfg: StaticConfiguration,
                  dynCfg: DynamicConfiguration,
-                 stageManager: StageManager[InputEvent]) extends Stage[InputEvent] {
+                 stageManager: StageManager[InputEvent])
+  extends Stage[InputEvent] {
 
   override def stageId: String = "game-simulation"
 
@@ -41,15 +42,18 @@ class WorldStage(statCfg: StaticConfiguration,
   val worldRenderer = WorldRenderer(statCfg, dynCfg)(worldRenderContext)
   val worldGui = WorldGui(statCfg, dynCfg)(worldRenderContext)
 
+  val inputConsumers = Seq(worldGui, playerStateMgr)
+  val closeables = Seq(networkStateMgr, audioStateMgr, worldRenderContext)
 
   //////////////////////////
   // Callbacks
   //
 
-  override def consumeInputs(inputs: Seq[InputEvent]): Seq[InputEvent] = {
-    val inputConsumers = Seq(worldGui, playerStateMgr)
-    val inputsLeft = inputConsumers.foldLeft(inputs)((inputs, item) => item.consumeInputs(inputs))
-    inputsLeft
+  override def consumeInput(input: InputEvent): Option[InputEvent] = {
+    inputConsumers.consume(input) match {
+      case Some(remainingInput) => worldRenderer.consumeInput(remainingInput)
+      case None => None
+    }
   }
 
   override def update(): Unit = {
@@ -58,10 +62,8 @@ class WorldStage(statCfg: StaticConfiguration,
     render(iSimFrame, playerStateMgr.state, worldStateMgr.world, worldEvents)
   }
 
-  override def onClose(): Unit = {
-    networkStateMgr.close()
-    audioStateMgr.close()
-    worldRenderContext.close()
+  override def close(): Unit = {
+    closeables.foreach(_.close())
   }
 
   //////////////////////////

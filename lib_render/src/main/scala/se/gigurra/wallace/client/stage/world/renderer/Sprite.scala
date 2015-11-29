@@ -15,13 +15,13 @@ case class Sprite(imgData: Pixmap,
   extends DecoratedTrait[Texture]
   with Closeable {
 
-  val textureData = TextureData.fromImgData(
+  lazy val textureData = TextureData.fromImgData(
     imgData = imgData,
     useMipMaps = useMipMaps,
     disposeOnUpload = disposeOnUpload,
     reloadOnContextLoss = reloadOnContextLoss)
 
-  val texture = new Texture(textureData) {
+  lazy val texture = new Texture(textureData) {
     if (useMipMaps)
       setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapNearestLinear)
   }

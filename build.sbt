@@ -80,11 +80,15 @@ lazy val lib_stage = project in file("lib_stage") settings (sharedSettings: _*) 
   name := baseName + "-lib_stage"
 )
 
-lazy val game_client_stage_menu = project in file("game_client_stage_menu") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config) settings(
+lazy val game_cursors = project in file("game_cursors") settings (sharedSettings: _*) dependsOn(lib_util, lib_render) settings(
+  name := baseName + "-game_cursors"
+)
+
+lazy val game_client_stage_menu = project in file("game_client_stage_menu") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config, game_cursors) settings(
   name := baseName + "-game_client_stage_menu"
 )
 
-lazy val game_client_stage_world = project in file("game_client_stage_world") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config, game_model) settings(
+lazy val game_client_stage_world = project in file("game_client_stage_world") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config, game_cursors, game_model) settings(
   name := baseName + "-game_client_stage_world"
 )
 
@@ -116,6 +120,7 @@ lazy val all = project.in(file("."))
     lib_stage,
     game_config,
     game_model,
+    game_cursors,
     game_client_stage_menu,
     game_client_stage_world,
     game_client,

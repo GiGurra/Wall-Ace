@@ -1,12 +1,14 @@
 package se.gigurra.wallace.client.stage.world.renderer
 
+import java.io.Closeable
+
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.utils.Align
 import se.gigurra.wallace.util.Disposing
 
-case class RenderContext[AssetsType : Disposing](_assets: AssetsType) {
+case class RenderContext[AssetsType : Disposing](_assets: AssetsType) extends Closeable {
 
   def fps = Gdx.graphics.getFramesPerSecond
 

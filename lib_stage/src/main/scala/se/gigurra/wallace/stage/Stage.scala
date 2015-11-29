@@ -1,28 +1,14 @@
 package se.gigurra.wallace.stage
 
-trait Stage[InputType] {
+trait Stage[InputType] extends StageInput[InputType] {
 
   def stageId: String
 
-  /**
-    * @param inputs
-    * @return Remaining InputEvents that were not consumed
-    */
-  def consumeInputs(inputs: Seq[InputType]): Seq[InputType] = {
-    inputs
+  def consumeInput(input: InputType): Option[InputType] = {
+    Some(input)
   }
 
-  def update(): Unit = {
-
-  }
-
-  def onClose(): Unit = {
-
-  }
-
-  def onOpen(): Unit = {
-
-  }
-
+  def update(): Unit = {}
+  def onOpen(): Unit = {}
 
 }

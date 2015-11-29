@@ -10,8 +10,8 @@ class MainMenuStage(statCfg: StaticConfiguration,
 
   override def stageId: String = "main-menu"
 
-  override def consumeInputs(inputs: Seq[InputEvent]): Seq[InputEvent] = {
-    inputs
+  override def consumeInput(input: InputEvent): Option[InputEvent] = {
+    Some(input)
   }
 
   override def update(): Unit = {
