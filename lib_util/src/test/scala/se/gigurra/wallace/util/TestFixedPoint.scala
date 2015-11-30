@@ -30,8 +30,8 @@ class TestFixedPoint extends WordSpec with Matchers {
       sqrt(144) shouldBe 12
     }
 
-    "be exact for n^2 where n = 1 .. 10000" in {
-      for (n <- 0 until 10000) {
+    "be exact for n^2 where n = 1 .. 10^6" in {
+      for (n <- 0L until 1000000L) {
         val square = n * n
         sqrt(square) shouldBe n
       }

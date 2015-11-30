@@ -14,10 +14,10 @@ object Main extends App {
   def buildLwjglCfg(statCfg: StaticConfiguration, dynCfg: DynamicConfiguration): LwjglApplicationConfiguration = {
     new LwjglApplicationConfiguration {
       title = statCfg.window_title
-      x = dynCfg.window_position.x
-      y = dynCfg.window_position.y
-      width = dynCfg.window_size.x
-      height = dynCfg.window_size.y
+      x = dynCfg.window_position.x.toInt
+      y = dynCfg.window_position.y.toInt
+      width = dynCfg.window_size.x.toInt
+      height = dynCfg.window_size.y.toInt
       forceExit = statCfg.app_forceExit
       vSyncEnabled = dynCfg.app_vsyncEnabled
       foregroundFPS = dynCfg.app_foregroundFps

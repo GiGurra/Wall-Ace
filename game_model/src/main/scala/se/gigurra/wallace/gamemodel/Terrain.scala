@@ -1,7 +1,7 @@
 package se.gigurra.wallace.gamemodel
 
 case class Terrain[T_TerrainStorage : TerrainStoring](storage: T_TerrainStorage,
-                                                      patch2WorldScale: Int) {
+                                                      patch2WorldScale: Long) {
 
   val storing = implicitly[TerrainStoring[T_TerrainStorage]]
 
@@ -13,15 +13,17 @@ case class Terrain[T_TerrainStorage : TerrainStoring](storage: T_TerrainStorage,
 
   val worldHeight = patchHeight * patch2WorldScale
 
-  def getPatch(iPatch: Int): TerrainPatch = storing.get(storage, iPatch)
+  val worldSize = WorldVector(worldWidth, worldHeight)
 
-  def setPatch(iPatch: Int, patch: TerrainPatch): Unit = storing.set(storage, iPatch, patch)
+  def getPatch(iPatch: Long): TerrainPatch = storing.get(storage, iPatch)
 
-  def setPatch(xWorld: Int, yWorld: Int, patch: TerrainPatch): Unit = {
+  def setPatch(iPatch: Long, patch: TerrainPatch): Unit = storing.set(storage, iPatch, patch)
+
+  def setPatch(xWorld: Long, yWorld: Long, patch: TerrainPatch): Unit = {
     setPatch(patchIndexOf(xWorld, yWorld), patch)
   }
 
-  def getPatch(xWorld: Int, yWorld: Int): TerrainPatch = {
+  def getPatch(xWorld: Long, yWorld: Long): TerrainPatch = {
     getPatch(patchIndexOf(xWorld, yWorld))
   }
 
@@ -33,11 +35,11 @@ case class Terrain[T_TerrainStorage : TerrainStoring](storage: T_TerrainStorage,
     setPatch(pos.x, pos.y, value)
   }
 
-  def patchIndexOf(pos: WorldVector): Int = {
+  def patchIndexOf(pos: WorldVector): Long = {
     patchIndexOf(pos.x, pos.y)
   }
 
-  def patchIndexOf(xWorld: Int, yWorld: Int): Int = {
+  def patchIndexOf(xWorld: Long, yWorld: Long): Long = {
     requireInside(xWorld, yWorld)
     val xPatch = xWorld / patch2WorldScale
     val yPatch = yWorld / patch2WorldScale
@@ -48,7 +50,7 @@ case class Terrain[T_TerrainStorage : TerrainStoring](storage: T_TerrainStorage,
     requireInside(pos.x, pos.y)
   }
 
-  def requireInside(x: Int, y: Int): Unit = {
+  def requireInside(x: Long, y: Long): Unit = {
     require(x >= 0, "x position negative")
     require(x < worldWidth, "x position too large")
     require(y >= 0, "y position negative")

@@ -31,10 +31,14 @@ class WorldStage(statCfg: StaticConfiguration,
 
   val networkStateMgr = NetworkStateManager(isSinglePlayer)
 
+  val worldMode = WorldMode.get(dynCfg.game_worldMode)
+
   val worldStateMgr = WorldStateManager(
     timeStep = statCfg.sim_dt,
     isSinglePlayer = dynCfg.game_isSinglePlayer,
-    startWorld = World.create(SpriteTerrainStorageFactory, 640, 640))
+    startWorld = World.create(SpriteTerrainStorageFactory, 640, 640, statCfg.sim_patch2WorldScale),
+    worldMode = worldMode
+  )
 
   val audioStateMgr = AudioStateManager(statCfg, dynCfg)
 
@@ -76,10 +80,15 @@ class WorldStage(statCfg: StaticConfiguration,
     worldStateMgr.update(updates.worldUpdates)
   }
 
+  private def ownUnit: Option[Entity] = {
+    playerStateMgr.state.unitId.flatMap(worldStateMgr.world.getEntity)
+  }
+
   private def getLocalUpdates(iSimFrame: WorldSimFrameIndex): LocalUpdates = {
-    val updatesFromPlayer = playerStateMgr.update(iSimFrame)
+    val updatesFromPlayer = playerStateMgr.update(iSimFrame, ownUnit.map(_.position))
     val updatesFromGui = worldGui.popQueued
-    val rawWorldUpdates = updatesFromPlayer.worldUpdates ++ updatesFromGui.worldUpdates
+    val updatesFromMode = worldMode.createRequests(playerStateMgr.state.unitId)
+    val rawWorldUpdates = updatesFromPlayer.worldUpdates ++ updatesFromGui.worldUpdates ++ updatesFromMode
     LocalUpdates(rawWorldUpdates)
   }
 

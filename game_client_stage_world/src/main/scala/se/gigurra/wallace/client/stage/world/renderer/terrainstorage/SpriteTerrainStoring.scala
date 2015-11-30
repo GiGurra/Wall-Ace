@@ -7,13 +7,13 @@ object SpriteTerrainStoring {
 
   implicit val terrainStoringSprite = new TerrainStoring[Sprite] {
 
-    override def width(t: Sprite): Int = t.width
+    override def width(t: Sprite): Long = t.width
 
-    override def height(t: Sprite): Int = t.height
+    override def height(t: Sprite): Long = t.height
 
-    override def set(t: Sprite, iPatch: Int, patch: TerrainPatch): Unit = {
+    override def set(t: Sprite, iPatch: Long, patch: TerrainPatch): Unit = {
       val data = t.data
-      val offset = iPatch * 4
+      val offset = (iPatch * 4).toInt
       data
         .put(offset + 0, patch.r)
         .put(offset + 1, patch.g)
@@ -21,9 +21,9 @@ object SpriteTerrainStoring {
         .put(offset + 3, patch.a)
     }
 
-    override def get(t: Sprite, iPatch: Int): TerrainPatch = {
+    override def get(t: Sprite, iPatch: Long): TerrainPatch = {
       val data = t.data
-      val offset = iPatch * 4
+      val offset = (iPatch * 4).toInt
       TerrainPatch(
         data.get(offset + 0),
         data.get(offset + 1),
@@ -36,7 +36,7 @@ object SpriteTerrainStoring {
 }
 
 object SpriteTerrainStorageFactory extends TerrainStorageFactory[Sprite] {
-  def create(width: Int, height: Int): Sprite = {
-    Sprite.fromSize(width = width, height = height, useMipMaps = true)
+  def create(width: Long, height: Long): Sprite = {
+    Sprite.fromSize(width = width.toInt, height = height.toInt, useMipMaps = true)
   }
 }

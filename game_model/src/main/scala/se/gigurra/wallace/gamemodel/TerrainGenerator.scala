@@ -12,8 +12,8 @@ object TerrainGenerator {
     val h = world.patchHeight
 
     optimize {
-      for (y <- 0 until h) {
-        for (x <- 0 until w) {
+      for (y <- 0L until h) {
+        for (x <- 0L until w) {
           val typ = genType(rnd, x, y, w, h)
           world.setPatch(
             xWorld = x * world.patch2WorldScale,
@@ -24,12 +24,12 @@ object TerrainGenerator {
     }
   }
 
-  private[this] def genType(rnd: Random, x: Int, y: Int, w: Int, h: Int): Byte = {
+  private[this] def genType(rnd: Random, x: Long, y: Long, w: Long, h: Long): Byte = {
     // TODO: Impl - Currently SUPER dumb!
-    val dyAboveGround = 100 * (h - y) / h
-    if (dyAboveGround > 20) {
+    val dyAboveGround = 100L * (h - y) / h
+    if (dyAboveGround > 20L) {
       TerrainPatch.ALPHA_SPACE
-    } else if (dyAboveGround > 10) {
+    } else if (dyAboveGround > 10L) {
       TerrainPatch.ALPHA_DIRT
     } else {
       TerrainPatch.ALPHA_ROCK

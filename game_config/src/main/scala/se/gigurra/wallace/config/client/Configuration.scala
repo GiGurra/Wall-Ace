@@ -3,6 +3,7 @@ package se.gigurra.wallace.config.client
 import se.gigurra.wallace.util.Vec2FixedPoint
 
 case class StaticConfiguration(sim_dt: Int,
+                               sim_patch2WorldScale: Int = 10000,
                                window_title: String,
                                app_forceExit: Boolean = true)
 
@@ -12,6 +13,7 @@ case class DynamicConfiguration(var window_position: Vec2FixedPoint,
                                 var app_foregroundFps: Int = 0,
                                 var app_backgroundFps: Int = 0,
                                 var game_isSinglePlayer: Boolean = true,
+                                var game_worldMode: String = "sandbox",
                                 var audio_volume: Float = 0.5f)
 
 object Configuration {

@@ -1,6 +1,6 @@
 package se.gigurra.wallace.gamemodel
 
-case class WorldFrameUpdater() {
+case class WorldFrameUpdater(worldMode: WorldMode) {
 
   def update(world: World[_],
              externalUpdates: Seq[WorldUpdate])
@@ -22,6 +22,10 @@ case class WorldFrameUpdater() {
                                 (implicit eventReceiver: WorldEventReceiver): Unit = {
 
     // TODO: Accelerate, move, explode, yadayada
+    val updates = worldMode.simulate()
+    for (update <- updates) {
+      update.apply(world)
+    }
 
   }
 }
