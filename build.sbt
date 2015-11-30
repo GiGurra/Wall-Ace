@@ -35,31 +35,25 @@ lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
   exportJars := true
 )
 
-def subproject(name: String): Project = {
-  Project(name, file(name))
+def subproject(projectName: String): Project = {
+  Project(projectName, file(projectName)).settings(sharedSettings: _*).settings(
+    name := s"${baseName}_${projectName}"
+  )
 }
 
-lazy val lib_util = subproject("lib_util") settings (sharedSettings: _*) settings(
-  name := baseName + "-lib_util"
-)
+lazy val lib_util = subproject("lib_util")
 
-lazy val game_config = subproject("game_config") settings (sharedSettings: _*) dependsOn lib_util settings(
-  name := baseName + "-game_config"
-)
+lazy val game_config = subproject("game_config") dependsOn lib_util
 
-lazy val game_model = subproject("game_model") settings (sharedSettings: _*) dependsOn lib_util settings(
-  name := baseName + "-game_model"
-)
+lazy val game_model = subproject("game_model") dependsOn lib_util
 
-lazy val lib_audio = subproject("lib_audio") settings (sharedSettings: _*) dependsOn lib_util settings(
-  name := baseName + "-lib_audio",
+lazy val lib_audio = subproject("lib_audio") dependsOn lib_util settings(
   libraryDependencies ++= Seq(
     "com.badlogicgames.gdx" % "gdx" % libgdxVersion
   )
 )
 
-lazy val lib_comm = subproject("lib_comm") settings (sharedSettings: _*) dependsOn lib_util settings(
-  name := baseName + "-lib_comm",
+lazy val lib_comm = subproject("lib_comm") dependsOn lib_util settings(
   libraryDependencies ++= Seq(
     "org.json4s" %% "json4s-native" % "3.3.0",
     "io.reactivex" %% "rxscala" % "0.25.0",
@@ -67,47 +61,32 @@ lazy val lib_comm = subproject("lib_comm") settings (sharedSettings: _*) depends
   )
 )
 
-lazy val lib_input = subproject("lib_input") settings (sharedSettings: _*) dependsOn lib_util settings(
-  name := baseName + "-lib_input",
+lazy val lib_input = subproject("lib_input") dependsOn lib_util settings(
   libraryDependencies ++= Seq(
     "com.badlogicgames.gdx" % "gdx" % libgdxVersion
   )
 )
 
-lazy val lib_render = subproject("lib_render") settings (sharedSettings: _*) dependsOn lib_util settings(
-  name := baseName + "-lib_render",
+lazy val lib_render = subproject("lib_render") dependsOn lib_util settings(
   libraryDependencies ++= Seq(
     "com.badlogicgames.gdx" % "gdx" % libgdxVersion,
     "com.badlogicgames.gdx" % "gdx-freetype" % libgdxVersion
   )
 )
 
-lazy val lib_stage = subproject("lib_stage") settings (sharedSettings: _*) dependsOn(lib_util) settings(
-  name := baseName + "-lib_stage"
-)
+lazy val lib_stage = subproject("lib_stage") dependsOn(lib_util)
 
-lazy val game_cursors = subproject("game_cursors") settings (sharedSettings: _*) dependsOn(lib_util, lib_render) settings(
-  name := baseName + "-game_cursors"
-)
+lazy val game_cursors = subproject("game_cursors") dependsOn(lib_util, lib_render)
 
-lazy val game_client_stage_menu = subproject("game_client_stage_menu") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config, game_cursors) settings(
-  name := baseName + "-game_client_stage_menu"
-)
+lazy val game_client_stage_menu = subproject("game_client_stage_menu") dependsOn(lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config, game_cursors)
 
-lazy val game_client_stage_world = subproject("game_client_stage_world") settings (sharedSettings: _*) dependsOn(lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config, game_cursors, game_model) settings(
-  name := baseName + "-game_client_stage_world"
-)
+lazy val game_client_stage_world = subproject("game_client_stage_world") dependsOn(lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config, game_cursors, game_model)
 
-lazy val game_client = subproject("game_client") settings (sharedSettings: _*) dependsOn(lib_util, game_client_stage_menu, game_client_stage_world) settings(
-  name := baseName + "-game_client"
-)
+lazy val game_client = subproject("game_client") dependsOn(lib_util, game_client_stage_menu, game_client_stage_world)
 
-lazy val game_server = subproject("game_server") settings (sharedSettings: _*) dependsOn(lib_util, lib_comm, game_model) settings(
-  name := baseName + "-game_server"
-)
+lazy val game_server = subproject("game_server") dependsOn(lib_util, lib_comm, game_model)
 
-lazy val platform_desktop = subproject("platform_desktop") settings (sharedSettings: _*) dependsOn game_client settings(
-    name := baseName + "-platform_desktop",
+lazy val platform_desktop = subproject("platform_desktop") dependsOn game_client settings(
     packMain := Map("platform_desktop" -> "se.gigurra.wallace.platform.desktop.Main"),
     libraryDependencies ++= Seq(
       "com.badlogicgames.gdx" % "gdx-backend-lwjgl" % libgdxVersion,
