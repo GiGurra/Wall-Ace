@@ -41,29 +41,27 @@ val ext_libGdx_lwJgl = "com.badlogicgames.gdx" % "gdx-backend-lwjgl" % ext_libgd
 val ext_libGdx_platform_desktop = "com.badlogicgames.gdx" % "gdx-platform" % ext_libgdxVersion classifier "natives-desktop"
 val ext_libGdx_freeType_platform_desktop = "com.badlogicgames.gdx" % "gdx-freetype-platform" % ext_libgdxVersion classifier "natives-desktop"
 
-def subproject(id: String,
-               deps: Seq[ClasspathDependency] = Seq.empty,
-               extDeps: Seq[ModuleID] = Seq.empty): Project = {
+def subproject(id: String, deps: ClasspathDependency*)(extDeps: ModuleID*): Project = {
   Project(id, file(id)).settings(sharedSettings: _*).dependsOn(deps: _*).settings(
     name := s"${name.value}_${id}",
     libraryDependencies ++= extDeps
   )
 }
 
-val lib_util = subproject("lib_util")
-val lib_audio = subproject("lib_audio", Seq(lib_util), Seq(ext_libGdx))
-val lib_comm = subproject("lib_comm", Seq(lib_util), Seq(ext_json4s, ext_rxScala, ext_kryonet))
-val lib_input = subproject("lib_input", Seq(lib_util), Seq(ext_libGdx))
-val lib_render = subproject("lib_render", Seq(lib_util), Seq(ext_libGdx, ext_libGdx_freeType))
-val lib_stage = subproject("lib_stage", Seq(lib_util))
-val game_config = subproject("game_config", Seq(lib_util))
-val game_model = subproject("game_model", Seq(lib_util))
-val game_cursors = subproject("game_cursors", Seq(lib_util, lib_render))
-val game_client_stage_menu = subproject("game_client_stage_menu", Seq(lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config, game_cursors))
-val game_client_stage_world = subproject("game_client_stage_world", Seq(lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config, game_cursors, game_model))
-val game_client = subproject("game_client", Seq(lib_util, game_client_stage_menu, game_client_stage_world))
-val game_server = subproject("game_server", Seq(lib_util, lib_comm, game_model))
-val platform_desktop = subproject("platform_desktop", Seq(game_client), Seq(ext_libGdx_lwJgl, ext_libGdx_platform_desktop, ext_libGdx_freeType_platform_desktop))
+val lib_util = subproject("lib_util")()
+val lib_audio = subproject("lib_audio", lib_util)(ext_libGdx)
+val lib_comm = subproject("lib_comm", lib_util)(ext_json4s, ext_rxScala, ext_kryonet)
+val lib_input = subproject("lib_input", lib_util)(ext_libGdx)
+val lib_render = subproject("lib_render", lib_util)(ext_libGdx, ext_libGdx_freeType)
+val lib_stage = subproject("lib_stage", lib_util)()
+val game_config = subproject("game_config", lib_util)()
+val game_model = subproject("game_model", lib_util)()
+val game_cursors = subproject("game_cursors", lib_util, lib_render)()
+val game_client_stage_menu = subproject("game_client_stage_menu", lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config, game_cursors)()
+val game_client_stage_world = subproject("game_client_stage_world", lib_util, lib_stage, lib_input, lib_render, lib_audio, game_config, game_cursors, game_model)()
+val game_client = subproject("game_client", lib_util, game_client_stage_menu, game_client_stage_world)()
+val game_server = subproject("game_server", lib_util, lib_comm, game_model)()
+val platform_desktop = subproject("platform_desktop", game_client)(ext_libGdx_lwJgl, ext_libGdx_platform_desktop, ext_libGdx_freeType_platform_desktop)
 
 val all = Project("all", file("."))
   .aggregate(
@@ -82,4 +80,3 @@ val all = Project("all", file("."))
     game_server,
     platform_desktop
   )
-
