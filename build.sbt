@@ -1,5 +1,3 @@
-packSettings
-
 val libgdxVersion = "1.7.0"
 
 lazy val baseName = "wall-ace"
@@ -87,7 +85,6 @@ lazy val game_client = subproject("game_client") dependsOn(lib_util, game_client
 lazy val game_server = subproject("game_server") dependsOn(lib_util, lib_comm, game_model)
 
 lazy val platform_desktop = subproject("platform_desktop") dependsOn game_client settings(
-    packMain := Map("platform_desktop" -> "se.gigurra.wallace.platform.desktop.Main"),
     libraryDependencies ++= Seq(
       "com.badlogicgames.gdx" % "gdx-backend-lwjgl" % libgdxVersion,
       "com.badlogicgames.gdx" % "gdx-platform" % libgdxVersion classifier "natives-desktop",
