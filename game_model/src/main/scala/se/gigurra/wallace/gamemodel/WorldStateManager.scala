@@ -2,7 +2,7 @@ package se.gigurra.wallace.gamemodel
 
 import scala.collection.mutable.ArrayBuffer
 
-case class WorldStateManager[T](timeStep: Int,
+case class WorldStateManager[T](timeStep: Long,
                                 isSinglePlayer: Boolean,
                                 startWorld: World[T],
                                 worldMode: WorldMode) {
@@ -11,7 +11,7 @@ case class WorldStateManager[T](timeStep: Int,
   // Private state
   //
 
-  private val worldFrameUpdater = WorldFrameUpdater(worldMode)
+  private val worldFrameUpdater = WorldFrameUpdater(worldMode, timeStep)
   private val worldUpdatesQue = WorldUpdatesQue()
   private val worldUpdater = WorldUpdater.create(timeStep, isSinglePlayer)
 

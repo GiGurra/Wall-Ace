@@ -1,7 +1,5 @@
 package se.gigurra.wallace.client.stage.world.player
 
-import java.util.UUID
-
 import com.badlogic.gdx.Input.Keys._
 import se.gigurra.wallace.client.stage.world.renderer.WorldRenderer
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
@@ -24,6 +22,7 @@ case class PlayerStateManager(statCfg: StaticConfiguration,
   override val stageId: String = "player-state-manager"
   private val queuedFromConsumedInput = SyncQue[WorldUpdate]()
   val state = new PlayerState(statCfg.sim_patch2WorldScale)
+  val timeStep = statCfg.sim_dt
 
 
   ///////////////////////
@@ -47,7 +46,8 @@ case class PlayerStateManager(statCfg: StaticConfiguration,
     Some(input)
   }
 
-  def update(iSimFrame: WorldSimFrameIndex, ownUnitPos: Option[WorldVector]): UpdatesFromPlayer = {
+  def update(iSimFrame: WorldSimFrameIndex,
+             ownUnitPos: Option[WorldVector]): UpdatesFromPlayer = {
 
     // Update camera to follow own unit
     for {
@@ -80,7 +80,7 @@ case class PlayerStateManager(statCfg: StaticConfiguration,
     (w + s + a + d)
       .normalized(
         newLength = maxSpeedWorld,
-        acceptZeroLength = true)
+        acceptZeroLength = true) * timeStep / 1000
   }
 
   private def updateOwnCharacterMovement(): Unit = {

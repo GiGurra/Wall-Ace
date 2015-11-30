@@ -4,7 +4,7 @@ import se.gigurra.wallace.util.Time
 
 object WorldUpdater {
 
-  def create(timeStep: Int,
+  def create(timeStep: Long,
              isSinglePlayer: Boolean): WorldUpdater = {
     if (isSinglePlayer)
       SinglePlayerWorldUpdater(timeStep)

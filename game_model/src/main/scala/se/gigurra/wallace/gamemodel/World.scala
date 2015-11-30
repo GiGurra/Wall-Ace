@@ -46,7 +46,7 @@ case class World[T_TerrainStorage: TerrainStoring](var iSimFrame: WorldSimFrameI
 
 object World {
 
-  implicit def world2terrain[T_TerrainStorage: TerrainStoring](world: World[T_TerrainStorage]): Terrain[T_TerrainStorage] = world.terrain
+  implicit def world2terrain(world: World[_]): Terrain[_] = world.terrain
 
   def create[T_TerrainStorage: TerrainStoring](storageFactory: TerrainStorageFactory[T_TerrainStorage],
                                                patchWidth: Int,

@@ -2,7 +2,7 @@ package se.gigurra.wallace.config.client
 
 import se.gigurra.wallace.util.Vec2FixedPoint
 
-case class StaticConfiguration(sim_dt: Int,
+case class StaticConfiguration(sim_dt: Long,
                                sim_patch2WorldScale: Int = 10000,
                                window_title: String,
                                app_forceExit: Boolean = true)
@@ -20,7 +20,7 @@ object Configuration {
 
   def readStatic(): StaticConfiguration = {
     StaticConfiguration(
-      sim_dt = 20,
+      sim_dt = 20L,
       window_title = "wall-ace",
       app_forceExit = true
     )

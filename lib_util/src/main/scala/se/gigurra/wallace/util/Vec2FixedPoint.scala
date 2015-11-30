@@ -28,7 +28,7 @@ case class Vec2FixedPoint(x: Long = 0L, y: Long = 0L) {
 
 object Vec2FixedPoint {
 
-  def zero = Vec2FixedPoint(0L, 0L)
+  val zero = Vec2FixedPoint(0L, 0L)
 
   def normalized(_v: Vec2FixedPoint, newLength: Long): Vec2FixedPoint = {
     require(newLength < Int.MaxValue / 2, "Arithmetic issue - cannot normalize to lenth > Int.MaxValue / 2")

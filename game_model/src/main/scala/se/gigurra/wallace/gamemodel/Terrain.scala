@@ -57,4 +57,34 @@ case class Terrain[T_TerrainStorage : TerrainStoring](storage: T_TerrainStorage,
     require(y < worldHeight, "y position too large")
   }
 
+  def clamp(p: WorldVector): WorldVector = {
+
+    def clampComponent(v: Long, max: Long): Long = {
+      if (v < 0) 0
+      else if (v >= max) max - 1
+      else v
+    }
+
+    val x = clampComponent(p.x, worldWidth)
+    val y = clampComponent(p.y, worldHeight)
+
+    WorldVector(x, y)
+  }
+
+  def containsX(x: Long): Boolean = {
+    x >= 0 && x < worldWidth
+  }
+
+  def containsY(y: Long): Boolean = {
+    y >= 0 && y < worldHeight
+  }
+
+  def containsWorldPosition(p: WorldVector): Boolean = {
+    containsWorldPosition(p.x, p.y)
+  }
+
+  def containsWorldPosition(x: Long, y: Long): Boolean = {
+    containsX(x) && containsY(y)
+  }
+
 }
