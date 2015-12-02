@@ -1,4 +1,4 @@
-package se.gigurra.wallace.client.stage.world.renderer
+package se.gigurra.wallace.renderer
 
 import java.io.Closeable
 
@@ -11,15 +11,23 @@ import com.badlogic.gdx.graphics.g2d.{BitmapFont, GlyphLayout, PixmapPacker}
 import com.badlogic.gdx.utils.Align
 import se.gigurra.wallace.util.Decorated
 
-class Font(_base: BitmapFont)
-  extends Decorated[BitmapFont](_base)
+case class Font(font: BitmapFont, size: Float)
+  extends Decorated[BitmapFont](font)
   with Closeable {
 
   def prep(str: CharSequence,
            align: Int = Align.left,
            targetWidth: Float = 0.0f,
-           wrap: Boolean = false): RichGlyphLayout = {
-    new RichGlyphLayout(new GlyphLayout(this, str, _base.getColor, targetWidth, align, wrap), this)
+           wrap: Boolean = false,
+           color: Color = null,
+           alphaScale: Float = 1.0f): RichGlyphLayout = {
+    new RichGlyphLayout(new GlyphLayout(
+      font,
+      str,
+      Option(color).getOrElse(font.getColor).scaleAlpha(alphaScale),
+      targetWidth,
+      align,
+      wrap), this)
   }
 
   override def close(): Unit = {
@@ -75,6 +83,6 @@ object Font {
     val font = generator.generateFont(parameter)
     font.setUseIntegerPositions(false)
     generator.dispose()
-    new Font(font)
+    new Font(font, size.toFloat)
   }
 }

@@ -1,4 +1,4 @@
-package se.gigurra.wallace.client.stage.world.renderer
+package se.gigurra.wallace.renderer
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import se.gigurra.wallace.util.Decorated

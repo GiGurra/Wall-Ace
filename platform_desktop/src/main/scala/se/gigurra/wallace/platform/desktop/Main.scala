@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.{Pixmap, Cursor}
 import org.lwjgl.BufferUtils
 import org.lwjgl.input.Mouse
 import se.gigurra.wallace.client.Client
-import se.gigurra.wallace.client.stage.world.renderer.Sprite
 import se.gigurra.wallace.config.client.{Configuration, DynamicConfiguration, StaticConfiguration}
+import se.gigurra.wallace.renderer.Sprite
 
 object Main extends App {
 

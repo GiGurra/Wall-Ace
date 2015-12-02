@@ -1,7 +1,7 @@
 package se.gigurra.wallace.client.stage.world.renderer.elements
 
-import se.gigurra.wallace.client.stage.world.renderer.{Sprite, RenderAssets, RenderContext, Rendering}
 import se.gigurra.wallace.gamemodel.Terrain
+import se.gigurra.wallace.renderer.{Rendering, RenderContext, RenderAssets}
 
 case class TerrainRenderer()(implicit renderContext: RenderContext[RenderAssets]) {
 

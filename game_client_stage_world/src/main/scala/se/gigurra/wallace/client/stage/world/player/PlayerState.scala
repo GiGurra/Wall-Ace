@@ -5,6 +5,7 @@ import java.util.UUID
 import se.gigurra.wallace.gamemodel.WorldVector
 
 case class PlayerState(val patch2WorldScale: Int,
+                       var name: String,
                        var unitId: Option[String] = Some(UUID.randomUUID().toString),
                        var cursorWorldPosition: WorldVector = WorldVector(),
                        var cursorHoverUnitId: Option[String] = None) {

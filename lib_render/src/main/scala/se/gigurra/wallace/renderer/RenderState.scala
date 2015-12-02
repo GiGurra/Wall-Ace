@@ -1,8 +1,8 @@
-package se.gigurra.wallace.client.stage.world.renderer
+package se.gigurra.wallace.renderer
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import Matrix4Stack.Matrix4Stack
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import se.gigurra.wallace.renderer.Matrix4Stack.Matrix4Stack
 
 class RenderState {
   val batch = new RichSpriteBatch(new SpriteBatch)

@@ -1,8 +1,8 @@
-package se.gigurra.wallace.client.stage.world.renderer
+package se.gigurra.wallace.renderer
 
 import java.io.Closeable
 
-import se.gigurra.wallace.util.{Tuple2List, Disposing}
+import se.gigurra.wallace.util.{Disposing, Tuple2List}
 
 import scala.collection.mutable
 

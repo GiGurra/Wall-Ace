@@ -1,7 +1,6 @@
-package se.gigurra.wallace.client.stage.world.renderer
+package se.gigurra.wallace.renderer
 
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.g2d.Batch
 
 object Projections {
 

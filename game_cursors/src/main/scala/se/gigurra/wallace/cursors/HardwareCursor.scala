@@ -2,7 +2,7 @@ package se.gigurra.wallace.cursors
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.{Pixmap, Cursor}
-import se.gigurra.wallace.client.stage.world.renderer.{ImageData, Sprite}
+import se.gigurra.wallace.renderer.{Sprite, ImageData}
 
 class SettableHardwareCursor(name: String, cursor: Cursor, visible: Boolean = true) {
   def set(): Unit = {

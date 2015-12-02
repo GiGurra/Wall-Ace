@@ -21,7 +21,7 @@ case class PlayerStateManager(statCfg: StaticConfiguration,
 
   override val stageId: String = "player-state-manager"
   private val queuedFromConsumedInput = SyncQue[WorldUpdate]()
-  val state = new PlayerState(statCfg.sim_patch2WorldScale)
+  val state = new PlayerState(statCfg.sim_patch2WorldScale, dynCfg.game_playerName)
   val timeStep = statCfg.sim_dt
 
 
@@ -69,7 +69,7 @@ case class PlayerStateManager(statCfg: StaticConfiguration,
 
   private def getOwnMoveVelocity(): WorldVector = {
 
-    val maxSpeedMps = 3
+    val maxSpeedMps = 5
     val maxSpeedWorld = maxSpeedMps * m2WorldScale
 
     val w = WorldVector(0, 1) * W.keyDown

@@ -14,6 +14,7 @@ case class DynamicConfiguration(var window_position: Vec2FixedPoint,
                                 var app_backgroundFps: Int = 0,
                                 var game_isSinglePlayer: Boolean = true,
                                 var game_worldMode: String = "sandbox",
+                                var game_playerName: String = "Johh Doe",
                                 var audio_volume: Float = 0.5f)
 
 object Configuration {

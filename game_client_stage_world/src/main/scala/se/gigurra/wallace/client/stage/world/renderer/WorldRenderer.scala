@@ -3,12 +3,13 @@ package se.gigurra.wallace.client.stage.world.renderer
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import se.gigurra.wallace.client.stage.world.player.{Camera, PlayerState}
-import se.gigurra.wallace.client.stage.world.renderer.Matrix4Stack.Matrix4Stack
+import se.gigurra.wallace.renderer.{Rendering, RenderContext, RenderAssets, Matrix4Stack}
+import Matrix4Stack.Matrix4Stack
 import se.gigurra.wallace.client.stage.world.renderer.elements._
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.cursors.HardwareCursor
 import se.gigurra.wallace.gamemodel._
-import se.gigurra.wallace.input.InputEvent
+import se.gigurra.wallace.input.{MousePositionUpdate, InputEvent}
 import se.gigurra.wallace.util.Vec2FixedPoint
 
 case class WorldRenderer(statCfg: StaticConfiguration,
@@ -22,7 +23,10 @@ case class WorldRenderer(statCfg: StaticConfiguration,
   private val eventsRenderer = EventsRenderer()
 
   def consumeInput(remainingInput: InputEvent): Option[InputEvent] = {
-    HardwareCursor.aim.set()
+    remainingInput match {
+      case MousePositionUpdate(_,_) => HardwareCursor.aim.set()
+      case _ =>
+    }
     None
   }
 

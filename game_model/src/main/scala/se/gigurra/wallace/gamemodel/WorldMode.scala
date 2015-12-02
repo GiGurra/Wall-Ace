@@ -11,7 +11,7 @@ trait WorldMode {
   def name: String
 
   // The world mode may issue requests, like spawn own player etc
-  def createRequests(playerUnitId: Option[String]): Seq[WorldUpdate]
+  def createRequests(playerName: String, playerUnitId: Option[String]): Seq[WorldUpdate]
 
   // Must never have any knowledge of the current player
   // This simulation will execute identically on all clients and the server
@@ -22,7 +22,7 @@ case class SandboxMode() extends WorldMode {
 
   override val name: String = "sandbox"
 
-  override def createRequests(playerUnitId: Option[String]): Seq[WorldUpdate] = {
+  override def createRequests(playerName: String, playerUnitId: Option[String]): Seq[WorldUpdate] = {
 
     def spawnOwnCharacter(playerUnitId: String): WorldUpdate = {
       new WorldUpdate {
@@ -34,12 +34,15 @@ case class SandboxMode() extends WorldMode {
               val r = new Random()
               val x = sz.x / 4 + r.nextInt(sz.x.toInt / 2)
               val y = sz.y / 4 + r.nextInt(sz.y.toInt / 2)
+              val worldPosition = WorldVector(x,y)
 
               world.addEntity(Entity(
                 id = playerUnitId,
                 isPlayerUnit = true,
-                position = WorldVector(x,y)
+                position = worldPosition,
+                name = Some(playerName)
               ))
+              emit(PlayerSpawn(playerUnitId, playerName, worldPosition))
           }
         }
       }

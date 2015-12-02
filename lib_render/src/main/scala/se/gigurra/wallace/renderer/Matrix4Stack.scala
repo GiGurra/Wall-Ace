@@ -1,4 +1,4 @@
-package se.gigurra.wallace.client.stage.world.renderer
+package se.gigurra.wallace.renderer
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
@@ -63,6 +63,8 @@ object Matrix4Stack {
     def scale(t: Vector3) = transform(_.scale(t.x, t.y, t.z))
     def scale(x: Float = 1.0f, y: Float = 1.0f, z: Float = 1.0f) = transform(_.scale(x, y, z))
     def scalexy(s: Float) = scale(x = s, y = s)
+    def inverseScaleXY() = scale(1.0f / current.getScaleX, 1.0f / current.getScaleY)
+    def overrideScaleXY(s: Float) = scale(x = s / current.getScaleX, y = s / current.getScaleY)
     def rotate(angle: Float, x: Float = 0.0f, y: Float = 0.0f, z: Float = 0.0f) = transform(_.rotate(angle, x, y, z))
     def rotate(angle: Float, axis: Vector3) = transform(_.rotate(axis, angle))
   }

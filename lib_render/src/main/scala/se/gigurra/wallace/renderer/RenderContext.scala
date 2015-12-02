@@ -1,8 +1,9 @@
-package se.gigurra.wallace.client.stage.world.renderer
+package se.gigurra.wallace.renderer
 
 import java.io.Closeable
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.utils.Align
@@ -26,8 +27,9 @@ case class RenderContext[AssetsType : Disposing](_assets: AssetsType) extends Cl
                str: CharSequence,
                align: Int = Align.left,
                targetWidth: Float = 0.0f,
-               wrap: Boolean = false): RichGlyphLayout = {
-    font.prep(str, align, targetWidth, wrap)
+               wrap: Boolean = false,
+               color: Color = null): RichGlyphLayout = {
+    font.prep(str, align, targetWidth, wrap, color)
   }
 
   def drawShapes[AnyReturnType](shapeType: ShapeType)

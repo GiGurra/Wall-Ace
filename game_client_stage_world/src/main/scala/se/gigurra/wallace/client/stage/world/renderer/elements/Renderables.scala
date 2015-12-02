@@ -4,6 +4,7 @@ import java.io.Closeable
 
 import se.gigurra.wallace.client.stage.world.renderer._
 import se.gigurra.wallace.gamemodel.Terrain
+import se.gigurra.wallace.renderer._
 
 object Renderables {
 

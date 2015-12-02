@@ -5,11 +5,12 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import se.gigurra.wallace.client.stage.world.player.PlayerState
 import se.gigurra.wallace.client.stage.world.renderer.elements.WorldGuiRenderer
-import se.gigurra.wallace.client.stage.world.renderer.{WorldRenderer, RenderAssets, RenderContext}
+import se.gigurra.wallace.client.stage.world.renderer.WorldRenderer
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.cursors.HardwareCursor
 import se.gigurra.wallace.gamemodel.{World, WorldSimFrameIndex, WorldUpdate}
 import se.gigurra.wallace.input.{MousePositionUpdate, InputEvent}
+import se.gigurra.wallace.renderer.{RenderContext, RenderAssets}
 import se.gigurra.wallace.stage.Stage
 import se.gigurra.wallace.util.{Vec2FixedPoint, SyncQue}
 

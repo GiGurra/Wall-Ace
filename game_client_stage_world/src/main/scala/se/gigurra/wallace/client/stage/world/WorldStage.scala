@@ -11,6 +11,7 @@ import se.gigurra.wallace.client.stage.world.renderer._
 import se.gigurra.wallace.config.client.{DynamicConfiguration, StaticConfiguration}
 import se.gigurra.wallace.gamemodel._
 import se.gigurra.wallace.input.InputEvent
+import se.gigurra.wallace.renderer.{Rendering, RenderContext, RenderAssets, Projections}
 import se.gigurra.wallace.stage.{Stage, StageManager}
 
 class WorldStage(statCfg: StaticConfiguration,
@@ -87,7 +88,7 @@ class WorldStage(statCfg: StaticConfiguration,
   private def getLocalUpdates(iSimFrame: WorldSimFrameIndex): LocalUpdates = {
     val updatesFromPlayer = playerStateMgr.update(iSimFrame, ownUnit.map(_.position))
     val updatesFromGui = worldGui.popQueued
-    val updatesFromMode = worldMode.createRequests(playerStateMgr.state.unitId)
+    val updatesFromMode = worldMode.createRequests(playerStateMgr.state.name, playerStateMgr.state.unitId)
     val rawWorldUpdates = updatesFromPlayer.worldUpdates ++ updatesFromGui.worldUpdates ++ updatesFromMode
     LocalUpdates(rawWorldUpdates)
   }

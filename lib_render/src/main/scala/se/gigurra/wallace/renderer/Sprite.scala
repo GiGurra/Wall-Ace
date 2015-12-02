@@ -1,4 +1,4 @@
-package se.gigurra.wallace.client.stage.world.renderer
+package se.gigurra.wallace.renderer
 
 import java.io.Closeable
 import java.nio.ByteBuffer

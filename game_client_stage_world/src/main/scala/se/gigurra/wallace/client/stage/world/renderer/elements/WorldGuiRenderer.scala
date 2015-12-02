@@ -1,8 +1,8 @@
 package se.gigurra.wallace.client.stage.world.renderer.elements
 
 import se.gigurra.wallace.client.stage.world.player.PlayerState
-import se.gigurra.wallace.client.stage.world.renderer.{RenderAssets, RenderContext}
 import se.gigurra.wallace.gamemodel.World
+import se.gigurra.wallace.renderer.{RenderContext, RenderAssets}
 
 case class WorldGuiRenderer()(implicit renderContext: RenderContext[RenderAssets]) {
 
