@@ -10,8 +10,8 @@ case class AudioManager(loader: AudioLoader) {
   private val playingSounds = new ArrayBuffer[Sound]
 
   def update(): Unit = {
-    val time = Time.seconds
-    val expired = playingSounds.filter(_.expired(time))
+    implicit val time = Time.seconds
+    val expired = playingSounds.filter(_.expired)
     playingSounds --= expired
     expired.foreach(_.stopNow())
   }

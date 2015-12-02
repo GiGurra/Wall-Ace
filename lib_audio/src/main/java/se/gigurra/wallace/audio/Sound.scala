@@ -10,5 +10,5 @@ trait Sound {
   def addPlayTime(dt: Time.Seconds)
   def stopNow(fadeTime: Time.Seconds = 0.0)
   def stopAfter(dt: Time.Seconds, fadeTime: Time.Seconds = 0.0)
-  def expired(time: Time.Seconds = Time.seconds): Boolean = timeLeft(time) > 0
+  def expired(implicit time: Time.Seconds = Time.seconds): Boolean = timeLeft(time) > 0
 }

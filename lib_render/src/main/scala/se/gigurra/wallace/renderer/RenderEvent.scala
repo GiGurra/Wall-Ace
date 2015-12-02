@@ -11,17 +11,21 @@ trait RenderEvent[+SourceType] {
   def lifeTime: Time.Seconds
   def endTime: Time.Seconds = startTime + lifeTime
 
-  def timeFractionInto(time: Time.Seconds = Time.seconds): Float = {
+  def timeFractionInto(implicit time: Time.Seconds = Time.seconds): Float = {
     ((time - startTime) / lifeTime).toFloat
   }
 
-  def timeFractionLeft(time: Time.Seconds = Time.seconds): Float = {
+  def timeFractionLeft(implicit time: Time.Seconds = Time.seconds): Float = {
     1.0f - timeFractionInto(time)
   }
 
-  def expired(time: Time.Seconds = Time.seconds): Boolean = {
+  def expired(implicit time: Time.Seconds = Time.seconds): Boolean = {
     time > endTime
   }
+}
+
+object RenderEvent {
+  implicit def renderEvent2Source[T](e: RenderEvent[T]) : T = e.source
 }
 
 case class NullRenderEvent[SourceType](_source: SourceType) extends RenderEvent[SourceType] {
