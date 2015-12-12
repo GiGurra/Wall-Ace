@@ -1,13 +1,8 @@
 package se.gigurra.wallace.platform.desktop
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.backends.lwjgl.{LwjglCursor, LwjglApplication, LwjglApplicationConfiguration}
-import com.badlogic.gdx.graphics.{Pixmap, Cursor}
-import org.lwjgl.BufferUtils
-import org.lwjgl.input.Mouse
+import com.badlogic.gdx.backends.lwjgl.{LwjglApplication, LwjglApplicationConfiguration}
 import se.gigurra.wallace.client.Client
 import se.gigurra.wallace.config.client.{Configuration, DynamicConfiguration, StaticConfiguration}
-import se.gigurra.wallace.renderer.Sprite
 
 object Main extends App {
 
