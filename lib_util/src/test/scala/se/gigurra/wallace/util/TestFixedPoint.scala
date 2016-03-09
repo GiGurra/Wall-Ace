@@ -9,7 +9,7 @@ class TestFixedPoint extends WordSpec with Matchers {
   "FixedPoint.sqrt" should {
 
     "throw for negative numbers" in {
-      for (square <- 1 until 100000) {
+      for (square <- 1L until 100000L) {
         intercept[Exception](sqrt(-square))
       }
     }
@@ -38,7 +38,7 @@ class TestFixedPoint extends WordSpec with Matchers {
     }
 
     "be as good as possible for all values up to 1 million" in {
-      for (square <- 0 until 1000000) {
+      for (square <- 0L until 1000000L) {
         val realsqrt = math.round(math.sqrt(square.toDouble))
         val mysqrt = sqrt(square)
         mysqrt shouldBe realsqrt
