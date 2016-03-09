@@ -12,8 +12,8 @@ case class TerrainRenderer()(implicit renderContext: RenderContext[RenderAssets]
 
     val mapSprite = assets.maps.getOrElseUpdate("mapSprite", terrain)
 
-    transform(_.scalexy(terrain.patch2WorldScale)) {
-      mapSprite.uploaded.draw()
+    transform(_.scalexy(terrain.patch2WorldScale.toFloat)) {
+      mapSprite.uploaded().draw()
     }
 
   }

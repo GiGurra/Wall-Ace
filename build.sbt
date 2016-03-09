@@ -34,7 +34,7 @@ val ext_json4s = "org.json4s" %% "json4s-native" % "3.3.0"
 val ext_rxScala = "io.reactivex" %% "rxscala" % "0.25.0"
 val ext_kryonet = "com.esotericsoftware" % "kryonet" % "2.22.0-RC1"
 
-val ext_libgdxVersion = "1.7.0"
+val ext_libgdxVersion = "1.9.2"
 val ext_libGdx = "com.badlogicgames.gdx" % "gdx" % ext_libgdxVersion
 val ext_libGdx_freeType = "com.badlogicgames.gdx" % "gdx-freetype" % ext_libgdxVersion
 val ext_libGdx_lwJgl = "com.badlogicgames.gdx" % "gdx-backend-lwjgl" % ext_libgdxVersion
