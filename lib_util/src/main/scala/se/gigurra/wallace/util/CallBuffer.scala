@@ -17,13 +17,13 @@ class CallBuffer[InterfaceType: ClassTag] {
     @throws[Throwable]
     override def invoke(proxy: Object, method: Method, args: Array[Object]): Object = {
       bufferedCalls.add(Call(method, args))
-      return null;
+      null
     }
   }
 
   private val proxy =
     java.lang.reflect.Proxy.newProxyInstance(
-      cls.getClassLoader(),
+      cls.getClassLoader,
       Array(cls),
       handler).asInstanceOf[InterfaceType]
 
