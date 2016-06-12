@@ -14,7 +14,7 @@ case class NetworkStateManager(isSinglePlayer: Boolean) extends Closeable {
   def update[T_TerrainStorage: TerrainStoring](iSimFrame: WorldSimFrameIndex,
                                               input: UpdateToNetwork): UpdatesFromNetwork = {
 
-    // Short curcuit if single player!
+    // Short circuit if single player!
     if (isSinglePlayer)
       return UpdatesFromNetwork(worldUpdates = Seq(WorldUpdateBatch(iSimFrame, input.updates.worldUpdates)))
 
